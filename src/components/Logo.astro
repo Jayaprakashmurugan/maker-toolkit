@@ -1,0 +1,11 @@
+---
+// Inline logo mark. Colors come from CSS (.logo__*), so it follows light and dark themes.
+import { LEFT, RIGHT, SLASH } from '../lib/logo';
+---
+
+<svg class="logo" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+  <rect class="logo__tile" width="64" height="64" rx="14"></rect>
+  <path class="logo__bracket logo__bracket--left" d={LEFT}></path>
+  <path class="logo__bracket logo__bracket--right" d={RIGHT}></path>
+  <path class="logo__slash" d={SLASH}></path>
+</svg>

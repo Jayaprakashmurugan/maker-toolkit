@@ -8,6 +8,16 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.4',
+    date: '2026-10-23',
+    title: 'A proper logo',
+    changes: [
+      'New logo: formula brackets cut by the orange slash from Maker/Toolkit, used everywhere from the header to share images.',
+      'Home-screen icons for iPhone and Android, a favicon that adapts to dark browser tabs, and a web app manifest.',
+      'Brand kit for anyone writing about the site: /brand/logo.svg, /brand/logo-512.png, /brand/lockup-light.png and /brand/lockup-dark.png.',
+    ],
+  },
+  {
     version: '1.3',
     date: '2026-10-23',
     title: 'Motion',

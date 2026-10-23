@@ -5,6 +5,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { inflateSync } from 'node:zlib';
+import { markPaths } from './logo';
 
 export interface OgCard {
   kicker: string;
@@ -124,6 +125,16 @@ const MONO_MED = 'JetBrains Mono Medium';
 const DISPLAY = 'Bricolage Grotesque ExtraBold';
 const BODY = 'Atkinson Hyperlegible Next';
 
+/** Renders an SVG string to PNG at the given width, with the site fonts available. */
+export function svgToPng(svg: string, width: number): Buffer {
+  return new Resvg(svg, {
+    font: { fontFiles: fonts(), loadSystemFonts: false, defaultFontFamily: MONO },
+    fitTo: { mode: 'width', value: width },
+  })
+    .render()
+    .asPng();
+}
+
 export function renderOg(card: OgCard & { host: string }): Buffer {
   const X = 80;
   const CW = 1040;
@@ -178,11 +189,10 @@ export function renderOg(card: OgCard & { host: string }): Buffer {
   <rect width="14" height="630" fill="${card.accent ?? C.accent}"/>
 
   <g transform="translate(${X} 64)">
-    <rect x="3" y="3" width="52" height="52" rx="9" fill="${C.accent}"/>
-    <rect width="52" height="52" rx="9" fill="${C.ink}"/>
+    <rect x="3" y="3" width="52" height="52" rx="11.4" fill="${C.accent}"/>
     <g transform="scale(0.8125)">
-      <path d="M22 16c-6 4-9 10-9 16s3 12 9 16M42 16c6 4 9 10 9 16s-3 12-9 16" fill="none" stroke="${C.paper}" stroke-width="5" stroke-linecap="round"/>
-      <path d="M37 18 27 46" stroke="${C.accent}" stroke-width="6" stroke-linecap="round"/>
+      <rect width="64" height="64" rx="14" fill="${C.ink}"/>
+      ${markPaths(C.paper, C.accent)}
     </g>
   </g>
   <text x="${X + 74}" y="101" font-family="${MONO}" font-size="30" fill="${C.ink}">Maker<tspan fill="${C.accent}">/</tspan>Toolkit</text>
@@ -195,10 +205,24 @@ export function renderOg(card: OgCard & { host: string }): Buffer {
   <text x="${X + CW}" y="598" text-anchor="end" font-family="${MONO_MED}" font-size="21" fill="${C.ink3}">Free · No sign-up · No cookies</text>
 </svg>`;
 
-  return new Resvg(svg, {
-    font: { fontFiles: fonts(), loadSystemFonts: false, defaultFontFamily: MONO },
-    fitTo: { mode: 'width', value: 1200 },
-  })
-    .render()
-    .asPng();
+  return svgToPng(svg, 1200);
+}
+
+/** Logo + wordmark on a light or dark background, for profiles and documents. */
+export function renderLockup(theme: 'light' | 'dark'): Buffer {
+  const bg = theme === 'light' ? C.paper : '#121315';
+  const text = theme === 'light' ? C.ink : '#ece7dc';
+  const slash = theme === 'light' ? C.accent : '#ff6a3d';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320">
+  <rect width="1200" height="320" fill="${bg}"/>
+  <g transform="translate(70 60)">
+    <rect x="12" y="12" width="200" height="200" rx="43.75" fill="${C.accent}"/>
+    <g transform="scale(3.125)">
+      <rect width="64" height="64" rx="14" fill="${C.ink}"/>
+      ${markPaths(C.paper, C.accent)}
+    </g>
+  </g>
+  <text x="330" y="198" font-family="${MONO}" font-size="104" letter-spacing="-3" fill="${text}">Maker<tspan fill="${slash}">/</tspan>Toolkit</text>
+</svg>`;
+  return svgToPng(svg, 1200);
 }

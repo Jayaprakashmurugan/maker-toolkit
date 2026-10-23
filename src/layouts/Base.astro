@@ -5,6 +5,7 @@ import '@fontsource/atkinson-hyperlegible-next/700.css';
 import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import { siteConfig } from '../site.config';
+import Logo from '../components/Logo.astro';
 
 interface Props {
   title?: string;
@@ -38,7 +39,10 @@ const nav = [
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteConfig.name} />
@@ -82,7 +86,7 @@ const nav = [
     <header class="site-header">
       <div class="wrap wrap--wide site-header__inner">
         <a class="brand" href="/" aria-label={`${siteConfig.name} home`}>
-          <span class="brand__mark" aria-hidden="true">ƒ</span>
+          <Logo />
           <span class="brand__text">
             {words.map((w, i) => (
               <>
@@ -134,7 +138,7 @@ const nav = [
       <div class="wrap wrap--wide site-footer__inner">
         <div>
           <a class="brand" href="/">
-            <span class="brand__mark" aria-hidden="true">ƒ</span>
+            <Logo />
             <span>{siteConfig.name}</span>
           </a>
           <p class="disclaimer">

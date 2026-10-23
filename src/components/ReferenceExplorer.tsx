@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
-import type { Category, RefItem } from '../data/types';
+import type { Category, Lang, RefItem } from '../data/types';
 import { slugify } from '../data/types';
 import FormulaDetail, { CopyButton } from './FormulaDetail';
 
@@ -10,6 +10,9 @@ interface Props {
   /** URL of the reference page, e.g. "/formula-reference/". Detail pages live below it. */
   basePath: string;
   noun?: string;
+  singular?: string;
+  lang?: Lang;
+  placeholder?: string;
 }
 
 type View = 'cards' | 'tree';
@@ -44,7 +47,16 @@ function Highlighted({ text, q }: { text: string; q: string }) {
   );
 }
 
-export default function ReferenceExplorer({ items, categories, docsBase, basePath, noun = 'formulas' }: Props) {
+export default function ReferenceExplorer({
+  items,
+  categories,
+  docsBase,
+  basePath,
+  noun = 'formulas',
+  singular = 'formula',
+  lang = 'powerfx',
+  placeholder,
+}: Props) {
   const [query, setQuery] = useState('');
   const [letter, setLetter] = useState<string | null>(null);
   const [category, setCategory] = useState<string | null>(null);
@@ -199,7 +211,7 @@ export default function ReferenceExplorer({ items, categories, docsBase, basePat
           <input
             ref={searchRef}
             type="search"
-            placeholder={`Search ${noun} or tasks, like "remove duplicates"`}
+            placeholder={placeholder ?? `Search ${noun} or tasks, like "remove duplicates"`}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoComplete="off"
@@ -261,7 +273,7 @@ export default function ReferenceExplorer({ items, categories, docsBase, basePat
         <div className="results">
           <div className="results__meta">
             <p aria-live="polite">
-              <strong>{results.length}</strong> {results.length === 1 ? noun.replace(/s$/, '') : noun}
+              <strong>{results.length}</strong> {results.length === 1 ? singular : noun}
               {q && (
                 <>
                   {' '}
@@ -357,7 +369,7 @@ export default function ReferenceExplorer({ items, categories, docsBase, basePat
         </div>
 
         {/* ── Detail panel ──────────────────────────────── */}
-        <aside className={`panel${selected ? ' is-open' : ''}`} aria-label="Formula details">
+        <aside className={`panel${selected ? ' is-open' : ''}`} aria-label={`${singular[0].toUpperCase()}${singular.slice(1)} details`}>
           {selected ? (
             <div className="panel__inner" key={selected.name} style={catStyle(colorOf.get(selected.category))}>
               <div className="panel__top">
@@ -376,7 +388,7 @@ export default function ReferenceExplorer({ items, categories, docsBase, basePat
               </h2>
               <p className="panel__summary">{selected.summary}</p>
 
-              <FormulaDetail item={selected} docsBase={docsBase} level={3} />
+              <FormulaDetail item={selected} docsBase={docsBase} lang={lang} level={3} />
 
               {(() => {
                 const related = items

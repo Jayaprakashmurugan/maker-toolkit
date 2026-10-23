@@ -1,0 +1,85 @@
+---
+import Base from '../../layouts/Base.astro';
+import Beautifier from '../../components/Beautifier';
+
+const title = 'Expression Beautifier';
+const description =
+  'Paste a long Power Automate or Power Fx expression and get it back indented, color-coded by nesting level, and checked for bracket and quote mistakes. Runs in your browser.';
+
+const faqs = [
+  {
+    q: 'What does the beautifier change?',
+    a: 'Only spaces and line breaks. Function names, strings and values stay exactly as you typed them, so the formatted expression behaves the same as the original.',
+  },
+  {
+    q: 'Which languages does it support?',
+    a: "Power Automate expressions (the Workflow Definition Language, with 'single-quoted' strings) and Power Apps Power Fx formulas (with \"double-quoted\" strings). It detects the language for you, or you can choose it.",
+  },
+  {
+    q: 'Can I paste the formatted version back into Power Automate?',
+    a: 'Power Automate accepts the formatted version, but the expression box is small, so many makers keep the one-line version in the flow and use the formatted one for reading and debugging. "One line" copies a compact version.',
+  },
+  {
+    q: 'Does it tell me whether my expression will work?',
+    a: 'It catches structural mistakes: unbalanced brackets, unclosed strings and empty arguments. It cannot know whether a function name, an action name or a field exists in your flow or app.',
+  },
+  {
+    q: 'Is my expression sent anywhere?',
+    a: 'No. Formatting happens entirely in your browser. Nothing is uploaded or stored.',
+  },
+];
+---
+
+<Base title={title} description={description} image="/og/expression-beautifier.png">
+  <div class="wrap wrap--wide">
+    <header class="page-head">
+      <p class="kicker"><b>Tool</b> · Power Automate + Power Fx</p>
+      <h1>{title}</h1>
+      <p class="page-head__lede">{description}</p>
+    </header>
+
+    <Beautifier client:load />
+  </div>
+
+  <section class="wrap section" aria-labelledby="bf-how">
+    <div class="section-head">
+      <div>
+        <p class="kicker">Guide</p>
+        <h2 id="bf-how">How to use it</h2>
+      </div>
+    </div>
+    <ol class="steps">
+      <li>
+        <h3>Paste your expression</h3>
+        <p>Copy it from the Expression tab, a Compose action, or the Power Apps formula bar.</p>
+      </li>
+      <li>
+        <h3>Read the structure</h3>
+        <p>Each nesting level gets its own bracket color, so you can see which argument belongs to which function.</p>
+      </li>
+      <li>
+        <h3>Fix what's flagged</h3>
+        <p>Click a problem in the checks list to jump to it in your expression.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="wrap section" aria-labelledby="bf-faq">
+    <div class="section-head">
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="bf-faq">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq">
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

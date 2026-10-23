@@ -1,4 +1,4 @@
-import type { RefItem } from '../data/types';
+import type { Lang, RefItem } from '../data/types';
 import { highlight } from '../lib/highlight';
 
 // Plain button: the click is handled by one delegated listener in Base.astro,
@@ -14,11 +14,11 @@ export function CopyButton({ text, label }: { text: string; label: string }) {
   );
 }
 
-export function CodeLine({ code, label }: { code: string; label: string }) {
+export function CodeLine({ code, label, lang = 'powerfx' }: { code: string; label: string; lang?: Lang }) {
   return (
     <div className="code">
       <pre>
-        <code>{highlight(code)}</code>
+        <code>{highlight(code, lang)}</code>
       </pre>
       <CopyButton text={code} label={label} />
     </div>
@@ -28,17 +28,18 @@ export function CodeLine({ code, label }: { code: string; label: string }) {
 interface Props {
   item: RefItem;
   docsBase: string;
+  lang?: Lang;
   /** Heading level for section titles: h3 inside the explorer panel, h2 on a page. */
   level?: 2 | 3;
 }
 
-export default function FormulaDetail({ item, docsBase, level = 3 }: Props) {
+export default function FormulaDetail({ item, docsBase, lang = 'powerfx', level = 3 }: Props) {
   const H = `h${level}` as 'h2' | 'h3';
   return (
     <div className="detail">
       <section className="detail__block">
         <H className="detail__label">Syntax</H>
-        <CodeLine code={item.syntax} label={`${item.name} syntax`} />
+        <CodeLine code={item.syntax} label={`${item.name} syntax`} lang={lang} />
       </section>
 
       {item.params && item.params.length > 0 && (
@@ -63,7 +64,7 @@ export default function FormulaDetail({ item, docsBase, level = 3 }: Props) {
         <ol className="examples">
           {item.examples.map((ex, i) => (
             <li key={i}>
-              <CodeLine code={ex.code} label={`${item.name} example ${i + 1}`} />
+              <CodeLine code={ex.code} label={`${item.name} example ${i + 1}`} lang={lang} />
               {ex.result && <p className="examples__result">{ex.result}</p>}
             </li>
           ))}

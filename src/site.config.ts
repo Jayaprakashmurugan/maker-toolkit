@@ -16,6 +16,8 @@ export const siteConfig = {
     { label: 'GitHub', href: 'https://github.com/Jayaprakashmurugan' },
     { label: 'Website', href: 'https://jayaprakash.carrd.co/' },
   ],
+  // Cloudflare Web Analytics token (cookie-free visit counts). Leave empty to turn it off.
+  cfAnalyticsToken: '',
   // Google Search Console "HTML tag" code: paste only the content="..." value.
   googleSiteVerification: 'GOf4XS8q19iUeJeqqMfqvAa6CY6ZuKPtOY3VwmgPNd4',
 };

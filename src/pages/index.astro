@@ -1,15 +1,20 @@
 ---
 import Base from '../layouts/Base.astro';
 import CodeTicker from '../components/CodeTicker';
-import { tools, powerAppsReference } from '../data/tools';
+import { tools } from '../data/tools';
+import { powerAppsReference, powerAutomateReference } from '../data/references';
 import { siteConfig } from '../site.config';
 
 const tickerLines = [
-  { code: `Patch(Tasks, ThisItem, { Status: "Done" })`, note: 'mark the selected task as done' },
-  { code: `Filter(Tasks, AssignedTo.Email = User().Email, Status <> "Done")`, note: 'my open tasks' },
-  { code: `Text(Now(), "yyyy-mm-dd hh:mm")`, note: 'a sortable timestamp' },
-  { code: `IfError(Value(txtQty.Text), 0)`, note: 'never crash on bad input' },
-  { code: `Notify("Saved!", NotificationType.Success, 3000)`, note: 'a three-second success toast' },
+  { code: `Patch(Tasks, ThisItem, { Status: "Done" })`, note: 'Power Apps: mark the task as done', lang: 'powerfx' as const },
+  {
+    code: `formatDateTime(convertTimeZone(utcNow(), 'UTC', 'India Standard Time'), 'dd MMM yyyy')`,
+    note: 'Power Automate: today in India',
+    lang: 'wdl' as const,
+  },
+  { code: `Filter(Tasks, AssignedTo.Email = User().Email, Status <> "Done")`, note: 'Power Apps: my open tasks', lang: 'powerfx' as const },
+  { code: `union(variables('emails'), variables('emails'))`, note: 'Power Automate: remove duplicates', lang: 'wdl' as const },
+  { code: `IfError(Value(txtQty.Text), 0)`, note: 'Power Apps: never crash on bad input', lang: 'powerfx' as const },
 ];
 
 const faqs = [
@@ -47,7 +52,8 @@ const faqs = [
           you're trying to do, copy a working example, and get back to building.
         </p>
         <div class="hero__actions">
-          <a class="btn" href={`/${powerAppsReference.slug}/`}>Open the formula reference <span aria-hidden="true">→</span></a>
+          <a class="btn" href={`/${powerAppsReference.slug}/`}>Power Apps formulas <span aria-hidden="true">→</span></a>
+          <a class="btn btn--ghost" href={`/${powerAutomateReference.slug}/`}>Power Automate expressions <span aria-hidden="true">→</span></a>
           <a class="plain" href="#tools">See all tools</a>
         </div>
       </div>
@@ -57,10 +63,10 @@ const faqs = [
     </div>
 
     <dl class="stats reveal" style="--d:5">
-      <div><dt>Formulas</dt><dd>{powerAppsReference.items.length}</dd></div>
-      <div><dt>Categories</dt><dd>{powerAppsReference.categories.length}</dd></div>
+      <div><dt>Power Fx formulas</dt><dd>{powerAppsReference.items.length}</dd></div>
+      <div><dt>Flow expressions</dt><dd>{powerAutomateReference.items.length}</dd></div>
+      <div><dt>Tools</dt><dd>{tools.filter((t) => t.status === 'live').length}</dd></div>
       <div><dt>Cookies</dt><dd>0</dd></div>
-      <div><dt>Price</dt><dd>Free</dd></div>
     </dl>
   </section>
 

@@ -14,6 +14,14 @@ import { siteConfig } from '../site.config';
       <li>This site sets no cookies and has no sign-up.</li>
       <li>Searches and text you enter in the tools stay in your browser and are never sent anywhere.</li>
       <li>Your light or dark theme choice is saved in your browser's local storage, on your device only.</li>
+      {
+        siteConfig.cfAnalyticsToken && (
+          <li>
+            Visits are counted with Cloudflare Web Analytics, which uses no cookies and does not track you across sites.
+            It shows totals such as page views and countries, never who you are.
+          </li>
+        )
+      }
       <li>
         The hosting provider may keep standard server logs, such as IP address and pages requested, for security and
         reliability.

@@ -1,9 +1,8 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import Base from '../../layouts/Base.astro';
-import FormulaDetail from '../../components/FormulaDetail';
-import { powerAppsReference as ref } from '../../data/tools';
-import { slugify, type RefItem } from '../../data/types';
+import ReferenceItem from '../../components/ReferenceItem.astro';
+import { powerAppsReference as ref } from '../../data/references';
+import { slugify } from '../../data/types';
 
 export const getStaticPaths = (() =>
   ref.items.map((item, i) => ({
@@ -11,88 +10,7 @@ export const getStaticPaths = (() =>
     props: { item, prev: ref.items[i - 1] ?? null, next: ref.items[i + 1] ?? null },
   }))) satisfies GetStaticPaths;
 
-interface Props {
-  item: RefItem;
-  prev: RefItem | null;
-  next: RefItem | null;
-}
-
 const { item, prev, next } = Astro.props;
-const basePath = `/${ref.slug}/`;
-const color = ref.categories.find((c) => c.name === item.category)?.color;
-const related = ref.items.filter((i) => i.category === item.category && i.name !== item.name);
-
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'TechArticle',
-  headline: `${item.name} function (Power Apps)`,
-  description: item.summary,
-  url: new URL(Astro.url.pathname, Astro.site).href,
-};
 ---
 
-<Base title={`${item.name} function · Power Apps`} description={`${item.summary} Syntax: ${item.syntax}`}>
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-
-  <div class="wrap" style={`--cat:${color}`}>
-    <header class="formula-head">
-      <nav class="crumbs" aria-label="Breadcrumb">
-        <a href="/">Home</a> <span aria-hidden="true">/</span>
-        <a href={basePath}>{ref.title}</a> <span aria-hidden="true">/</span>
-        <span aria-current="page">{item.name}</span>
-      </nav>
-      <span class="tag"><span class="chip__dot" aria-hidden="true"></span>{item.category}</span>
-      <h1>{item.name}</h1>
-      <p>{item.summary}</p>
-    </header>
-
-    <div class="formula-layout">
-      <article>
-        <FormulaDetail item={item} docsBase={ref.docsBase} level={2} />
-
-        <nav class="pager" aria-label="Previous and next formula">
-          {
-            prev ? (
-              <a href={`${basePath}${slugify(prev.name)}/`}>
-                <small>← Previous</small>
-                <strong>{prev.name}</strong>
-              </a>
-            ) : (
-              <span />
-            )
-          }
-          {
-            next && (
-              <a href={`${basePath}${slugify(next.name)}/`}>
-                <small>Next →</small>
-                <strong>{next.name}</strong>
-              </a>
-            )
-          }
-        </nav>
-      </article>
-
-      <aside class="formula-aside">
-        <div class="aside-card aside-card--cta">
-          <h2>Explorer</h2>
-          <p>Browse all {ref.items.length} formulas with search, A–Z and categories.</p>
-          <a class="btn" href={`${basePath}?f=${encodeURIComponent(item.name)}`}>Open in explorer →</a>
-        </div>
-        {
-          related.length > 0 && (
-            <div class="aside-card">
-              <h2>More in {item.category}</h2>
-              <div class="related">
-                {related.map((r) => (
-                  <a class="related__item" href={`${basePath}${slugify(r.name)}/`}>
-                    {r.name}
-                  </a>
-                ))}
-              </div>
-            </div>
-          )
-        }
-      </aside>
-    </div>
-  </div>
-</Base>
+<ReferenceItem reference={ref} item={item} prev={prev} next={next} />

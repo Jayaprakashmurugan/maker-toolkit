@@ -1,0 +1,32 @@
+// Newest first. Add an entry whenever you ship something visitors would notice.
+export interface Release {
+  version: string;
+  date: string; // YYYY-MM-DD
+  title: string;
+  changes: string[];
+}
+
+export const changelog: Release[] = [
+  {
+    version: '1.1',
+    date: '2026-10-23',
+    title: 'Power Automate, a beautifier and nearly 100 more formulas',
+    changes: [
+      'New: Power Automate Expression Reference covering every workflow expression function, each with its own page.',
+      'New: Expression Beautifier for Power Automate and Power Fx, with rainbow brackets and syntax checks.',
+      'The Power Apps Formula Reference grows to about 200 formulas, adding trigonometry, signals, AI, testing and operators.',
+      'Every page now has a share image, so links look good on LinkedIn, Teams and WhatsApp.',
+      'New: this What’s new page.',
+    ],
+  },
+  {
+    version: '1.0',
+    date: '2026-10-23',
+    title: 'Launch',
+    changes: [
+      'Power Apps Formula Reference with search by name or task, A–Z, categories, cards and tree views.',
+      'A page for every formula, with copy-ready syntax and examples.',
+      'Light and dark themes, no cookies, no sign-up.',
+    ],
+  },
+];

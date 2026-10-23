@@ -16,13 +16,19 @@ npm run preview   # serve dist/ to check the production build
 
 | Path | What it is |
 | --- | --- |
-| `src/site.config.ts` | Site name, tagline, author, feedback link. **Edit this first.** |
-| `astro.config.mjs` | `site:` is your public URL (used for the sitemap and canonical links). |
-| `src/data/power-apps-formulas.ts` | All formula entries and categories. |
+| `src/site.config.ts` | Site name, author, links, Google verification and analytics token. **Edit this first.** |
+| `astro.config.mjs` | `site:` is your public URL (used for the sitemap, canonical links and share images). |
+| `src/data/power-apps-formulas.ts` | Power Apps (Power Fx) formulas and their categories. |
+| `src/data/power-automate-expressions.ts` | Power Automate expression functions and their categories. |
+| `src/data/references.ts` | Ties each dataset to its URL, title, FAQ and search hint. |
 | `src/data/tools.ts` | The tool list shown on the homepage. |
+| `src/data/changelog.ts` | Entries for the "What's new" page. |
+| `src/components/ReferenceIndex.astro` | Shared layout for a reference page (explorer, A–Z index, FAQ). |
+| `src/components/ReferenceItem.astro` | Shared layout for one formula/expression page. |
 | `src/components/ReferenceExplorer.tsx` | The interactive explorer (search, A–Z, categories, cards/tree, detail panel). |
-| `src/components/FormulaDetail.tsx` | Syntax, parameters, examples and notes, shared by the panel and the formula pages. |
-| `src/pages/` | One file per URL. `formula-reference/[slug].astro` generates a page per formula. |
+| `src/components/Beautifier.tsx` + `src/lib/beautify.ts` | The Expression Beautifier UI and its formatting/checking engine. |
+| `src/lib/og.ts` + `src/pages/og/` | Share images (1200×630 PNG) generated for every page at build time. |
+| `src/pages/` | One file per URL. `[slug].astro` files generate a page per formula or expression. |
 | `src/styles/global.css` | All styling. Colors are CSS variables at the top (light and dark). |
 
 ## Add a formula
@@ -43,13 +49,21 @@ Add an object to the `formulas` array in `src/data/power-apps-formulas.ts`:
 }
 ```
 
-The list is sorted automatically, and a page at `/formula-reference/mod/` is created on the next build.
+The list is sorted automatically, and a page at `/formula-reference/mod/` (plus its share image) is created on the next build.
+Power Automate expressions work the same way in `src/data/power-automate-expressions.ts`; there `docs` defaults to the
+function's anchor on Microsoft Learn, so you can leave it out.
 
-## Add another reference (for example, Power Automate expressions)
+## Add another reference
 
-1. Copy `src/data/power-apps-formulas.ts` to a new file and fill it in.
-2. Add an entry for it in `src/data/tools.ts`.
-3. Copy `src/pages/formula-reference/` to a new folder (for example `src/pages/expression-reference/`) and point it at the new data.
+1. Create a data file like `src/data/power-automate-expressions.ts`.
+2. Add a `Reference` for it in `src/data/references.ts` (and to the `references` list, so it gets share images).
+3. Copy `src/pages/expression-reference/` to a new folder and import your new reference in both files.
+4. Add it to `src/data/tools.ts` and the nav in `src/layouts/Base.astro`.
+
+## Visitor stats (optional, free, cookie-free)
+
+In Cloudflare: **Analytics & Logs → Web Analytics → Add a site**, enter the site's hostname, and copy the `token`
+from the snippet. Paste it into `cfAnalyticsToken` in `src/site.config.ts` and push. The privacy page updates itself.
 
 ## Publish (free)
 

@@ -53,7 +53,7 @@ The list is sorted automatically, and a page at `/formula-reference/mod/` is cre
 
 ## Publish (free)
 
-Live at **<https://power-platform-tools.mjaijayaprakash977.workers.dev>**, hosted as a Cloudflare Worker
+Live at **<https://maker-toolkit.jay365.workers.dev>**, hosted as a Cloudflare Worker
 connected to this GitHub repo. Every `git push` to `main` rebuilds and redeploys automatically.
 
 - `wrangler.jsonc` tells Cloudflare how to deploy: it runs `npm run build`, then serves `dist/`

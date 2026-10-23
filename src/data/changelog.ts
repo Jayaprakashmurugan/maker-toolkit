@@ -8,6 +8,17 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.3',
+    date: '2026-10-23',
+    title: 'Motion',
+    changes: [
+      'Titles decode from code symbols, and the homepage types its formulas as you watch.',
+      'Beautifier and schema output unfold line by line; sections slide in as you scroll.',
+      'Smooth page-to-page transitions in supporting browsers.',
+      'All motion turns off automatically if your device is set to reduce motion.',
+    ],
+  },
+  {
     version: '1.2',
     date: '2026-10-23',
     title: 'JSON Schema Helper',

@@ -65,6 +65,14 @@ const nav = [
         const t = localStorage.getItem('theme');
         if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
       } catch {}
+      // Enable entrance animations unless the visitor prefers reduced motion.
+      // Safety net: if the motion script never runs, show everything after 2.5 s.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('motion');
+        setTimeout(() => {
+          if (!window.__motionReady) document.documentElement.classList.remove('motion');
+        }, 2500);
+      }
     </script>
     <slot name="head" />
   </head>
@@ -162,6 +170,8 @@ const nav = [
     }
 
     <script>
+      import '../scripts/motion';
+
       // One delegated handler for every copy button, including ones React renders later.
       const status = document.getElementById('sr-status');
 

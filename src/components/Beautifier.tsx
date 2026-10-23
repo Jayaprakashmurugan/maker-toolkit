@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState, type ReactNode } from 'react';
 import type { Lang } from '../data/types';
 import { beautify, detectLang, tokenize, type Mode } from '../lib/beautify';
+import AnimatedLines, { toLines } from './AnimatedLines';
 import { CopyButton } from './FormulaDetail';
 
 const SAMPLES: Record<Lang, string> = {
@@ -74,6 +75,9 @@ export default function Beautifier() {
   const [mode, setMode] = useState<Mode>('smart');
   const [indent, setIndent] = useState(2);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  // Bumped on deliberate changes (sample, paste, settings) to replay the unfold animation.
+  const [version, setVersion] = useState(0);
+  const bump = () => setVersion((v) => v + 1);
 
   const lang: Lang = langPref === 'auto' ? detectLang(src) : langPref;
   const hasInput = src.trim().length > 0;
@@ -97,6 +101,7 @@ export default function Beautifier() {
   const loadSample = (l: Lang) => {
     setSrc(SAMPLES[l]);
     setLangPref('auto');
+    bump();
   };
 
   return (
@@ -105,7 +110,10 @@ export default function Beautifier() {
         <Segmented
           label="Language"
           value={langPref}
-          onChange={setLangPref}
+          onChange={(v) => {
+            setLangPref(v);
+            bump();
+          }}
           options={[
             ['auto', hasInput && langPref === 'auto' ? `Auto · ${LANG_NAME[lang]}` : 'Auto-detect'],
             ['wdl', 'Power Automate'],
@@ -115,7 +123,10 @@ export default function Beautifier() {
         <Segmented
           label="Layout"
           value={mode}
-          onChange={setMode}
+          onChange={(v) => {
+            setMode(v);
+            bump();
+          }}
           options={[
             ['smart', 'Smart'],
             ['expanded', 'Expanded'],
@@ -125,7 +136,10 @@ export default function Beautifier() {
         <Segmented
           label="Indent"
           value={indent}
-          onChange={setIndent}
+          onChange={(v) => {
+            setIndent(v);
+            bump();
+          }}
           options={[
             [2, '2'],
             [4, '4'],
@@ -156,6 +170,7 @@ export default function Beautifier() {
             className="bf-input"
             value={src}
             onChange={(e) => setSrc(e.target.value)}
+            onPaste={bump}
             placeholder={`Paste an expression, for example:\n${SAMPLES.wdl.slice(0, 64)}…`}
             spellCheck={false}
             autoCapitalize="off"
@@ -188,7 +203,9 @@ export default function Beautifier() {
                   ))}
                 </ol>
                 <pre>
-                  <code>{render(result.output, lang)}</code>
+                  <code key={version}>
+                    <AnimatedLines lines={toLines(render(result.output, lang))} />
+                  </code>
                 </pre>
               </>
             ) : (
@@ -218,9 +235,9 @@ export default function Beautifier() {
             </p>
           </div>
           <ul className="bf-checklist">
-            <li className={issueKinds.brackets ? 'is-bad' : 'is-ok'}>Brackets are balanced</li>
-            <li className={issueKinds.strings ? 'is-bad' : 'is-ok'}>Strings and quoted names are closed</li>
-            <li className={issueKinds.args ? 'is-bad' : 'is-ok'}>Arguments are separated correctly</li>
+            <li key={`b${issueKinds.brackets}`} className={issueKinds.brackets ? 'is-bad' : 'is-ok'}>Brackets are balanced</li>
+            <li key={`s${issueKinds.strings}`} className={issueKinds.strings ? 'is-bad' : 'is-ok'}>Strings and quoted names are closed</li>
+            <li key={`a${issueKinds.args}`} className={issueKinds.args ? 'is-bad' : 'is-ok'}>Arguments are separated correctly</li>
           </ul>
           {result.issues.length > 0 && (
             <ol className="bf-issues">

@@ -47,13 +47,13 @@ const byLetter = Object.entries(
   </div>
 
   <section class="wrap section" aria-labelledby="howto-title">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <div>
         <p class="kicker">Guide</p>
         <h2 id="howto-title">How to use this reference</h2>
       </div>
     </div>
-    <ol class="steps">
+    <ol class="steps" data-reveal-group>
       <li>
         <h3>Search or browse</h3>
         <p>Type a name or a task. Narrow it down with the A–Z strip or a category.</p>
@@ -76,14 +76,14 @@ const byLetter = Object.entries(
   </section>
 
   <section class="wrap section" aria-labelledby="az-title">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <div>
         <p class="kicker">Index</p>
         <h2 id="az-title">Every {ref.singular}, A–Z</h2>
       </div>
       <p>Each one also has its own page that you can bookmark or share.</p>
     </div>
-    <div class="az-index">
+    <div class="az-index" data-reveal-group>
       {
         byLetter.map(([letter, group]) => (
           <section aria-label={letter}>
@@ -102,13 +102,13 @@ const byLetter = Object.entries(
   </section>
 
   <section class="wrap section" aria-labelledby="rfaq-title">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <div>
         <p class="kicker">Questions</p>
         <h2 id="rfaq-title">FAQ</h2>
       </div>
     </div>
-    <div class="faq">
+    <div class="faq" data-reveal-group>
       {
         ref.faqs.map((f) => (
           <details>

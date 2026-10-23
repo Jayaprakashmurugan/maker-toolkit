@@ -2383,6 +2383,158 @@ button {
   margin-top: 0.6rem;
 }
 
+/* ── Motion ───────────────────────────────────────────────────
+   Hidden "before" states apply only under html.motion, which is set
+   when the visitor hasn't asked for reduced motion and JS is running. */
+
+/* Scroll reveal (children of [data-reveal-group] get [data-reveal] from motion.ts) */
+html.motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--d, 0) * 70ms);
+}
+html.motion [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+html.motion .tools[data-reveal-group] > [data-reveal] {
+  transform: translateX(-24px);
+}
+html.motion .tools[data-reveal-group] > [data-reveal].is-visible {
+  transform: none;
+}
+
+/* Decoding titles: symbols in the accent color until resolved */
+html.motion [data-scramble]:not(.is-decoded) {
+  color: var(--accent);
+}
+html.motion .hero__accent {
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.5s ease 0.15s;
+}
+html.motion .hero__accent.is-decoded {
+  text-decoration-color: var(--accent);
+}
+
+/* Typing ticker */
+.ticker.is-typing .ticker__line {
+  animation: none;
+  opacity: 0;
+  transform: none;
+  transition: opacity 0.25s ease;
+}
+.ticker.is-typing .ticker__line.is-active {
+  opacity: 1;
+}
+.ticker.is-typing .ticker__line code::after {
+  content: '';
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--accent);
+  animation: caret 1s steps(1) infinite;
+}
+.ticker.is-typing .ticker__line p {
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+.ticker.is-typing .ticker__line.is-done p {
+  opacity: 1;
+  transform: none;
+}
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Output unfolds line by line (beautifier, schema helper) */
+.bf-output code .ln {
+  display: block;
+  min-height: 1.6em;
+}
+html.motion .bf-output code .ln {
+  animation: line-in 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(min(var(--i, 0), 40) * 14ms);
+}
+@keyframes line-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+}
+html.motion .sh-table tbody tr {
+  animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(min(var(--i, 0), 20) * 30ms);
+}
+
+/* Pops: check marks and copy buttons */
+html.motion .bf-checklist li::before {
+  animation: pop 0.35s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+html.motion .copy-btn.is-copied {
+  animation: pop 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Explorer panel slides in from the side on desktop */
+@media (min-width: 1000px) {
+  html.motion .panel__inner {
+    animation: panel-in 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+}
+
+/* Page-to-page transitions (browsers with cross-document View Transitions) */
+@view-transition {
+  navigation: auto;
+}
+.site-header {
+  view-transition-name: site-header;
+}
+.panel__name,
+.formula-head h1 {
+  view-transition-name: fx-title;
+}
+::view-transition-old(root) {
+  animation: vt-out 0.18s ease both;
+}
+::view-transition-new(root) {
+  animation: vt-in 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
 /* ── Motion preferences ───────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -2400,5 +2552,10 @@ button {
   }
   .ticker__line:first-child {
     opacity: 1;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

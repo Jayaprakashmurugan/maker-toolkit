@@ -42,13 +42,13 @@ const faqs = [
   </div>
 
   <section class="wrap section" aria-labelledby="bf-how">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <div>
         <p class="kicker">Guide</p>
         <h2 id="bf-how">How to use it</h2>
       </div>
     </div>
-    <ol class="steps">
+    <ol class="steps" data-reveal-group>
       <li>
         <h3>Paste your expression</h3>
         <p>Copy it from the Expression tab, a Compose action, or the Power Apps formula bar.</p>
@@ -65,13 +65,13 @@ const faqs = [
   </section>
 
   <section class="wrap section" aria-labelledby="bf-faq">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <div>
         <p class="kicker">Questions</p>
         <h2 id="bf-faq">FAQ</h2>
       </div>
     </div>
-    <div class="faq">
+    <div class="faq" data-reveal-group>
       {
         faqs.map((f) => (
           <details>

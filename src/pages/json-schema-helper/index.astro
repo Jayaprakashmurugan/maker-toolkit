@@ -42,13 +42,13 @@ const faqs = [
   </div>
 
   <section class="wrap section" aria-labelledby="sh-how">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <div>
         <p class="kicker">Guide</p>
         <h2 id="sh-how">How to use it</h2>
       </div>
     </div>
-    <ol class="steps">
+    <ol class="steps" data-reveal-group>
       <li>
         <h3>Get a real sample</h3>
         <p>Run the flow once, open the run, and copy the raw output of the step whose JSON you want to parse.</p>
@@ -65,13 +65,13 @@ const faqs = [
   </section>
 
   <section class="wrap section" aria-labelledby="sh-faq">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <div>
         <p class="kicker">Questions</p>
         <h2 id="sh-faq">FAQ</h2>
       </div>
     </div>
-    <div class="faq">
+    <div class="faq" data-reveal-group>
       {
         faqs.map((f) => (
           <details>

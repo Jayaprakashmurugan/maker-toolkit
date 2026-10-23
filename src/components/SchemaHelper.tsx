@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { fieldRows, inferShape, parseSample, shapeStats, toSchema } from '../lib/jsonSchema';
+import AnimatedLines, { toLines } from './AnimatedLines';
 import { CopyButton } from './FormulaDetail';
 
 const SAMPLES: Record<string, string> = {
@@ -90,6 +91,13 @@ export default function SchemaHelper() {
   const [actionName, setActionName] = useState('Parse JSON');
   const [filter, setFilter] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  // Bumped on deliberate changes (sample, paste, options) to replay the unfold animation.
+  const [version, setVersion] = useState(0);
+  const bump = () => setVersion((v) => v + 1);
+  const withBump = (set: (v: boolean) => void) => (v: boolean) => {
+    set(v);
+    bump();
+  };
 
   const hasInput = src.trim().length > 0;
   const parsed = useMemo(() => (hasInput ? parseSample(src) : null), [src, hasInput]);
@@ -112,9 +120,9 @@ export default function SchemaHelper() {
   return (
     <div className="bf sh">
       <div className="bf-toolbar">
-        <Toggle label="Nulls" value={nullable} onChange={setNullable} options={['Allow everywhere', 'Only where seen']} />
-        <Toggle label="Properties" value={optional} onChange={setOptional} options={['All optional', 'Required if in sample']} />
-        <Toggle label="Numbers" value={anyNumber} onChange={setAnyNumber} options={['number', 'integer when whole']} />
+        <Toggle label="Nulls" value={nullable} onChange={withBump(setNullable)} options={['Allow everywhere', 'Only where seen']} />
+        <Toggle label="Properties" value={optional} onChange={withBump(setOptional)} options={['All optional', 'Required if in sample']} />
+        <Toggle label="Numbers" value={anyNumber} onChange={withBump(setAnyNumber)} options={['number', 'integer when whole']} />
         <label className="bf-control sh-action">
           <span className="bf-control__label">Action name</span>
           <input value={actionName} onChange={(e) => setActionName(e.target.value)} spellCheck={false} />
@@ -127,7 +135,10 @@ export default function SchemaHelper() {
             <h2 id="sh-in-title">Sample JSON</h2>
             <div className="bf-pane__actions">
               {Object.keys(SAMPLES).map((name) => (
-                <button key={name} type="button" className="link-btn" onClick={() => setSrc(SAMPLES[name])}>
+                <button key={name} type="button" className="link-btn" onClick={() => {
+                    setSrc(SAMPLES[name]);
+                    bump();
+                  }}>
                   {name}
                 </button>
               ))}
@@ -143,6 +154,7 @@ export default function SchemaHelper() {
             className="bf-input"
             value={src}
             onChange={(e) => setSrc(e.target.value)}
+            onPaste={bump}
             placeholder={'Paste a sample of the JSON your flow receives:\na run’s output, an HTTP response or a Compose result.'}
             spellCheck={false}
             autoCapitalize="off"
@@ -169,7 +181,9 @@ export default function SchemaHelper() {
                   ))}
                 </ol>
                 <pre>
-                  <code>{highlightJson(schema)}</code>
+                  <code key={version}>
+                    <AnimatedLines lines={toLines(highlightJson(schema))} />
+                  </code>
                 </pre>
               </>
             ) : parsed && !parsed.ok ? (
@@ -242,9 +256,9 @@ export default function SchemaHelper() {
                     <th scope="col">Expression</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {shown.map((r) => (
-                    <tr key={r.path}>
+                <tbody key={version}>
+                  {shown.map((r, i) => (
+                    <tr key={r.path} style={{ '--i': i } as CSSProperties}>
                       <td>
                         <code className="sh-path">{r.path}</code>
                         {r.optional && <span className="sh-badge">sometimes missing</span>}

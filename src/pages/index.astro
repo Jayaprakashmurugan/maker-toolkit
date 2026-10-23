@@ -42,7 +42,7 @@ const faqs = [
     <p class="kicker reveal" style="--d:0"><b>Field manual</b> · Vol. 01 · Power Platform</p>
     <h1 class="hero__title reveal" style="--d:1">
       <span>Formulas,</span>
-      <span class="hero__accent">decoded.</span>
+      <span class="hero__accent" data-scramble>decoded.</span>
     </h1>
 
     <div class="hero__grid">
@@ -63,22 +63,22 @@ const faqs = [
     </div>
 
     <dl class="stats reveal" style="--d:5">
-      <div><dt>Power Fx formulas</dt><dd>{powerAppsReference.items.length}</dd></div>
-      <div><dt>Flow expressions</dt><dd>{powerAutomateReference.items.length}</dd></div>
-      <div><dt>Tools</dt><dd>{tools.filter((t) => t.status === 'live').length}</dd></div>
+      <div><dt>Power Fx formulas</dt><dd data-count>{powerAppsReference.items.length}</dd></div>
+      <div><dt>Flow expressions</dt><dd data-count>{powerAutomateReference.items.length}</dd></div>
+      <div><dt>Tools</dt><dd data-count>{tools.filter((t) => t.status === 'live').length}</dd></div>
       <div><dt>Cookies</dt><dd>0</dd></div>
     </dl>
   </section>
 
   <section class="wrap section" id="tools" aria-labelledby="tools-title">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <div>
         <p class="kicker">The toolbox</p>
         <h2 id="tools-title">Pick a tool</h2>
       </div>
       <p>Each one does one job, works on any device, and needs no setup.</p>
     </div>
-    <ol class="tools">
+    <ol class="tools" data-reveal-group>
       {
         tools.map((t, i) => (
           <li class={`tool tool--${t.status}`}>
@@ -110,13 +110,13 @@ const faqs = [
   </section>
 
   <section class="wrap section" aria-labelledby="why-title">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <div>
         <p class="kicker">How it works</p>
         <h2 id="why-title">Built for the middle of a build</h2>
       </div>
     </div>
-    <div class="principles">
+    <div class="principles" data-reveal-group>
       <article class="principle">
         <p class="kicker"><b>01</b> · Search</p>
         <h3>Search by task, not just by name</h3>
@@ -136,13 +136,13 @@ const faqs = [
   </section>
 
   <section class="wrap section" aria-labelledby="faq-title">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <div>
         <p class="kicker">Questions</p>
         <h2 id="faq-title">FAQ</h2>
       </div>
     </div>
-    <div class="faq">
+    <div class="faq" data-reveal-group>
       {
         faqs.map((f) => (
           <details>

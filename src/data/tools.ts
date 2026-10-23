@@ -38,6 +38,13 @@ export const tools: Tool[] = [
     meta: 'Power Automate + Power Apps',
   },
   {
+    title: 'List Copier',
+    description: 'Copy a SharePoint list and its columns to another site or tenant, with no app registration needed.',
+    href: '/list-copier/',
+    status: 'live',
+    meta: 'SharePoint · Microsoft Lists',
+  },
+  {
     title: 'JSON Schema Helper',
     description: 'Paste sample JSON and get a Parse JSON schema that won’t fail on nulls, plus an expression for every field.',
     href: '/json-schema-helper/',

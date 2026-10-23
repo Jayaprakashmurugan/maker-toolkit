@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import ListCopier from '../../components/ListCopier';
+
+const title = 'List Copier';
+const description =
+  'Copy a SharePoint list’s structure (the list and its custom columns) to another site, even in another tenant. No app registration, no admin consent.';
+
+const faqs = [
+  {
+    q: 'Doesn’t SharePoint already have “Create list from existing list”?',
+    a: 'Yes, and it works well inside one tenant when you can see the source site. List Copier helps when you can’t: copying between tenants (for example from a dev tenant to a client), from a site you only have read access to, or when you want a script you can run again.',
+  },
+  {
+    q: 'Do I need to sign in to this website?',
+    a: 'No. This site never signs in to Microsoft and never sees your data. You open the source URLs in your own browser, and the generated script runs on the target site with your own SharePoint sign-in.',
+  },
+  {
+    q: 'Is it safe to paste a script into the browser console?',
+    a: 'Only paste scripts you trust and understand. This one is short and readable: it asks SharePoint for a security token for the open site, creates one list, and adds the selected columns. Nothing is sent anywhere else. If your organisation blocks the console, use the Power Automate option instead.',
+  },
+  {
+    q: 'What gets copied?',
+    a: 'The list name, description, versioning and attachment settings, and the custom columns you select, with their internal names, choices, defaults, formats and formulas. List items, views other than the default, permissions and column formatting are not copied.',
+  },
+  {
+    q: 'Why are lookup and managed metadata columns unticked?',
+    a: 'They depend on something outside the list: another list, or a term set. Create those on the target first, then add these columns by hand so they point to the right place.',
+  },
+  {
+    q: 'Is my data sent anywhere?',
+    a: 'No. The XML you paste is read in your browser. The only network calls are the ones the generated script or flow makes to your own SharePoint site.',
+  },
+];
+---
+
+<Base title={title} description={description} image="/og/list-copier.png">
+  <div class="wrap wrap--wide">
+    <header class="page-head">
+      <p class="kicker"><b>Tool</b> · SharePoint · Microsoft Lists</p>
+      <h1>{title}</h1>
+      <p class="page-head__lede">{description}</p>
+    </header>
+
+    <ListCopier client:load />
+  </div>
+
+  <section class="wrap section" aria-labelledby="lc-faq">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="lc-faq">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq" data-reveal-group>
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

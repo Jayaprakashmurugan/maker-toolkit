@@ -30,6 +30,15 @@ export const getStaticPaths = (() => {
       },
     },
     {
+      path: 'list-copier',
+      card: {
+        kicker: 'Tool · SharePoint · Microsoft Lists',
+        title: 'List Copier',
+        titleFont: 'display',
+        summary: 'Copy a list and its columns to another site, even another tenant. No app registration needed.',
+      },
+    },
+    {
       path: 'json-schema-helper',
       card: {
         kicker: 'Tool · Power Automate · Parse JSON',

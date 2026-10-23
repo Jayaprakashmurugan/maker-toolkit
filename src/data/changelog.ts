@@ -8,6 +8,16 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.6',
+    date: '2026-10-23',
+    title: 'List Copier',
+    changes: [
+      'New: List Copier recreates a SharePoint list and its custom columns on another site, including across tenants.',
+      'No sign-in on this site and no app registration: run the generated script in the browser console, as Power Automate steps, or with PnP PowerShell.',
+      'Keeps internal names, choices, defaults and formulas. Creates calculated columns last, and flags lookup and managed metadata columns.',
+    ],
+  },
+  {
     version: '1.5',
     date: '2026-10-23',
     title: 'Expression Picker',

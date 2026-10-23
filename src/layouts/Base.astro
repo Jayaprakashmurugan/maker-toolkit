@@ -30,7 +30,7 @@ const nav = [
     href: '/#tools',
     label: 'Tools',
     sm: false,
-    match: ['/expression-beautifier/', '/json-schema-helper/', '/json-expression-picker/'],
+    match: ['/expression-beautifier/', '/json-schema-helper/', '/json-expression-picker/', '/list-copier/'],
   },
   { href: '/about/', label: 'About', sm: false, match: [] },
 ];
@@ -158,6 +158,7 @@ const isCurrent = (n: (typeof nav)[number]) => [n.href, ...n.match].some((h) => 
           <a href="/expression-beautifier/">Expression Beautifier</a>
           <a href="/json-expression-picker/">Expression Picker</a>
           <a href="/json-schema-helper/">JSON Schema Helper</a>
+          <a href="/list-copier/">List Copier</a>
           <a href="/changelog/">What’s new</a>
           <a href="/about/">About</a>
           <a href="/privacy/">Privacy &amp; terms</a>

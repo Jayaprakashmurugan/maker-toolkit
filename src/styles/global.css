@@ -2571,6 +2571,137 @@ button {
   }
 }
 
+/* ── List Copier ──────────────────────────────────────────── */
+
+.lc-step h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.lc-num {
+  display: inline-grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--f-mono);
+  font-size: 0.85rem;
+}
+.lc-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1rem;
+}
+.lc-wide input,
+.lc-target input {
+  width: min(32rem, 70vw);
+}
+.lc-url {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-top: 0.75rem;
+}
+.lc-url .bf-control__label {
+  width: 4.5rem;
+}
+.lc-url code {
+  flex: 1;
+  min-width: 12rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  background: var(--code-bg);
+  color: var(--tk-fn);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+.lc-pastes {
+  margin-top: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.lc-pastes .bf-pane {
+  min-height: 0;
+}
+.lc-pastes .bf-input {
+  min-height: 9rem;
+  font-size: 0.78rem;
+}
+.lc-pane-title {
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+}
+.lc-warn {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--accent-soft);
+  font-size: 0.92rem;
+}
+.lc-table input[type='checkbox'],
+.lc-options input[type='checkbox'] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--accent);
+}
+.lc-options {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+}
+.lc-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.lc-target {
+  margin-top: 1rem;
+}
+.lc-howto {
+  margin: 1rem 0 0.6rem;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+}
+.lc-code {
+  margin-top: 0.5rem;
+}
+.lc-code pre {
+  max-height: 26rem;
+  overflow: auto;
+  white-space: pre;
+  word-break: normal;
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+.lc-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.1rem;
+}
+.lc-code {
+  max-width: 100%;
+}
+.lc-method {
+  animation: rise 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@media (max-width: 860px) {
+  .lc-pastes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* ── Changelog ────────────────────────────────────────────── */
 
 .releases {

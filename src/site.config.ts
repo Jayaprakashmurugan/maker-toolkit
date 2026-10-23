@@ -17,5 +17,5 @@ export const siteConfig = {
     { label: 'Website', href: 'https://jayaprakash.carrd.co/' },
   ],
   // Google Search Console "HTML tag" code: paste only the content="..." value.
-  googleSiteVerification: '',
+  googleSiteVerification: 'GOf4XS8q19iUeJeqqMfqvAa6CY6ZuKPtOY3VwmgPNd4',
 };

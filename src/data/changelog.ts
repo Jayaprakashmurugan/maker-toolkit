@@ -8,6 +8,17 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.8',
+    date: '2026-10-23',
+    title: 'Adaptive Card Builder',
+    changes: [
+      'New: Adaptive Card Builder with templates for approvals, notifications, feedback forms and status updates.',
+      'Live Teams-style preview in light and dark, using Microsoft’s official Adaptive Cards renderer.',
+      'Copy-ready JSON for the Teams actions, plus the expressions that read the reply: the button pressed, each input and who responded.',
+      'Paste any card JSON to preview it.',
+    ],
+  },
+  {
     version: '1.7',
     date: '2026-10-23',
     title: 'HTML Table Styler',

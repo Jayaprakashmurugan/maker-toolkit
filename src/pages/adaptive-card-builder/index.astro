@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import CardBuilder from '../../components/CardBuilder';
+
+const title = 'Adaptive Card Builder';
+const description =
+  'Build a Microsoft Teams card for Power Automate from a template, see it exactly as Teams shows it, and copy the JSON plus the expressions to read the reply.';
+
+const faqs = [
+  {
+    q: 'Which Power Automate action do I use?',
+    a: 'For a card that only shows information, use "Post card in a chat or channel". For approvals and forms, use "Post adaptive card and wait for a response": the flow pauses until someone presses a button, then continues with their answer.',
+  },
+  {
+    q: 'How do I put dynamic content in the card?',
+    a: "Paste the JSON into the action first, then replace the sample text inside the quotes with dynamic content or an expression such as @{triggerBody()?['name']}. Keep the quotes around it.",
+  },
+  {
+    q: 'My card breaks when the data has quotes or line breaks. Why?',
+    a: "Card JSON is text, so a quote inside your data ends the string early. Wrap risky values in an expression that escapes them, for example replace(variables('comment'), '\"', '\\\"').",
+  },
+  {
+    q: 'Why version 1.4?',
+    a: 'Teams supports newer features in some places, but version 1.4 works reliably with the Power Automate Teams actions on desktop, web and mobile.',
+  },
+  {
+    q: 'Is the preview exact?',
+    a: 'It uses Microsoft’s official Adaptive Cards renderer with colors and spacing close to Teams. Fonts and small details can differ slightly between the Teams desktop, web and mobile apps.',
+  },
+];
+---
+
+<Base title={title} description={description} image="/og/adaptive-card-builder.png">
+  <div class="wrap wrap--wide">
+    <header class="page-head">
+      <p class="kicker"><b>Tool</b> · Power Automate · Teams</p>
+      <h1>{title}</h1>
+      <p class="page-head__lede">{description}</p>
+    </header>
+
+    <CardBuilder client:load />
+  </div>
+
+  <section class="wrap section" aria-labelledby="cb-faq">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="cb-faq">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq" data-reveal-group>
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

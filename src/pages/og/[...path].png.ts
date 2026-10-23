@@ -39,6 +39,15 @@ export const getStaticPaths = (() => {
       },
     },
     {
+      path: 'adaptive-card-builder',
+      card: {
+        kicker: 'Tool · Power Automate · Teams',
+        title: 'Adaptive Card Builder',
+        titleFont: 'display',
+        summary: 'Teams cards for approvals, alerts and forms. Start from a template, preview it, copy the JSON.',
+      },
+    },
+    {
       path: 'list-copier',
       card: {
         kicker: 'Tool · SharePoint · Microsoft Lists',

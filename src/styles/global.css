@@ -2819,6 +2819,201 @@ button {
   }
 }
 
+/* ── Adaptive Card Builder ────────────────────────────────── */
+
+.cb-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.cb-top .ts-presets {
+  margin: 0;
+}
+.cb-top .segmented button {
+  padding: 0.45rem 0.9rem;
+}
+.cb-editor {
+  display: grid;
+  gap: 0.6rem;
+}
+.cb-editor .detail__label {
+  margin: 0.8rem 0 0;
+}
+.cb-editor .detail__label:first-child {
+  margin-top: 0;
+}
+.cb-editor .link-btn {
+  justify-self: start;
+}
+.acp .ac-textBlock p {
+  margin: 0;
+}
+.acp .ac-textBlock ul,
+.acp .ac-textBlock ol {
+  margin: 0.25rem 0;
+  padding-left: 1.25rem;
+}
+.acp .ac-textBlock a {
+  color: #5b5fc7;
+}
+.cb-input {
+  width: 100%;
+  min-width: 0;
+  height: 2.3rem;
+  padding: 0 0.65rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.88rem;
+}
+.cb-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.cb-text {
+  height: auto;
+  min-height: 4.5rem;
+  padding: 0.5rem 0.65rem;
+  resize: vertical;
+}
+.cb-grid2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.5rem;
+}
+.cb-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+.cb-row--input {
+  grid-template-columns: 7.5rem minmax(0, 1.4fr) minmax(0, 0.8fr) auto;
+}
+.cb-span {
+  grid-column: 2 / -1;
+}
+.cb-x {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.cb-tones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.cb-tone {
+  border-left-width: 4px;
+}
+.cb-tone--default { border-left-color: #d1d1d1; }
+.cb-tone--emphasis { border-left-color: #8a8886; }
+.cb-tone--accent { border-left-color: #5b5fc7; }
+.cb-tone--good { border-left-color: #107c10; }
+.cb-tone--warning { border-left-color: #c19c00; }
+.cb-tone--attention { border-left-color: #c4314b; }
+.cb-gap {
+  margin-top: 1.5rem;
+}
+.cb-exprs {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 1rem;
+}
+.cb-empty {
+  padding: 3rem 1rem;
+}
+@media (max-width: 700px) {
+  .cb-grid2,
+  .cb-exprs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cb-row--input {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+  .cb-row--input > :nth-child(3) {
+    display: none;
+  }
+}
+
+/* Teams-like preview around the official Adaptive Cards renderer */
+.acp {
+  padding: 1.25rem;
+  background: #f0f0f0;
+  min-height: 12rem;
+}
+.acp--dark {
+  background: #141414;
+}
+.acp__card {
+  max-width: 30rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.14);
+}
+.acp .ac-pushButton {
+  min-height: 2rem;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #242424;
+  font: 600 14px 'Segoe UI', system-ui, sans-serif;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.acp .ac-pushButton:hover {
+  background: #f5f5f5;
+}
+.acp input.ac-input,
+.acp textarea.ac-input,
+.acp select.ac-input,
+.acp .ac-textInput,
+.acp .ac-dateInput {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #242424;
+  font: 14px 'Segoe UI', system-ui, sans-serif;
+}
+.acp--dark .ac-pushButton {
+  border-color: #5c5c5c;
+  background: #292929;
+  color: #ffffff;
+}
+.acp--dark .ac-pushButton:hover {
+  background: #333333;
+}
+.acp--dark input.ac-input,
+.acp--dark textarea.ac-input,
+.acp--dark select.ac-input,
+.acp--dark .ac-textInput,
+.acp--dark .ac-dateInput {
+  border-color: #5c5c5c;
+  background: #1f1f1f;
+  color: #ffffff;
+  color-scheme: dark;
+}
+.acp__msg {
+  margin: 0;
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--f-mono);
+  font-size: 0.78rem;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+
 /* ── Changelog ────────────────────────────────────────────── */
 
 .releases {

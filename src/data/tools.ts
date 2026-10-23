@@ -38,6 +38,13 @@ export const tools: Tool[] = [
     meta: 'Power Automate · Emails',
   },
   {
+    title: 'Adaptive Card Builder',
+    description: 'Teams cards for approvals, alerts and forms: start from a template, preview it like Teams, copy the JSON.',
+    href: '/adaptive-card-builder/',
+    status: 'live',
+    meta: 'Power Automate · Teams',
+  },
+  {
     title: 'Expression Picker',
     description: 'Paste a step’s JSON, click the value you need, and copy its Power Automate expression and Power Apps formula.',
     href: '/json-expression-picker/',

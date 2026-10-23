@@ -1,7 +1,7 @@
 // Cloudflare Workers config: serves the built static site from dist/.
 {
   // Must match the Worker's name in the Cloudflare dashboard.
-  "name": "power-platform-tools",
+  "name": "maker-toolkit",
   "compatibility_date": "2026-09-01",
   // Build before every deploy, so dist/ always exists.
   "build": {

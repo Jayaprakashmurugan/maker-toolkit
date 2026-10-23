@@ -15,7 +15,7 @@ const { title, description = siteConfig.description } = Astro.props;
 const fullTitle = title ? `${title} · ${siteConfig.name}` : `${siteConfig.name} · ${siteConfig.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const path = Astro.url.pathname;
-const words = siteConfig.name.toLowerCase().split(/\s+/);
+const words = siteConfig.name.split(/\s+/);
 
 const nav = [
   { href: '/formula-reference/', label: 'Formula reference', hideSm: false },

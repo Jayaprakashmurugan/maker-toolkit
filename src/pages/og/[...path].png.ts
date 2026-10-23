@@ -21,6 +21,15 @@ export const getStaticPaths = (() => {
       },
     },
     {
+      path: 'json-schema-helper',
+      card: {
+        kicker: 'Tool · Power Automate · Parse JSON',
+        title: 'JSON Schema Helper',
+        titleFont: 'display',
+        summary: 'Paste sample JSON. Get a Parse JSON schema that won’t fail on nulls, plus an expression for every field.',
+      },
+    },
+    {
       path: 'about',
       card: {
         kicker: 'About',

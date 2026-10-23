@@ -32,7 +32,9 @@ export const tools: Tool[] = [
   },
   {
     title: 'JSON Schema Helper',
-    description: 'Paste sample JSON and get a schema for the Parse JSON action, with nullable fields handled.',
-    status: 'planned',
+    description: 'Paste sample JSON and get a Parse JSON schema that won’t fail on nulls, plus an expression for every field.',
+    href: '/json-schema-helper/',
+    status: 'live',
+    meta: 'Power Automate · Parse JSON',
   },
 ];

@@ -16,6 +16,9 @@ const basePath = `/${ref.slug}/`;
 const slug = slugify(item.name);
 const color = ref.categories.find((c) => c.name === item.category)?.color;
 const related = ref.items.filter((i) => i.category === item.category && i.name !== item.name);
+const jsonRelated =
+  ref.language === 'wdl' &&
+  (item.category === 'JSON & XML' || ['json', 'body', 'triggerBody', 'outputs', 'item', 'items'].includes(item.name));
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -77,6 +80,15 @@ const jsonLd = {
           <p>Browse all {ref.items.length} {ref.noun} with search, A–Z and categories.</p>
           <a class="btn" href={`${basePath}?f=${encodeURIComponent(item.name)}`}>Open in explorer →</a>
         </div>
+        {
+          jsonRelated && (
+            <div class="aside-card">
+              <h2>Parsing JSON?</h2>
+              <p class="aside-card__text">Get a Parse JSON schema that won’t fail on nulls, plus an expression for every field.</p>
+              <a href="/json-schema-helper/">JSON Schema Helper →</a>
+            </div>
+          )
+        }
         {
           ref.language === 'wdl' && (
             <div class="aside-card">

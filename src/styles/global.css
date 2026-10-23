@@ -2205,6 +2205,142 @@ button {
   }
 }
 
+/* ── JSON Schema Helper ───────────────────────────────────── */
+
+.tk-key {
+  color: var(--tk-enum);
+}
+.sh-action input {
+  width: 11rem;
+  height: 2.3rem;
+  padding: 0 0.7rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--f-mono);
+  font-size: 0.82rem;
+}
+.sh-action input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.sh-intro {
+  margin-top: 0.6rem;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+  max-width: 75ch;
+}
+.sh-filter {
+  margin-top: 0.9rem;
+  width: min(100%, 22rem);
+  height: 2.3rem;
+  padding: 0 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+}
+.sh-table-wrap {
+  margin-top: 0.9rem;
+  overflow-x: auto;
+}
+.sh-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.sh-table th {
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  border-bottom: 1.5px solid var(--ink);
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  text-align: left;
+  white-space: nowrap;
+}
+.sh-table td {
+  padding: 0.6rem 0.75rem 0.6rem 0;
+  border-bottom: 1px dotted var(--rule);
+  vertical-align: top;
+}
+.sh-path {
+  font-weight: 700;
+  margin-right: 0.4rem;
+}
+.sh-badge {
+  display: inline-block;
+  margin: 0.15rem 0.3rem 0 0;
+  padding: 0.05rem 0.45rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-size: 0.64rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.sh-type {
+  font-family: var(--f-mono);
+  font-size: 0.8rem;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.sh-expr {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.sh-expr code {
+  flex: 1;
+  min-width: 14rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 4px;
+  background: var(--code-bg);
+  color: var(--tk-fn);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+.sh-loop {
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+.sh-loop code {
+  font-size: 0.76rem;
+  color: var(--ink-2);
+}
+@media (max-width: 700px) {
+  .sh-table thead {
+    display: none;
+  }
+  .sh-table tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.4rem 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .sh-table td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+  .sh-table td:last-child {
+    grid-column: 1 / -1;
+  }
+  .sh-type {
+    text-align: right;
+  }
+  .sh-expr code {
+    min-width: 0;
+  }
+}
+
 /* ── Changelog ────────────────────────────────────────────── */
 
 .releases {

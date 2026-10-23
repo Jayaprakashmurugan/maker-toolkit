@@ -8,6 +8,16 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.2',
+    date: '2026-10-23',
+    title: 'JSON Schema Helper',
+    changes: [
+      'New: JSON Schema Helper builds a Parse JSON schema from sample JSON that allows nulls and missing fields, so runs stop failing on empty values.',
+      'It merges every item in an array, not just the first, and lists a ready-to-use expression for every field.',
+      'Plain-English JSON error messages with the exact line and column.',
+    ],
+  },
+  {
     version: '1.1',
     date: '2026-10-23',
     title: 'Power Automate, a beautifier and nearly 100 more formulas',

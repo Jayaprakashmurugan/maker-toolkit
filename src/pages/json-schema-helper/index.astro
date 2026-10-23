@@ -1,0 +1,85 @@
+---
+import Base from '../../layouts/Base.astro';
+import SchemaHelper from '../../components/SchemaHelper';
+
+const title = 'JSON Schema Helper';
+const description =
+  'Paste sample JSON and get a schema for the Power Automate Parse JSON action that won’t fail on nulls or missing fields, plus a ready-to-use expression for every value.';
+
+const faqs = [
+  {
+    q: 'Why does Parse JSON fail with "Invalid type. Expected String but got Null"?',
+    a: 'Your sample had a value where a later run had null. "Generate from sample" only allows the types it saw, so the empty value breaks the run. This helper adds "null" to every type by default, so empty values pass.',
+  },
+  {
+    q: 'Why does it fail with "Required properties are missing from object"?',
+    a: 'The built-in generator marks every property in your sample as required. When a later run leaves one out, validation fails. This helper makes all properties optional unless you choose "Required if in sample".',
+  },
+  {
+    q: 'How is this different from "Generate from sample"?',
+    a: 'It merges every item in an array, so a field that only some items have is still included. It can allow nulls everywhere, keep properties optional and use "number" for all numbers, so a whole number in the sample doesn’t make a later 4.5 fail.',
+  },
+  {
+    q: 'How do I use the schema?',
+    a: 'Add a Parse JSON action, set Content to the JSON (for example the body of an HTTP action), and paste the schema into the Schema box. Fields then appear in dynamic content, or you can use the expressions listed under the schema.',
+  },
+  {
+    q: 'Is my JSON uploaded?',
+    a: 'No. The schema is built entirely in your browser. Nothing is sent or stored, so it is safe to paste real data. Still, remove anything you would not want on screen.',
+  },
+];
+---
+
+<Base title={title} description={description} image="/og/json-schema-helper.png">
+  <div class="wrap wrap--wide">
+    <header class="page-head">
+      <p class="kicker"><b>Tool</b> · Power Automate · Parse JSON</p>
+      <h1>{title}</h1>
+      <p class="page-head__lede">{description}</p>
+    </header>
+
+    <SchemaHelper client:load />
+  </div>
+
+  <section class="wrap section" aria-labelledby="sh-how">
+    <div class="section-head">
+      <div>
+        <p class="kicker">Guide</p>
+        <h2 id="sh-how">How to use it</h2>
+      </div>
+    </div>
+    <ol class="steps">
+      <li>
+        <h3>Get a real sample</h3>
+        <p>Run the flow once, open the run, and copy the raw output of the step whose JSON you want to parse.</p>
+      </li>
+      <li>
+        <h3>Paste and copy</h3>
+        <p>Paste it here, copy the schema, and paste that into the Schema box of your Parse JSON action.</p>
+      </li>
+      <li>
+        <h3>Use the expressions</h3>
+        <p>Set your action’s name above, then copy the expression for any field you need in later steps.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="wrap section" aria-labelledby="sh-faq">
+    <div class="section-head">
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="sh-faq">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq">
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

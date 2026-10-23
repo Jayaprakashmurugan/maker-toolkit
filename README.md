@@ -27,6 +27,7 @@ npm run preview   # serve dist/ to check the production build
 | `src/components/ReferenceItem.astro` | Shared layout for one formula/expression page. |
 | `src/components/ReferenceExplorer.tsx` | The interactive explorer (search, A–Z, categories, cards/tree, detail panel). |
 | `src/components/Beautifier.tsx` + `src/lib/beautify.ts` | The Expression Beautifier UI and its formatting/checking engine. |
+| `src/components/SchemaHelper.tsx` + `src/lib/jsonSchema.ts` | The JSON Schema Helper UI and its schema, expression and JSON-error engine. |
 | `src/lib/og.ts` + `src/pages/og/` | Share images (1200×630 PNG) generated for every page at build time. |
 | `src/pages/` | One file per URL. `[slug].astro` files generate a page per formula or expression. |
 | `src/styles/global.css` | All styling. Colors are CSS variables at the top (light and dark). |

@@ -8,6 +8,17 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.5',
+    date: '2026-10-23',
+    title: 'Expression Picker',
+    changes: [
+      'New: Expression Picker. Paste a step’s JSON, click any value, and copy a paste-ready Power Automate expression.',
+      'Works for actions, Compose, the trigger, variables and loop items, and detects raw outputs automatically.',
+      'For values in a list, choose one item, the first item safely with first(), or every item with the exact list to loop over.',
+      'Also gives the matching Power Apps ParseJSON formula, and hands your JSON to the JSON Schema Helper in one click.',
+    ],
+  },
+  {
     version: '1.4',
     date: '2026-10-23',
     title: 'A proper logo',

@@ -22,13 +22,19 @@ const path = Astro.url.pathname;
 const words = siteConfig.name.split(/\s+/);
 
 // "sm" = also shown on phones; the rest live in the footer there.
+// "match" = other paths that count as this section (for highlighting).
 const nav = [
-  { href: '/formula-reference/', label: 'Power Apps', sm: true },
-  { href: '/expression-reference/', label: 'Power Automate', sm: true },
-  { href: '/expression-beautifier/', label: 'Beautifier', sm: false },
-  { href: '/json-schema-helper/', label: 'JSON Schema', sm: false },
-  { href: '/about/', label: 'About', sm: false },
+  { href: '/formula-reference/', label: 'Power Apps', sm: true, match: [] as string[] },
+  { href: '/expression-reference/', label: 'Power Automate', sm: true, match: [] },
+  {
+    href: '/#tools',
+    label: 'Tools',
+    sm: false,
+    match: ['/expression-beautifier/', '/json-schema-helper/', '/json-expression-picker/'],
+  },
+  { href: '/about/', label: 'About', sm: false, match: [] },
 ];
+const isCurrent = (n: (typeof nav)[number]) => [n.href, ...n.match].some((h) => h !== '/#tools' && path.startsWith(h));
 ---
 
 <!doctype html>
@@ -102,7 +108,7 @@ const nav = [
               <a
                 href={n.href}
                 class={n.sm ? undefined : 'nav-hide-sm'}
-                aria-current={path.startsWith(n.href) ? 'page' : undefined}
+                aria-current={isCurrent(n) ? 'page' : undefined}
               >
                 {n.label}
               </a>
@@ -150,6 +156,7 @@ const nav = [
           <a href="/formula-reference/">Power Apps formulas</a>
           <a href="/expression-reference/">Power Automate expressions</a>
           <a href="/expression-beautifier/">Expression Beautifier</a>
+          <a href="/json-expression-picker/">Expression Picker</a>
           <a href="/json-schema-helper/">JSON Schema Helper</a>
           <a href="/changelog/">What’s new</a>
           <a href="/about/">About</a>

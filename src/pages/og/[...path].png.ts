@@ -21,6 +21,15 @@ export const getStaticPaths = (() => {
       },
     },
     {
+      path: 'json-expression-picker',
+      card: {
+        kicker: 'Tool · Power Automate · JSON to expression',
+        title: 'Expression Picker',
+        titleFont: 'display',
+        summary: 'Paste a step’s JSON, click the value you need, and copy a ready-made expression.',
+      },
+    },
+    {
       path: 'json-schema-helper',
       card: {
         kicker: 'Tool · Power Automate · Parse JSON',

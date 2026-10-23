@@ -31,6 +31,13 @@ export const tools: Tool[] = [
     meta: 'Power Automate + Power Fx',
   },
   {
+    title: 'Expression Picker',
+    description: 'Paste a step’s JSON, click the value you need, and copy its Power Automate expression and Power Apps formula.',
+    href: '/json-expression-picker/',
+    status: 'live',
+    meta: 'Power Automate + Power Apps',
+  },
+  {
     title: 'JSON Schema Helper',
     description: 'Paste sample JSON and get a Parse JSON schema that won’t fail on nulls, plus an expression for every field.',
     href: '/json-schema-helper/',

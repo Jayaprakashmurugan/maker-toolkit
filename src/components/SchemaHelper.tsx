@@ -1,4 +1,5 @@
-import { useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { sendJson, takeJson } from '../lib/handoff';
 import { fieldRows, inferShape, parseSample, shapeStats, toSchema } from '../lib/jsonSchema';
 import AnimatedLines, { toLines } from './AnimatedLines';
 import { CopyButton } from './FormulaDetail';
@@ -98,6 +99,15 @@ export default function SchemaHelper() {
     set(v);
     bump();
   };
+
+  // JSON handed over from the Expression Picker.
+  useEffect(() => {
+    const handed = takeJson();
+    if (handed) {
+      setSrc(handed);
+      bump();
+    }
+  }, []);
 
   const hasInput = src.trim().length > 0;
   const parsed = useMemo(() => (hasInput ? parseSample(src) : null), [src, hasInput]);
@@ -234,7 +244,10 @@ export default function SchemaHelper() {
           </div>
           <p className="sh-intro">
             After the Parse JSON step, read any value with these expressions. Fields inside an array need an{' '}
-            <b>Apply to each</b> loop over the array shown.
+            <b>Apply to each</b> loop over the array shown.{' '}
+            <button type="button" className="link-btn" onClick={() => sendJson(src, '/json-expression-picker/')}>
+              Pick values from this JSON in a tree →
+            </button>
           </p>
           {rows.length > 10 && (
             <input

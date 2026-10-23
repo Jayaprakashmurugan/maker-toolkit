@@ -28,6 +28,7 @@ npm run preview   # serve dist/ to check the production build
 | `src/components/ReferenceExplorer.tsx` | The interactive explorer (search, A–Z, categories, cards/tree, detail panel). |
 | `src/components/Beautifier.tsx` + `src/lib/beautify.ts` | The Expression Beautifier UI and its formatting/checking engine. |
 | `src/components/SchemaHelper.tsx` + `src/lib/jsonSchema.ts` | The JSON Schema Helper UI and its schema, expression and JSON-error engine. |
+| `src/components/ExpressionPicker.tsx` + `src/lib/jsonExpression.ts` | The Expression Picker: JSON tree and the path-to-expression (and Power Fx) builder. |
 | `src/lib/og.ts` + `src/pages/og/` | Share images (1200×630 PNG) generated for every page at build time. |
 | `src/lib/logo.ts` | The logo's paths and colors: the single source for the header logo, favicons, app icons and brand kit. |
 | `src/pages/favicon.*.ts`, `[icon].png.ts`, `site.webmanifest.ts`, `brand/` | Favicon, home-screen icons, manifest and brand kit, all generated from `logo.ts`. |

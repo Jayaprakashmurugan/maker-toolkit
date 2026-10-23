@@ -1,0 +1,89 @@
+---
+import Base from '../../layouts/Base.astro';
+import ExpressionPicker from '../../components/ExpressionPicker';
+
+const title = 'Expression Picker';
+const description =
+  'Paste the JSON a flow step returns, click the value you need, and copy a ready-made Power Automate expression, plus the matching Power Apps formula.';
+
+const faqs = [
+  {
+    q: 'What is the difference between "paste-ready" and "expression only"?',
+    a: 'Paste-ready wraps the expression in @{ }, so you can paste it straight into an input field and Power Automate treats it as an expression. "Expression only" is for the expression editor (the fx box), where you type the expression without @{ }.',
+  },
+  {
+    q: 'What should I paste: raw outputs or the body?',
+    a: 'Either. Raw outputs (with statusCode, headers and body) are detected automatically, and values inside the body still use the shorter body() form. You can force the choice with the "Pasted" switch.',
+  },
+  {
+    q: 'Why does it use ?[ ] instead of [ ]?',
+    a: "The ? makes the expression return null instead of failing when a property is missing, which keeps a flow running when a field is optional or empty.",
+  },
+  {
+    q: 'How do I read a value from every item in a list?',
+    a: 'Pick a value inside the list and choose "Every item (loop)". The tool shows which list to put in an Apply to each and the item() expression to use inside it. "First item, safely" uses first(), which returns null instead of failing when the list is empty.',
+  },
+  {
+    q: 'Does it work for the trigger, a Compose or a variable?',
+    a: 'Yes. Choose where the JSON comes from, and the expression starts with triggerBody(), outputs(), variables() or item() as needed.',
+  },
+  {
+    q: 'Is my JSON sent anywhere?',
+    a: 'No. Everything happens in your browser. Nothing is uploaded or stored.',
+  },
+];
+---
+
+<Base title={title} description={description} image="/og/json-expression-picker.png">
+  <div class="wrap wrap--wide">
+    <header class="page-head">
+      <p class="kicker"><b>Tool</b> · Power Automate · JSON to expression</p>
+      <h1>{title}</h1>
+      <p class="page-head__lede">{description}</p>
+    </header>
+
+    <ExpressionPicker client:load />
+  </div>
+
+  <section class="wrap section" aria-labelledby="pk-how">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="kicker">Guide</p>
+        <h2 id="pk-how">How to use it</h2>
+      </div>
+    </div>
+    <ol class="steps" data-reveal-group>
+      <li>
+        <h3>Copy a real output</h3>
+        <p>Run the flow once, open the run, select the step and copy its raw outputs or body.</p>
+      </li>
+      <li>
+        <h3>Paste and name it</h3>
+        <p>Paste the JSON here and type the step’s name exactly as it appears in the designer.</p>
+      </li>
+      <li>
+        <h3>Pick and paste</h3>
+        <p>Press Use next to the value you need, then paste it into any input in your flow.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="wrap section" aria-labelledby="pk-faq">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="pk-faq">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq" data-reveal-group>
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

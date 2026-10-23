@@ -1846,6 +1846,71 @@ button {
   color: var(--ink);
 }
 
+.author-card {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: 5px 5px 0 var(--accent);
+}
+.author-card__mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--f-display);
+  font-stretch: 80%;
+  font-weight: 760;
+  font-size: 1.4rem;
+}
+.prose .author-card p {
+  margin-top: 0;
+}
+.author-card__name {
+  font-family: var(--f-display);
+  font-stretch: 85%;
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--ink) !important;
+}
+.author-card__role {
+  margin-top: 0.15rem !important;
+  font-size: 0.95rem;
+}
+.author-card__certs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem !important;
+}
+.author-card__certs-label {
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  color: var(--ink-3);
+  margin-left: 0.25rem;
+}
+.author-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.9rem !important;
+}
+@media (max-width: 480px) {
+  .author-card {
+    flex-direction: column;
+  }
+}
+
 /* ── Motion preferences ───────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {

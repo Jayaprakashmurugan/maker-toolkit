@@ -1,18 +1,65 @@
 ---
 import Base from '../layouts/Base.astro';
 import { siteConfig } from '../site.config';
+
+const initials = siteConfig.author
+  .split(/\s+/)
+  .map((w) => w[0])
+  .join('');
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: siteConfig.author,
+  jobTitle: siteConfig.authorRole,
+  address: { '@type': 'PostalAddress', addressLocality: 'Chennai', addressCountry: 'IN' },
+  sameAs: siteConfig.authorLinks.map((l) => l.href),
+};
 ---
 
-<Base title="About" description={`What ${siteConfig.name} is, who it is for, and how it is made.`}>
+<Base
+  title="About"
+  description={`${siteConfig.name} is a free Power Platform reference built by ${siteConfig.author}, ${siteConfig.authorRole}.`}
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(personLd)} />
+
   <article class="wrap prose">
     <p class="kicker"><b>About</b></p>
     <h1>Small tools for people who build.</h1>
     <p class="lede">
       {siteConfig.name} is a free collection of references and utilities for Power Apps and Power Automate makers.
     </p>
+
+    <section class="author-card" aria-label="Who builds this">
+      <span class="author-card__mark" aria-hidden="true">{initials}</span>
+      <div>
+        <p class="author-card__name">{siteConfig.author}</p>
+        <p class="author-card__role">{siteConfig.authorRole} · {siteConfig.authorLocation}</p>
+        <p class="author-card__certs">
+          {siteConfig.authorCerts.map((c) => <span class="tag">{c}</span>)}
+          <span class="author-card__certs-label">Microsoft Certified</span>
+        </p>
+        <p class="author-card__links">
+          {
+            siteConfig.authorLinks.map((l) => (
+              <a class="related__item" href={l.href} rel="noopener me">
+                {l.label} ↗
+              </a>
+            ))
+          }
+        </p>
+      </div>
+    </section>
+
+    <h2>Why this exists</h2>
     <p>
-      It started as a personal cheat sheet: the formulas I kept looking up, written the way I wish they had been explained
-      to me, with an example I could paste straight in. It grew into a site so others could use it too.
+      I'm a Power Platform developer with a background in mathematics, so formulas are where I feel at home. Power Fx
+      is powerful, but its documentation is spread across many pages, and the answer to “how do I…?” is often a
+      formula you've never heard of.
+    </p>
+    <p>
+      {siteConfig.name} puts those answers in one place: every formula with its syntax, what each part means, an
+      example you can paste straight in, and the gotchas that trip makers up.
     </p>
 
     <h2>Who it is for</h2>
@@ -23,13 +70,15 @@ import { siteConfig } from '../site.config';
 
     <h2>How it is made</h2>
     <p>
-      The site is built with Astro and React and is published as static files. There is no database, no account system
-      and no tracking of what you type.
+      The site is built with Astro and React and published as static files on Cloudflare. There is no database, no
+      account system and no tracking of what you type. The <a href="https://github.com/Jayaprakashmurugan/maker-toolkit"
+        rel="noopener">source code is on GitHub</a>.
     </p>
 
     <h2>Corrections and ideas</h2>
     <p>
-      Found a mistake, or want a formula or tool added? <a href={siteConfig.feedbackUrl} rel="noopener">Open an issue</a>.
+      Found a mistake, or want a formula or tool added? <a href={siteConfig.feedbackUrl} rel="noopener">Open an issue</a>
+      or message me on <a href={siteConfig.authorLinks[0].href} rel="noopener">LinkedIn</a>.
     </p>
   </article>
 </Base>

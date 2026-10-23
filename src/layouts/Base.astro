@@ -39,6 +39,11 @@ const nav = [
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary" />
+    {
+      siteConfig.googleSiteVerification && (
+        <meta name="google-site-verification" content={siteConfig.googleSiteVerification} />
+      )
+    }
     <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#121315" media="(prefers-color-scheme: dark)" />
     <script is:inline>

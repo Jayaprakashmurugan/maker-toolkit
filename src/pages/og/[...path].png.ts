@@ -30,6 +30,15 @@ export const getStaticPaths = (() => {
       },
     },
     {
+      path: 'html-table-styler',
+      card: {
+        kicker: 'Tool · Power Automate · Emails',
+        title: 'HTML Table Styler',
+        titleFont: 'display',
+        summary: 'Make Create HTML table look good in Outlook and Gmail. Pick a style, preview it, copy one step.',
+      },
+    },
+    {
       path: 'list-copier',
       card: {
         kicker: 'Tool · SharePoint · Microsoft Lists',

@@ -31,6 +31,13 @@ export const tools: Tool[] = [
     meta: 'Power Automate + Power Fx',
   },
   {
+    title: 'HTML Table Styler',
+    description: 'Make Create HTML table look good in Outlook and Gmail. Pick a style, preview it, copy one Compose step.',
+    href: '/html-table-styler/',
+    status: 'live',
+    meta: 'Power Automate · Emails',
+  },
+  {
     title: 'Expression Picker',
     description: 'Paste a step’s JSON, click the value you need, and copy its Power Automate expression and Power Apps formula.',
     href: '/json-expression-picker/',

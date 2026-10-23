@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import TableStyler from '../../components/TableStyler';
+
+const title = 'HTML Table Styler';
+const description =
+  'Make the output of Power Automate’s Create HTML table look good in emails. Pick a style, preview it with your data, and copy one Compose step.';
+
+const faqs = [
+  {
+    q: 'Why does my Create HTML table look so plain in emails?',
+    a: 'The action outputs a bare table with no styling at all, so email apps show it with default borders and spacing. Adding styles after the action fixes that without changing your data.',
+  },
+  {
+    q: 'Inline styles or style block: which should I use?',
+    a: 'Inline styles put the formatting on every cell, so the table looks the same in every email app, including classic Outlook for Windows. A style block is shorter and supports zebra stripes, but classic Outlook ignores the stripes.',
+  },
+  {
+    q: 'My cells show &lt;b&gt; instead of bold text. Why?',
+    a: 'Create HTML table escapes any HTML in your data for safety. Tick "Allow HTML inside cells" and the generated step turns the escaped tags back into real HTML, so links and bold text work.',
+  },
+  {
+    q: 'Can I color a row based on its value, such as a red "Overdue"?',
+    a: 'Not with Create HTML table, because every row gets the same tags. For that, build the rows yourself with a Select that outputs HTML per item, then join them.',
+  },
+  {
+    q: 'Is my data uploaded?',
+    a: 'No. The preview is built in your browser from the data you paste, and nothing is sent anywhere.',
+  },
+];
+---
+
+<Base title={title} description={description} image="/og/html-table-styler.png">
+  <div class="wrap wrap--wide">
+    <header class="page-head">
+      <p class="kicker"><b>Tool</b> · Power Automate · Emails</p>
+      <h1>{title}</h1>
+      <p class="page-head__lede">{description}</p>
+    </header>
+
+    <TableStyler client:load />
+  </div>
+
+  <section class="wrap section" aria-labelledby="ts-faq">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="ts-faq">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq" data-reveal-group>
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

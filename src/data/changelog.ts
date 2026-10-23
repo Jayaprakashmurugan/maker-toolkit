@@ -8,6 +8,16 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.7',
+    date: '2026-10-23',
+    title: 'HTML Table Styler',
+    changes: [
+      'New: HTML Table Styler makes the output of Create HTML table look good in emails, with six presets and full customization.',
+      'Live email preview with your own data, and one Compose step to copy.',
+      'Inline styles that work in every email app, including classic Outlook, or a style block with zebra stripes.',
+    ],
+  },
+  {
     version: '1.6',
     date: '2026-10-23',
     title: 'List Copier',

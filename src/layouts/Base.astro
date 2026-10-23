@@ -6,6 +6,7 @@ import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import { siteConfig } from '../site.config';
 import Logo from '../components/Logo.astro';
+import { tools } from '../data/tools';
 
 interface Props {
   title?: string;
@@ -30,7 +31,8 @@ const nav = [
     href: '/#tools',
     label: 'Tools',
     sm: false,
-    match: ['/expression-beautifier/', '/json-schema-helper/', '/json-expression-picker/', '/list-copier/'],
+    // Every tool page (references have their own links above).
+    match: tools.flatMap((t) => (t.href && !t.href.includes('-reference/') ? [t.href] : [])),
   },
   { href: '/about/', label: 'About', sm: false, match: [] },
 ];
@@ -156,6 +158,7 @@ const isCurrent = (n: (typeof nav)[number]) => [n.href, ...n.match].some((h) => 
           <a href="/formula-reference/">Power Apps formulas</a>
           <a href="/expression-reference/">Power Automate expressions</a>
           <a href="/expression-beautifier/">Expression Beautifier</a>
+          <a href="/html-table-styler/">HTML Table Styler</a>
           <a href="/json-expression-picker/">Expression Picker</a>
           <a href="/json-schema-helper/">JSON Schema Helper</a>
           <a href="/list-copier/">List Copier</a>

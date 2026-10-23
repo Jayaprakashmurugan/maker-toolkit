@@ -6,6 +6,6 @@ export const siteConfig = {
   description:
     'Free, browser-based references and tools for Power Apps and Power Automate makers. No sign-up, no cookies.',
   // Where people can report a mistake or suggest a formula. Replace with your GitHub repo's issues page.
-  feedbackUrl: 'https://github.com/Jayaprakashmurugan/flow-tools/issues',
+  feedbackUrl: 'https://github.com/Jayaprakashmurugan/maker-toolkit/issues',
   author: 'Jayaprakash Murugan',
 };

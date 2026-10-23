@@ -1,0 +1,176 @@
+---
+import '@fontsource-variable/bricolage-grotesque/standard.css';
+import '@fontsource/atkinson-hyperlegible-next/400.css';
+import '@fontsource/atkinson-hyperlegible-next/700.css';
+import '@fontsource-variable/jetbrains-mono';
+import '../styles/global.css';
+import { siteConfig } from '../site.config';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = siteConfig.description } = Astro.props;
+const fullTitle = title ? `${title} · ${siteConfig.name}` : `${siteConfig.name} · ${siteConfig.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname;
+const words = siteConfig.name.toLowerCase().split(/\s+/);
+
+const nav = [
+  { href: '/formula-reference/', label: 'Formula reference', hideSm: false },
+  { href: '/about/', label: 'About', hideSm: true },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121315" media="(prefers-color-scheme: dark)" />
+    <script is:inline>
+      // Apply a saved theme before first paint to avoid a flash.
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="wrap wrap--wide site-header__inner">
+        <a class="brand" href="/" aria-label={`${siteConfig.name} home`}>
+          <span class="brand__mark" aria-hidden="true">ƒ</span>
+          <span class="brand__text">
+            {words.map((w, i) => (
+              <>
+                {i > 0 && <span class="brand__slash">/</span>}
+                {w}
+              </>
+            ))}
+          </span>
+        </a>
+        <nav class="site-nav" aria-label="Main">
+          {
+            nav.map((n) => (
+              <a
+                href={n.href}
+                class={n.hideSm ? 'nav-hide-sm' : undefined}
+                aria-current={path.startsWith(n.href) ? 'page' : undefined}
+              >
+                {n.label}
+              </a>
+            ))
+          }
+          <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+            <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"></circle>
+              <path
+                d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"></path>
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linejoin="round"></path>
+            </svg>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap wrap--wide site-footer__inner">
+        <div>
+          <a class="brand" href="/">
+            <span class="brand__mark" aria-hidden="true">ƒ</span>
+            <span>{siteConfig.name}</span>
+          </a>
+          <p class="disclaimer">
+            An independent project. Not affiliated with or endorsed by Microsoft. Power Apps, Power Automate and Power Fx
+            are trademarks of Microsoft Corporation.
+          </p>
+        </div>
+        <nav aria-label="Footer">
+          <a href="/formula-reference/">Formula reference</a>
+          <a href="/about/">About</a>
+          <a href="/privacy/">Privacy &amp; terms</a>
+          <a href={siteConfig.feedbackUrl} rel="noopener">Report an issue</a>
+          <span>© {new Date().getFullYear()} {siteConfig.author}</span>
+        </nav>
+      </div>
+    </footer>
+
+    <div id="sr-status" class="visually-hidden" aria-live="polite"></div>
+
+    <script>
+      // One delegated handler for every copy button, including ones React renders later.
+      const status = document.getElementById('sr-status');
+
+      async function copyText(text: string) {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        }
+      }
+
+      document.addEventListener('click', async (e) => {
+        const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-copy]');
+        if (!btn) return;
+        await copyText(btn.dataset.copy ?? '');
+        btn.classList.add('is-copied');
+        if (status) status.textContent = 'Copied to clipboard';
+        window.setTimeout(() => {
+          btn.classList.remove('is-copied');
+          if (status) status.textContent = '';
+        }, 1600);
+      });
+
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const dark = root.dataset.theme
+          ? root.dataset.theme === 'dark'
+          : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const next = dark ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem('theme', next);
+        } catch {}
+      });
+    </script>
+  </body>
+</html>

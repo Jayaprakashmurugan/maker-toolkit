@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import { siteConfig } from '../site.config';
+---
+
+<Base title="About" description={`What ${siteConfig.name} is, who it is for, and how it is made.`}>
+  <article class="wrap prose">
+    <p class="kicker"><b>About</b></p>
+    <h1>Small tools for people who build.</h1>
+    <p class="lede">
+      {siteConfig.name} is a free collection of references and utilities for Power Apps and Power Automate makers.
+    </p>
+    <p>
+      It started as a personal cheat sheet: the formulas I kept looking up, written the way I wish they had been explained
+      to me, with an example I could paste straight in. It grew into a site so others could use it too.
+    </p>
+
+    <h2>Who it is for</h2>
+    <p>
+      Citizen developers, analysts and pro developers who work in the Power Platform and want a quick answer without
+      opening five tabs.
+    </p>
+
+    <h2>How it is made</h2>
+    <p>
+      The site is built with Astro and React and is published as static files. There is no database, no account system
+      and no tracking of what you type.
+    </p>
+
+    <h2>Corrections and ideas</h2>
+    <p>
+      Found a mistake, or want a formula or tool added? <a href={siteConfig.feedbackUrl} rel="noopener">Open an issue</a>.
+    </p>
+  </article>
+</Base>

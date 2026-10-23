@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import { siteConfig } from '../site.config';
+---
+
+<Base title="Privacy & terms" description={`Privacy policy and terms of use for ${siteConfig.name}.`}>
+  <article class="wrap prose">
+    <p class="kicker"><b>Legal</b> · Plain English</p>
+    <h1>Privacy &amp; terms</h1>
+    <p class="lede">Short version: no cookies, no accounts, no selling data. Use the content at your own risk.</p>
+
+    <h2>Privacy</h2>
+    <ul>
+      <li>This site sets no cookies and has no sign-up.</li>
+      <li>Searches and text you enter in the tools stay in your browser and are never sent anywhere.</li>
+      <li>Your light or dark theme choice is saved in your browser's local storage, on your device only.</li>
+      <li>
+        The hosting provider may keep standard server logs, such as IP address and pages requested, for security and
+        reliability.
+      </li>
+    </ul>
+
+    <h2>Terms of use</h2>
+    <ul>
+      <li>The content is provided as is, without warranty. Test formulas in your own environment before relying on them.</li>
+      <li>This is an independent project and is not affiliated with or endorsed by Microsoft.</li>
+      <li>
+        Power Apps, Power Automate and Power Fx are trademarks of Microsoft Corporation. Other names belong to their owners.
+      </li>
+    </ul>
+
+    <h2>Contact</h2>
+    <p>Questions about this page? <a href={siteConfig.feedbackUrl} rel="noopener">Get in touch</a>.</p>
+  </article>
+</Base>

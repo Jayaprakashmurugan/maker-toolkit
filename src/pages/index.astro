@@ -1,0 +1,150 @@
+---
+import Base from '../layouts/Base.astro';
+import CodeTicker from '../components/CodeTicker';
+import { tools, powerAppsReference } from '../data/tools';
+import { siteConfig } from '../site.config';
+
+const tickerLines = [
+  { code: `Patch(Tasks, ThisItem, { Status: "Done" })`, note: 'mark the selected task as done' },
+  { code: `Filter(Tasks, AssignedTo.Email = User().Email, Status <> "Done")`, note: 'my open tasks' },
+  { code: `Text(Now(), "yyyy-mm-dd hh:mm")`, note: 'a sortable timestamp' },
+  { code: `IfError(Value(txtQty.Text), 0)`, note: 'never crash on bad input' },
+  { code: `Notify("Saved!", NotificationType.Success, 3000)`, note: 'a three-second success toast' },
+];
+
+const faqs = [
+  {
+    q: 'Is it free?',
+    a: 'Yes. Every tool runs in your browser. There is no account, no paywall and nothing to install.',
+  },
+  {
+    q: 'Do you collect my data?',
+    a: 'No. There are no cookies and no sign-ups. Nothing you type into a tool leaves your device.',
+  },
+  {
+    q: 'Is this an official Microsoft site?',
+    a: 'No. It is an independent project. Every reference entry links to the official Microsoft Learn page so you can check the source.',
+  },
+  {
+    q: 'Something is wrong or missing. What do I do?',
+    a: `Report it on the issues page linked in the footer. Corrections and suggestions are welcome.`,
+  },
+];
+---
+
+<Base description={siteConfig.description}>
+  <section class="wrap hero">
+    <p class="kicker reveal" style="--d:0"><b>Field manual</b> · Vol. 01 · Power Platform</p>
+    <h1 class="hero__title reveal" style="--d:1">
+      <span>Formulas,</span>
+      <span class="hero__accent">decoded.</span>
+    </h1>
+
+    <div class="hero__grid">
+      <div class="reveal" style="--d:3">
+        <p class="hero__lede">
+          Free references and small tools for people who build with Power Apps and Power Automate. Search by what
+          you're trying to do, copy a working example, and get back to building.
+        </p>
+        <div class="hero__actions">
+          <a class="btn" href={`/${powerAppsReference.slug}/`}>Open the formula reference <span aria-hidden="true">→</span></a>
+          <a class="plain" href="#tools">See all tools</a>
+        </div>
+      </div>
+      <div class="reveal" style="--d:4">
+        <CodeTicker lines={tickerLines} />
+      </div>
+    </div>
+
+    <dl class="stats reveal" style="--d:5">
+      <div><dt>Formulas</dt><dd>{powerAppsReference.items.length}</dd></div>
+      <div><dt>Categories</dt><dd>{powerAppsReference.categories.length}</dd></div>
+      <div><dt>Cookies</dt><dd>0</dd></div>
+      <div><dt>Price</dt><dd>Free</dd></div>
+    </dl>
+  </section>
+
+  <section class="wrap section" id="tools" aria-labelledby="tools-title">
+    <div class="section-head">
+      <div>
+        <p class="kicker">The toolbox</p>
+        <h2 id="tools-title">Pick a tool</h2>
+      </div>
+      <p>Each one does one job, works on any device, and needs no setup.</p>
+    </div>
+    <ol class="tools">
+      {
+        tools.map((t, i) => (
+          <li class={`tool tool--${t.status}`}>
+            {t.href ? (
+              <a href={t.href}>
+                <span class="tool__num">{String(i + 1).padStart(2, '0')}</span>
+                <span>
+                  <span class="tool__title">{t.title}</span>
+                  <span class="tool__desc">{t.description}</span>
+                </span>
+                <span class="tool__meta">{t.meta}</span>
+                <span class="tool__arrow" aria-hidden="true">→</span>
+              </a>
+            ) : (
+              <div>
+                <span class="tool__num">{String(i + 1).padStart(2, '0')}</span>
+                <span>
+                  <span class="tool__title">{t.title}</span>
+                  <span class="tool__desc">{t.description}</span>
+                </span>
+                <span class="stamp">Planned</span>
+                <span />
+              </div>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="wrap section" aria-labelledby="why-title">
+    <div class="section-head">
+      <div>
+        <p class="kicker">How it works</p>
+        <h2 id="why-title">Built for the middle of a build</h2>
+      </div>
+    </div>
+    <div class="principles">
+      <article class="principle">
+        <p class="kicker"><b>01</b> · Search</p>
+        <h3>Search by task, not just by name</h3>
+        <p>Type “remove duplicates” or “format date” and get the formula that does it.</p>
+      </article>
+      <article class="principle">
+        <p class="kicker"><b>02</b> · Copy</p>
+        <h3>Copy, paste, done</h3>
+        <p>Every syntax line and example has a copy button. Paste it straight into the formula bar.</p>
+      </article>
+      <article class="principle">
+        <p class="kicker"><b>03</b> · Private</p>
+        <h3>Private by default</h3>
+        <p>No accounts, no cookies, no tracking of what you type. It is a plain, fast static site.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap section" aria-labelledby="faq-title">
+    <div class="section-head">
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="faq-title">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq">
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

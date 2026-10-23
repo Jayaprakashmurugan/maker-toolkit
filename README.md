@@ -53,12 +53,13 @@ The list is sorted automatically, and a page at `/formula-reference/mod/` is cre
 
 ## Publish (free)
 
-1. Push this folder to a GitHub repository.
-2. In Cloudflare: **Workers & Pages → Create → Pages → Connect to Git**, pick the repo.
-3. Build settings: framework preset **Astro**, build command `npm run build`, output directory `dist`.
-4. After the first deploy, put the real address in `astro.config.mjs` (`site:`) and push again.
+Live at **https://power-platform-tools.mjaijayaprakash977.workers.dev**, hosted as a Cloudflare Worker
+connected to this GitHub repo. Every `git push` to `main` rebuilds and redeploys automatically.
 
-Every `git push` to `main` redeploys automatically.
+- `wrangler.jsonc` tells Cloudflare how to deploy: it runs `npm run build`, then serves `dist/`
+  (including `404.html` for unknown URLs). The `name` must match the Worker's name in the dashboard.
+- `astro.config.mjs` → `site:` must be the public address. Update it if you add a custom domain.
+- To check the deploy config locally without deploying: `npx wrangler deploy --dry-run`.
 
 ## Content and trademarks
 

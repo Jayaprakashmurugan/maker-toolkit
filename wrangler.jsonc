@@ -1,0 +1,15 @@
+// Cloudflare Workers config: serves the built static site from dist/.
+{
+  // Must match the Worker's name in the Cloudflare dashboard.
+  "name": "power-platform-tools",
+  "compatibility_date": "2026-09-01",
+  // Build before every deploy, so dist/ always exists.
+  "build": {
+    "command": "npm run build"
+  },
+  "assets": {
+    "directory": "./dist",
+    // Serve dist/404.html for unknown URLs.
+    "not_found_handling": "404-page"
+  }
+}

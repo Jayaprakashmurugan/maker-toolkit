@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import ODataBuilder from '../../components/ODataBuilder';
+
+const title = 'OData Filter Builder';
+const description =
+  'Build the Filter Query for SharePoint “Get items” or Dataverse “List rows” in Power Automate, with the right quotes, dates and column names for each.';
+
+const faqs = [
+  {
+    q: 'Why filter in the action instead of with a Filter array step?',
+    a: 'A filter query runs on the server, so only the matching items come back. That is faster, uses fewer API calls, and avoids the default limits on how many items Get items and List rows return.',
+  },
+  {
+    q: 'Why does SharePoint say the column does not exist?',
+    a: 'The filter needs the internal name, which can differ from the display name: spaces become _x0020_, and renamed columns keep their original internal name. Check it in List settings by clicking the column and reading Field= at the end of the URL.',
+  },
+  {
+    q: 'How do I filter by a date relative to today?',
+    a: 'Tick fx on a date condition and pick a shortcut such as "7 days ago". SharePoint needs the date in quotes; Dataverse needs it without. The builder adds the right form for you.',
+  },
+  {
+    q: 'Can I filter on a person or lookup column?',
+    a: 'Yes. In SharePoint, filter a person column by email (Approver/EMail eq ...) and a lookup by its ID (ProjectId eq 5). In Dataverse, filter a lookup by the related row’s GUID on the _name_value column.',
+  },
+  {
+    q: 'Is anything sent to a server?',
+    a: 'No. The filter is built in your browser.',
+  },
+];
+---
+
+<Base title={title} description={description} image="/og/odata-filter-builder.png">
+  <div class="wrap wrap--wide">
+    <header class="page-head">
+      <p class="kicker"><b>Tool</b> · Power Automate · SharePoint + Dataverse</p>
+      <h1>{title}</h1>
+      <p class="page-head__lede">{description}</p>
+    </header>
+
+    <ODataBuilder client:load />
+  </div>
+
+  <section class="wrap section" aria-labelledby="od-faq">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="od-faq">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq" data-reveal-group>
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

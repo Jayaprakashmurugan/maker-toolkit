@@ -48,6 +48,15 @@ export const getStaticPaths = (() => {
       },
     },
     {
+      path: 'odata-filter-builder',
+      card: {
+        kicker: 'Tool · SharePoint + Dataverse',
+        title: 'OData Filter Builder',
+        titleFont: 'display',
+        summary: 'Build the Filter Query for Get items or List rows, with the right quotes, dates and names.',
+      },
+    },
+    {
       path: 'list-copier',
       card: {
         kicker: 'Tool · SharePoint · Microsoft Lists',

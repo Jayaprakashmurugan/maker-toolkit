@@ -3014,6 +3014,83 @@ button {
   overflow-wrap: anywhere;
 }
 
+/* ── OData Filter Builder ─────────────────────────────────── */
+
+.od-head,
+.od-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 10.5rem 10.5rem minmax(0, 1.4fr);
+  gap: 0.5rem;
+  align-items: center;
+}
+.od-head {
+  margin-top: 1rem;
+  font-family: var(--f-mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+.od-row {
+  position: relative;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+}
+.od-join {
+  position: absolute;
+  top: -0.55rem;
+  left: 0.5rem;
+  padding: 0 0.4rem;
+  background: var(--card);
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent-ink);
+  text-transform: uppercase;
+}
+.od-row + .od-row {
+  border-top: 1px dashed var(--rule);
+}
+.od-value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.od-dyn {
+  flex: none;
+  font-family: var(--f-mono);
+  font-size: 0.8rem;
+}
+.od-shortcuts {
+  grid-column: 4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.od-shortcuts .related__item[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.od-conds .link-btn {
+  margin-top: 0.9rem;
+}
+.od-tips {
+  margin-top: 1rem;
+}
+@media (max-width: 800px) {
+  .od-head {
+    display: none;
+  }
+  .od-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .od-row > input:first-of-type,
+  .od-value,
+  .od-shortcuts {
+    grid-column: 1 / -1;
+  }
+}
+
 /* ── Changelog ────────────────────────────────────────────── */
 
 .releases {

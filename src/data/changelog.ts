@@ -8,6 +8,16 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.9',
+    date: '2026-10-23',
+    title: 'OData Filter Builder',
+    changes: [
+      'New: OData Filter Builder for the Filter Query of SharePoint Get items and Dataverse List rows.',
+      'Formats each condition the way that data source expects: quoted or unquoted dates, 1/0 or true/false, choice text or numbers, person and lookup columns.',
+      'Date shortcuts (7 days ago, start of month), apostrophe escaping, and a display-name to internal-name converter for SharePoint.',
+    ],
+  },
+  {
     version: '1.8',
     date: '2026-10-23',
     title: 'Adaptive Card Builder',

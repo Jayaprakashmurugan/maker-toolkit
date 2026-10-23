@@ -45,6 +45,13 @@ export const tools: Tool[] = [
     meta: 'Power Automate · Teams',
   },
   {
+    title: 'OData Filter Builder',
+    description: 'Build the Filter Query for SharePoint Get items or Dataverse List rows, with the right quotes and dates.',
+    href: '/odata-filter-builder/',
+    status: 'live',
+    meta: 'SharePoint + Dataverse',
+  },
+  {
     title: 'Expression Picker',
     description: 'Paste a step’s JSON, click the value you need, and copy its Power Automate expression and Power Apps formula.',
     href: '/json-expression-picker/',

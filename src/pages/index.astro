@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import CodeTicker from '../components/CodeTicker';
 import { tools } from '../data/tools';
-import { powerAppsReference, powerAutomateReference } from '../data/references';
+import { desktopReference, powerAppsReference, powerAutomateReference } from '../data/references';
 import { siteConfig } from '../site.config';
 
 const tickerLines = [
@@ -65,6 +65,7 @@ const faqs = [
     <dl class="stats reveal" style="--d:5">
       <div><dt>Power Fx formulas</dt><dd data-count>{powerAppsReference.items.length}</dd></div>
       <div><dt>Flow expressions</dt><dd data-count>{powerAutomateReference.items.length}</dd></div>
+      <div><dt>Desktop formulas</dt><dd data-count>{desktopReference.items.length}</dd></div>
       <div><dt>Tools</dt><dd data-count>{tools.filter((t) => t.status === 'live').length}</dd></div>
       <div><dt>Cookies</dt><dd>0</dd></div>
     </dl>

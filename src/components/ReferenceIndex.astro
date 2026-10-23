@@ -68,7 +68,9 @@ const byLetter = Object.entries(
           {
             ref.language === 'wdl'
               ? 'Copy the syntax or an example, paste it into the Expression tab in your flow, and rename the actions.'
-              : 'Copy the syntax or an example, paste it into the Power Apps formula bar, and rename the controls.'
+              : ref.slug === 'desktop-flow-reference'
+                ? 'Copy an example into an action input in your desktop flow (keep the = at the start), and swap in your own variables.'
+                : 'Copy the syntax or an example, paste it into the Power Apps formula bar, and rename the controls.'
           }
         </p>
       </li>

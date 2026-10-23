@@ -1,4 +1,4 @@
-import { powerAppsReference, powerAutomateReference } from './references';
+import { desktopReference, powerAppsReference, powerAutomateReference } from './references';
 
 export interface Tool {
   title: string;
@@ -22,6 +22,13 @@ export const tools: Tool[] = [
     href: `/${powerAutomateReference.slug}/`,
     status: 'live',
     meta: `${powerAutomateReference.items.length} expressions · ${powerAutomateReference.categories.length} categories`,
+  },
+  {
+    title: desktopReference.title,
+    description: 'The Power Fx functions for desktop flows, with desktop-style examples and the rules that differ from Power Apps.',
+    href: `/${desktopReference.slug}/`,
+    status: 'live',
+    meta: `${desktopReference.items.length} formulas · ${desktopReference.categories.length} categories`,
   },
   {
     title: 'Expression Beautifier',

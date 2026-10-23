@@ -27,6 +27,7 @@ const words = siteConfig.name.split(/\s+/);
 const nav = [
   { href: '/formula-reference/', label: 'Power Apps', sm: true, match: [] as string[] },
   { href: '/expression-reference/', label: 'Power Automate', sm: true, match: [] },
+  { href: '/desktop-flow-reference/', label: 'Desktop', sm: false, match: [] },
   {
     href: '/#tools',
     label: 'Tools',
@@ -157,6 +158,7 @@ const isCurrent = (n: (typeof nav)[number]) => [n.href, ...n.match].some((h) => 
         <nav aria-label="Footer">
           <a href="/formula-reference/">Power Apps formulas</a>
           <a href="/expression-reference/">Power Automate expressions</a>
+          <a href="/desktop-flow-reference/">Desktop flow formulas</a>
           <a href="/expression-beautifier/">Expression Beautifier</a>
           <a href="/html-table-styler/">HTML Table Styler</a>
           <a href="/adaptive-card-builder/">Adaptive Card Builder</a>

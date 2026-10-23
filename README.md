@@ -20,6 +20,7 @@ npm run preview   # serve dist/ to check the production build
 | `astro.config.mjs` | `site:` is your public URL (used for the sitemap, canonical links and share images). |
 | `src/data/power-apps-formulas.ts` | Power Apps (Power Fx) formulas and their categories. |
 | `src/data/power-automate-expressions.ts` | Power Automate expression functions and their categories. |
+| `src/data/desktop-formulas.ts` | Power Fx for desktop flows: Microsoft's list of 130 functions, reusing Power Apps entries with desktop examples. |
 | `src/data/references.ts` | Ties each dataset to its URL, title, FAQ and search hint. |
 | `src/data/tools.ts` | The tool list shown on the homepage. |
 | `src/data/changelog.ts` | Entries for the "What's new" page. |

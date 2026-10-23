@@ -1,0 +1,16 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ReferenceItem from '../../components/ReferenceItem.astro';
+import { desktopReference as ref } from '../../data/references';
+import { slugify } from '../../data/types';
+
+export const getStaticPaths = (() =>
+  ref.items.map((item, i) => ({
+    params: { slug: slugify(item.name) },
+    props: { item, prev: ref.items[i - 1] ?? null, next: ref.items[i + 1] ?? null },
+  }))) satisfies GetStaticPaths;
+
+const { item, prev, next } = Astro.props;
+---
+
+<ReferenceItem reference={ref} item={item} prev={prev} next={next} />

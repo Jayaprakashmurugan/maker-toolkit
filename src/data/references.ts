@@ -1,6 +1,7 @@
 import type { Reference } from './types';
 import * as powerApps from './power-apps-formulas';
 import * as powerAutomate from './power-automate-expressions';
+import * as desktop from './desktop-formulas';
 
 export const powerAppsReference: Reference = {
   slug: 'formula-reference',
@@ -70,4 +71,42 @@ export const powerAutomateReference: Reference = {
   ],
 };
 
-export const references = [powerAppsReference, powerAutomateReference];
+export const desktopReference: Reference = {
+  slug: 'desktop-flow-reference',
+  title: 'Power Automate Desktop Formula Reference',
+  product: 'Power Automate Desktop',
+  kicker: 'Power Fx · Desktop flows',
+  description:
+    'All 130 Power Fx functions you can use in Power Automate desktop flows, with desktop-style examples and the rules that differ from Power Apps.',
+  noun: 'formulas',
+  singular: 'formula',
+  language: 'powerfx',
+  searchPlaceholder: 'Search desktop formulas or tasks, like "sort a list"',
+  items: desktop.desktopFormulas,
+  categories: desktop.categories,
+  docsBase: desktop.docsBase,
+  faqs: [
+    {
+      q: 'How do I use Power Fx in a desktop flow?',
+      a: 'Turn on the Power Fx option when you create a new desktop flow in Power Automate for desktop. Then type expressions in action inputs, starting with an equals sign.',
+    },
+    {
+      q: 'Why does every formula start with "="?',
+      a: 'In Power Fx–enabled desktop flows, an input that starts with = is a formula. Anything else is treated as plain text, so numbers and true/false also need the =.',
+    },
+    {
+      q: 'How do I put a formula inside text?',
+      a: 'Use string interpolation without the equals sign: The total is ${Sum(10, 20)}. To write a literal ${, type $${.',
+    },
+    {
+      q: 'Why is the first item number 1?',
+      a: 'Like Excel, Power Fx counts from 1, so Index(List, 1) is the first item. Classic desktop flows without Power Fx count from 0.',
+    },
+    {
+      q: 'Why does my variable say it doesn’t exist?',
+      a: 'Variable names are case-sensitive in Power Fx–enabled flows (NewVar and newVar are different), and a variable must be set before a formula uses it.',
+    },
+  ],
+};
+
+export const references = [powerAppsReference, powerAutomateReference, desktopReference];

@@ -8,6 +8,15 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.10',
+    date: '2026-10-23',
+    title: 'Desktop flows, and every Power Apps formula',
+    changes: [
+      'New: Power Automate Desktop Formula Reference with all 130 Power Fx functions for desktop flows, each with its own page and desktop-style examples.',
+      'The Power Apps Formula Reference now covers all 215 formulas in Microsoft’s canvas-app list, adding Color, HashTags, ReadNFC, ShowHostInfo, Dataverse.Unmask, Type and RecordOf.',
+    ],
+  },
+  {
     version: '1.9',
     date: '2026-10-23',
     title: 'OData Filter Builder',

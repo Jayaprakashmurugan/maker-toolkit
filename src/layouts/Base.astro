@@ -6,7 +6,7 @@ import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import { siteConfig } from '../site.config';
 import Logo from '../components/Logo.astro';
-import { tools } from '../data/tools';
+import { categories, toolsIn } from '../data/tools';
 
 interface Props {
   title?: string;
@@ -22,22 +22,14 @@ const imageUrl = new URL(image, Astro.site);
 const path = Astro.url.pathname;
 const words = siteConfig.name.split(/\s+/);
 
-// "sm" = also shown on phones; the rest live in the footer there.
-// "match" = other paths that count as this section (for highlighting).
+// One link per category. "match" = tool pages that belong to it (for highlighting).
+// Narrow screens swap the four for a single "Tools" link; search is always there.
 const nav = [
-  { href: '/formula-reference/', label: 'Power Apps', sm: true, match: [] as string[] },
-  { href: '/expression-reference/', label: 'Power Automate', sm: true, match: [] },
-  { href: '/desktop-flow-reference/', label: 'Desktop', sm: false, match: [] },
-  {
-    href: '/#tools',
-    label: 'Tools',
-    sm: false,
-    // Every tool page (references have their own links above).
-    match: tools.flatMap((t) => (t.href && !t.href.includes('-reference/') ? [t.href] : [])),
-  },
-  { href: '/about/', label: 'About', sm: false, match: [] },
+  ...categories.map((c) => ({ href: `/${c.id}/`, label: c.short, cls: 'nav-wide', match: toolsIn(c.id).map((t) => t.href) })),
+  { href: '/about/', label: 'About', cls: 'nav-wider', match: [] as string[] },
+  { href: '/#tools', label: 'Tools', cls: 'nav-narrow', match: [] as string[] },
 ];
-const isCurrent = (n: (typeof nav)[number]) => [n.href, ...n.match].some((h) => h !== '/#tools' && path.startsWith(h));
+const isCurrent = (n: (typeof nav)[number]) => n.href !== '/#tools' && [n.href, ...n.match].some((h) => path.startsWith(h));
 ---
 
 <!doctype html>
@@ -108,15 +100,19 @@ const isCurrent = (n: (typeof nav)[number]) => [n.href, ...n.match].some((h) => 
         <nav class="site-nav" aria-label="Main">
           {
             nav.map((n) => (
-              <a
-                href={n.href}
-                class={n.sm ? undefined : 'nav-hide-sm'}
-                aria-current={isCurrent(n) ? 'page' : undefined}
-              >
+              <a href={n.href} class={n.cls} aria-current={isCurrent(n) ? 'page' : undefined}>
                 {n.label}
               </a>
             ))
           }
+          <button type="button" class="search-btn" data-search-open aria-label="Search" aria-keyshortcuts="Control+K Meta+K">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle>
+              <path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+            <span class="search-btn__label">Search</span>
+            <kbd data-search-kbd>Ctrl K</kbd>
+          </button>
           <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
             <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"></circle>
@@ -154,29 +150,65 @@ const isCurrent = (n: (typeof nav)[number]) => [n.href, ...n.match].some((h) => 
             An independent project. Not affiliated with or endorsed by Microsoft. Power Apps, Power Automate and Power Fx
             are trademarks of Microsoft Corporation.
           </p>
+          <p class="site-footer__copy">© {new Date().getFullYear()} {siteConfig.author}</p>
         </div>
-        <nav aria-label="Footer">
-          <a href="/formula-reference/">Power Apps formulas</a>
-          <a href="/expression-reference/">Power Automate expressions</a>
-          <a href="/desktop-flow-reference/">Desktop flow formulas</a>
-          <a href="/expression-beautifier/">Expression Beautifier</a>
-          <a href="/html-table-styler/">HTML Table Styler</a>
-          <a href="/adaptive-card-builder/">Adaptive Card Builder</a>
-          <a href="/odata-filter-builder/">OData Filter Builder</a>
-          <a href="/trigger-condition-builder/">Trigger Condition Builder</a>
-          <a href="/svg-to-power-apps/">SVG to Power Apps</a>
-          <a href="/regex-tester/">Regex Tester</a>
-          <a href="/json-expression-picker/">Expression Picker</a>
-          <a href="/json-schema-helper/">JSON Schema Helper</a>
-          <a href="/list-copier/">List Copier</a>
-          <a href="/changelog/">What’s new</a>
-          <a href="/about/">About</a>
-          <a href="/privacy/">Privacy &amp; terms</a>
-          <a href={siteConfig.feedbackUrl} rel="noopener">Report an issue</a>
-          <span>© {new Date().getFullYear()} {siteConfig.author}</span>
+        <nav class="footer-cols" aria-label="Footer">
+          {
+            categories.map((c) => (
+              <div>
+                <a class="footer-cols__head" href={`/${c.id}/`}>
+                  {c.name}
+                </a>
+                <ul>
+                  {toolsIn(c.id).map((t) => (
+                    <li>
+                      <a href={t.href}>{t.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+          <div>
+            <span class="footer-cols__head">Site</span>
+            <ul>
+              <li><a href="/changelog/">What’s new</a></li>
+              <li><a href="/about/">About</a></li>
+              <li><a href="/privacy/">Privacy &amp; terms</a></li>
+              <li><a href={siteConfig.feedbackUrl} rel="noopener">Report an issue</a></li>
+            </ul>
+          </div>
         </nav>
       </div>
     </footer>
+
+    <dialog class="sitesearch" id="site-search" aria-label="Search the site">
+      <div class="sitesearch__bar">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle>
+          <path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+        </svg>
+        <input
+          id="search-q"
+          type="search"
+          placeholder="Search tools, formulas, expressions…"
+          autocomplete="off"
+          spellcheck="false"
+          role="combobox"
+          aria-expanded="true"
+          aria-controls="search-results"
+          aria-autocomplete="list"
+          aria-label="Search"
+        />
+        <button type="button" class="sitesearch__close" data-search-close aria-label="Close search">Esc</button>
+      </div>
+      <ul id="search-results" class="sitesearch__results" role="listbox" aria-label="Results"></ul>
+      <p class="sitesearch__foot">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> move</span>
+        <span><kbd>Enter</kbd> open</span>
+        <span class="sitesearch__count" aria-live="polite"></span>
+      </p>
+    </dialog>
 
     <div id="sr-status" class="visually-hidden" aria-live="polite"></div>
 
@@ -193,6 +225,7 @@ const isCurrent = (n: (typeof nav)[number]) => [n.href, ...n.match].some((h) => 
 
     <script>
       import '../scripts/motion';
+      import '../scripts/search';
 
       // One delegated handler for every copy button, including ones React renders later.
       const status = document.getElementById('sr-status');

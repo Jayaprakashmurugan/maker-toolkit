@@ -4,6 +4,7 @@ import { renderOg, type OgCard } from '../../lib/og';
 import { references } from '../../data/references';
 import { slugify } from '../../data/types';
 import { siteConfig } from '../../site.config';
+import { categories, toolsIn } from '../../data/tools';
 
 export const getStaticPaths = (() => {
   const pages: { path: string; card: OgCard }[] = [
@@ -11,6 +12,15 @@ export const getStaticPaths = (() => {
       path: 'home',
       card: { kicker: 'Field manual · Power Platform', title: 'Formulas, decoded.', titleFont: 'display', summary: siteConfig.description },
     },
+    ...categories.map((c) => ({
+      path: c.id,
+      card: {
+        kicker: `Category · ${toolsIn(c.id).length} tools`,
+        title: `${c.name} tools`,
+        titleFont: 'display' as const,
+        summary: c.summary,
+      },
+    })),
     {
       path: 'expression-beautifier',
       card: {

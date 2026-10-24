@@ -1,0 +1,46 @@
+---
+// Equal-weight cards: every tool and reference gets the same size and layout.
+import { categoryById, type Tool } from '../data/tools';
+
+interface Props {
+  tools: Tool[];
+  /** Number shown on the first card; numbering continues from it. */
+  start?: number;
+  /** Show the tool's own category on each card (useful when mixing categories). */
+  showCategory?: boolean;
+}
+
+const { tools, start = 1, showCategory = false } = Astro.props;
+---
+
+<ul class="tcards" data-reveal-group>
+  {
+    tools.map((t, i) => {
+      const cat = categoryById(t.category);
+      return (
+        <li class="tcard" style={`--cat:${cat.color}`}>
+          <a href={t.href}>
+            <span class="tcard__top">
+              <span class="tcard__kind">
+                <span class="tcard__dot" aria-hidden="true" />
+                {t.kind === 'reference' ? 'Reference' : 'Tool'}
+                {showCategory && <> · {cat.short}</>}
+              </span>
+              <span class="tcard__num" aria-hidden="true">
+                {String(start + i).padStart(2, '0')}
+              </span>
+            </span>
+            <span class="tcard__title">{t.title}</span>
+            <span class="tcard__desc">{t.description}</span>
+            <span class="tcard__foot">
+              <span class="tcard__meta">{t.meta}</span>
+              <span class="tcard__arrow" aria-hidden="true">
+                →
+              </span>
+            </span>
+          </a>
+        </li>
+      );
+    })
+  }
+</ul>

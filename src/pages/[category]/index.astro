@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import ToolGrid from '../../components/ToolGrid.astro';
+import { alsoIn, categories, toolsIn, type ToolCategory } from '../../data/tools';
+
+export function getStaticPaths() {
+  return categories.map((cat) => ({ params: { category: cat.id }, props: { cat } }));
+}
+
+const { cat } = Astro.props as { cat: ToolCategory };
+const own = toolsIn(cat.id);
+const also = alsoIn(cat.id);
+const others = categories.filter((c) => c.id !== cat.id);
+const title = `${cat.name} tools`;
+---
+
+<Base title={title} description={`${cat.summary} Free, in your browser, no sign-up.`} image={`/og/${cat.id}.png`}>
+  <div class="wrap" style={`--cat:${cat.color}`}>
+    <header class="page-head cat-page__head">
+      <p class="kicker"><b>Category</b> · {own.length} {own.length === 1 ? 'tool' : 'tools'}</p>
+      <h1>{cat.name}</h1>
+      <p class="page-head__lede">{cat.intro}</p>
+    </header>
+
+    <ToolGrid tools={own} />
+
+    {
+      also.length > 0 && (
+        <section class="section cat-also" aria-labelledby="also-title">
+          <div class="section-head" data-reveal>
+            <div>
+              <p class="kicker">From other groups</p>
+              <h2 id="also-title">Also useful for {cat.name}</h2>
+            </div>
+          </div>
+          <ToolGrid tools={also} showCategory />
+        </section>
+      )
+    }
+
+    <nav class="section cat-others" aria-label="Other groups">
+      <p class="kicker">More tools</p>
+      <div class="cat-jump">
+        {
+          others.map((c) => (
+            <a href={`/${c.id}/`} style={`--cat:${c.color}`}>
+              <span class="tcard__dot" aria-hidden="true" />
+              {c.name}
+              <span class="cat-jump__n">{toolsIn(c.id).length}</span>
+            </a>
+          ))
+        }
+      </div>
+    </nav>
+  </div>
+</Base>

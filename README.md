@@ -22,7 +22,9 @@ npm run preview   # serve dist/ to check the production build
 | `src/data/power-automate-expressions.ts` | Power Automate expression functions and their categories. |
 | `src/data/desktop-formulas.ts` | Power Fx for desktop flows: Microsoft's list of 130 functions, reusing Power Apps entries with desktop examples. |
 | `src/data/references.ts` | Ties each dataset to its URL, title, FAQ and search hint. |
-| `src/data/tools.ts` | The tool list shown on the homepage. |
+| `src/data/tools.ts` | The four categories and every tool. The homepage, category pages (`/power-apps/` etc.), header, footer and search are all built from it. |
+| `src/components/ToolGrid.astro` | The equal-weight tool cards used on the homepage and category pages. |
+| `src/scripts/search.ts` + `src/pages/search-index.json.ts` | Site-wide search (Ctrl K or /) over every tool and reference entry; the index is built at build time and loaded on first use. |
 | `src/data/changelog.ts` | Entries for the "What's new" page. |
 | `src/components/ReferenceIndex.astro` | Shared layout for a reference page (explorer, A–Z index, FAQ). |
 | `src/components/ReferenceItem.astro` | Shared layout for one formula/expression page. |
@@ -70,7 +72,11 @@ function's anchor on Microsoft Learn, so you can leave it out.
 1. Create a data file like `src/data/power-automate-expressions.ts`.
 2. Add a `Reference` for it in `src/data/references.ts` (and to the `references` list, so it gets share images).
 3. Copy `src/pages/expression-reference/` to a new folder and import your new reference in both files.
-4. Add it to `src/data/tools.ts` and the nav in `src/layouts/Base.astro`.
+4. Add it to `src/data/tools.ts` with its `category`. It then appears on the homepage, its category page, the footer and in search.
+
+## Add a tool
+
+Build the page under `src/pages/<slug>/`, then add one entry to `src/data/tools.ts` (pick a `category`, and `also` for other categories it helps with), a share image in `src/pages/og/[...path].png.ts`, and a line in `src/data/changelog.ts`.
 
 ## Visitor stats (optional, free, cookie-free)
 

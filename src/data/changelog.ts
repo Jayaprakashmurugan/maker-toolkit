@@ -8,6 +8,17 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.14',
+    date: '2026-10-24',
+    title: 'One toolbox, four groups, one search',
+    changes: [
+      'The site is now organized into Power Apps, Power Automate, Dataverse and Developer Utilities, each with its own page that also lists tools from other groups that help there.',
+      'The homepage shows every tool and reference as an equal card, grouped by product.',
+      'New site-wide search: press Ctrl K (⌘K on a Mac) or / on any page to search every tool, formula and expression at once, by name or by task.',
+      'The footer now lists every tool by group.',
+    ],
+  },
+  {
     version: '1.13',
     date: '2026-10-24',
     title: 'Regex Tester for Power Fx',

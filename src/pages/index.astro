@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import CodeTicker from '../components/CodeTicker';
-import { tools } from '../data/tools';
+import ToolGrid from '../components/ToolGrid.astro';
+import { categories, tools, toolsIn } from '../data/tools';
 import { desktopReference, powerAppsReference, powerAutomateReference } from '../data/references';
 import { siteConfig } from '../site.config';
 
@@ -16,6 +17,13 @@ const tickerLines = [
   { code: `union(variables('emails'), variables('emails'))`, note: 'Power Automate: remove duplicates', lang: 'wdl' as const },
   { code: `IfError(Value(txtQty.Text), 0)`, note: 'Power Apps: never crash on bad input', lang: 'powerfx' as const },
 ];
+
+const entries = powerAppsReference.items.length + powerAutomateReference.items.length + desktopReference.items.length;
+const toolCount = tools.filter((t) => t.kind === 'tool').length;
+const groups = categories.map((c) => ({ ...c, tools: toolsIn(c.id) }));
+// Cards are numbered straight through all four groups.
+const starts = groups.map((_, i) => 1 + groups.slice(0, i).reduce((n, g) => n + g.tools.length, 0));
+const tryThese = ['remove duplicates', 'format date', 'Patch', 'trigger condition', 'email table', 'regex'];
 
 const faqs = [
   {
@@ -48,14 +56,25 @@ const faqs = [
     <div class="hero__grid">
       <div class="reveal" style="--d:3">
         <p class="hero__lede">
-          Free references and small tools for people who build with Power Apps and Power Automate. Search by what
-          you're trying to do, copy a working example, and get back to building.
+          A free toolbox for people who build with Power Apps, Power Automate and Dataverse. Search {entries} formulas
+          and expressions, or pick a tool. Everything runs in your browser.
         </p>
-        <div class="hero__actions">
-          <a class="btn" href={`/${powerAppsReference.slug}/`}>Power Apps formulas <span aria-hidden="true">→</span></a>
-          <a class="btn btn--ghost" href={`/${powerAutomateReference.slug}/`}>Power Automate expressions <span aria-hidden="true">→</span></a>
-          <a class="plain" href="#tools">See all tools</a>
-        </div>
+        <form class="hero-search" role="search" action="/" data-search-form>
+          <label class="visually-hidden" for="hero-q">Search tools, formulas and expressions</label>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+          <input id="hero-q" type="search" placeholder="Search tools, formulas, expressions…" autocomplete="off" spellcheck="false" data-search-input />
+          <kbd data-search-kbd>Ctrl K</kbd>
+        </form>
+        <p class="hero-search__try">
+          Try
+          {
+            tryThese.map((q) => (
+              <button type="button" class="chip" data-search-query={q}>
+                {q}
+              </button>
+            ))
+          }
+        </p>
       </div>
       <div class="reveal" style="--d:4">
         <CodeTicker lines={tickerLines} />
@@ -66,7 +85,7 @@ const faqs = [
       <div><dt>Power Fx formulas</dt><dd data-count>{powerAppsReference.items.length}</dd></div>
       <div><dt>Flow expressions</dt><dd data-count>{powerAutomateReference.items.length}</dd></div>
       <div><dt>Desktop formulas</dt><dd data-count>{desktopReference.items.length}</dd></div>
-      <div><dt>Tools</dt><dd data-count>{tools.filter((t) => t.status === 'live').length}</dd></div>
+      <div><dt>Tools</dt><dd data-count>{toolCount}</dd></div>
       <div><dt>Cookies</dt><dd>0</dd></div>
     </dl>
   </section>
@@ -75,39 +94,38 @@ const faqs = [
     <div class="section-head" data-reveal>
       <div>
         <p class="kicker">The toolbox</p>
-        <h2 id="tools-title">Pick a tool</h2>
+        <h2 id="tools-title">Every tool, by product</h2>
       </div>
-      <p>Each one does one job, works on any device, and needs no setup.</p>
+      <p>{tools.length} tools and references in four groups. Each one does one job and needs no setup.</p>
     </div>
-    <ol class="tools" data-reveal-group>
+
+    <nav class="cat-jump" aria-label="Tool groups" data-reveal>
       {
-        tools.map((t, i) => (
-          <li class={`tool tool--${t.status}`}>
-            {t.href ? (
-              <a href={t.href}>
-                <span class="tool__num">{String(i + 1).padStart(2, '0')}</span>
-                <span>
-                  <span class="tool__title">{t.title}</span>
-                  <span class="tool__desc">{t.description}</span>
-                </span>
-                <span class="tool__meta">{t.meta}</span>
-                <span class="tool__arrow" aria-hidden="true">→</span>
-              </a>
-            ) : (
-              <div>
-                <span class="tool__num">{String(i + 1).padStart(2, '0')}</span>
-                <span>
-                  <span class="tool__title">{t.title}</span>
-                  <span class="tool__desc">{t.description}</span>
-                </span>
-                <span class="stamp">Planned</span>
-                <span />
-              </div>
-            )}
-          </li>
+        groups.map((g) => (
+          <a href={`#${g.id}`} style={`--cat:${g.color}`}>
+            <span class="tcard__dot" aria-hidden="true" />
+            {g.name}
+            <span class="cat-jump__n">{g.tools.length}</span>
+          </a>
         ))
       }
-    </ol>
+    </nav>
+
+    {
+      groups.map((g, i) => (
+        <section class="cat" id={g.id} aria-labelledby={`${g.id}-title`} style={`--cat:${g.color}`}>
+          <header class="cat__head" data-reveal>
+            <p class="cat__index">{String(i + 1).padStart(2, '0')}</p>
+            <h3 id={`${g.id}-title`}>{g.name}</h3>
+            <p class="cat__summary">{g.summary}</p>
+            <a class="cat__more" href={`/${g.id}/`}>
+              All {g.name} tools <span aria-hidden="true">→</span>
+            </a>
+          </header>
+          <ToolGrid tools={g.tools} start={starts[i]} />
+        </section>
+      ))
+    }
   </section>
 
   <section class="wrap section" aria-labelledby="why-title">
@@ -120,13 +138,13 @@ const faqs = [
     <div class="principles" data-reveal-group>
       <article class="principle">
         <p class="kicker"><b>01</b> · Search</p>
-        <h3>Search by task, not just by name</h3>
-        <p>Type “remove duplicates” or “format date” and get the formula that does it.</p>
+        <h3>Search everything at once</h3>
+        <p>Press Ctrl K anywhere and type “remove duplicates” or “format date” to find the formula, expression or tool that does it.</p>
       </article>
       <article class="principle">
         <p class="kicker"><b>02</b> · Copy</p>
         <h3>Copy, paste, done</h3>
-        <p>Every syntax line and example has a copy button. Paste it straight into the formula bar.</p>
+        <p>Every syntax line, example and generated formula has a copy button. Paste it straight into the formula bar.</p>
       </article>
       <article class="principle">
         <p class="kicker"><b>03</b> · Private</p>

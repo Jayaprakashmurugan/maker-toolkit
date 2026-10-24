@@ -33,6 +33,7 @@ npm run preview   # serve dist/ to check the production build
 | `src/components/TableStyler.tsx` + `src/lib/htmlTable.ts` | The HTML Table Styler: presets, inline/style-block output and the email preview. |
 | `src/components/CardBuilder.tsx` + `src/lib/adaptiveCard.ts` | The Adaptive Card Builder: templates, card JSON, reply expressions; preview uses the official `adaptivecards` renderer. |
 | `src/components/ODataBuilder.tsx` + `src/lib/odata.ts` | The OData Filter Builder: per-source formatting rules, date shortcuts and the SharePoint internal-name converter. |
+| `src/components/TriggerBuilder.tsx` + `src/lib/triggerCondition.ts` | The Trigger Condition Builder: field paths per trigger, null-safe text checks, presets and AND/OR output. |
 | `src/components/ListCopier.tsx` + `src/lib/spList.ts` | The List Copier: parses SharePoint REST XML/JSON and generates console, Power Automate and PnP scripts. |
 | `src/lib/og.ts` + `src/pages/og/` | Share images (1200×630 PNG) generated for every page at build time. |
 | `src/lib/logo.ts` | The logo's paths and colors: the single source for the header logo, favicons, app icons and brand kit. |

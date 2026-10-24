@@ -8,6 +8,16 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.11',
+    date: '2026-10-24',
+    title: 'Trigger Condition Builder',
+    changes: [
+      'New: Trigger Condition Builder, so a flow only starts when it should, for SharePoint, Dataverse, Outlook and other triggers.',
+      'Reads choice, person and lookup columns the right way, and guards text checks against empty values so the condition never errors.',
+      'Presets for common cases, such as new items only and ignoring the flow’s own edits to stop loops, plus “any is true” as one @or line.',
+    ],
+  },
+  {
     version: '1.10',
     date: '2026-10-23',
     title: 'Desktop flows, and every Power Apps formula',

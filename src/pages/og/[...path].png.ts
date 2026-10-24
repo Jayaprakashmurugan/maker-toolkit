@@ -57,6 +57,15 @@ export const getStaticPaths = (() => {
       },
     },
     {
+      path: 'trigger-condition-builder',
+      card: {
+        kicker: 'Tool · Power Automate · Triggers',
+        title: 'Trigger Condition Builder',
+        titleFont: 'display',
+        summary: 'Make a flow start only when it should. Conditions for SharePoint, Dataverse and Outlook, ready to paste.',
+      },
+    },
+    {
       path: 'list-copier',
       card: {
         kicker: 'Tool · SharePoint · Microsoft Lists',

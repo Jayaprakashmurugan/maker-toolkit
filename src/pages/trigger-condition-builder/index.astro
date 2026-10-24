@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import TriggerBuilder from '../../components/TriggerBuilder';
+
+const title = 'Trigger Condition Builder';
+const description =
+  'Build Power Automate trigger conditions without guesswork, so a flow only starts when it should. For SharePoint, Dataverse, Outlook and other triggers.';
+
+const faqs = [
+  {
+    q: 'What is a trigger condition?',
+    a: 'A rule on the trigger itself. If it is false, the flow never starts, which saves runs, avoids loops and keeps run history clean, unlike a Condition action that only checks after the flow has started.',
+  },
+  {
+    q: 'Why does every condition start with @?',
+    a: 'The Trigger conditions box expects a full expression, and the @ marks it as one. Paste each line exactly as shown.',
+  },
+  {
+    q: 'How do I make OR logic?',
+    a: 'Separate condition boxes are always combined with AND. For OR, choose "Any is true" and the builder writes a single @or(...) condition for one box.',
+  },
+  {
+    q: 'How do I stop a flow from triggering itself?',
+    a: 'When a flow updates the same SharePoint item that triggered it, it can loop. Use the "Ignore edits made by the flow’s account" preset with the email of the account the flow’s connection uses.',
+  },
+  {
+    q: 'My condition never matches. What should I check?',
+    a: 'Use internal names (spaces become _x0020_), read choice columns through /Value, and compare numbers without quotes. If text case might differ, tick Aa to ignore case.',
+  },
+];
+---
+
+<Base title={title} description={description} image="/og/trigger-condition-builder.png">
+  <div class="wrap wrap--wide">
+    <header class="page-head">
+      <p class="kicker"><b>Tool</b> · Power Automate · Triggers</p>
+      <h1>{title}</h1>
+      <p class="page-head__lede">{description}</p>
+    </header>
+
+    <TriggerBuilder client:load />
+  </div>
+
+  <section class="wrap section" aria-labelledby="tc-faq">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="tc-faq">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq" data-reveal-group>
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

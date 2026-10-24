@@ -59,6 +59,13 @@ export const tools: Tool[] = [
     meta: 'SharePoint + Dataverse',
   },
   {
+    title: 'Trigger Condition Builder',
+    description: 'Make a flow start only when it should: build trigger conditions for SharePoint, Dataverse and Outlook.',
+    href: '/trigger-condition-builder/',
+    status: 'live',
+    meta: 'Power Automate · Triggers',
+  },
+  {
     title: 'Expression Picker',
     description: 'Paste a step’s JSON, click the value you need, and copy its Power Automate expression and Power Apps formula.',
     href: '/json-expression-picker/',

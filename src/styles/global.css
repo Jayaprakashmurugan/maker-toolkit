@@ -3085,6 +3085,7 @@ button {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
   .od-row > input:first-of-type,
+  .od-row > .od-field,
   .od-value,
   .od-shortcuts {
     grid-column: 1 / -1;

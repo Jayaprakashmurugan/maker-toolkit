@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import SvgConverter from '../../components/SvgConverter';
+
+const title = 'SVG to Power Apps';
+const description =
+  'Turn any SVG icon into an Image formula for Power Apps: cleaned, minified and ready to paste, with colors you can drive from Power Fx.';
+
+const faqs = [
+  {
+    q: 'Why use a formula instead of uploading the SVG as media?',
+    a: 'A media file is fixed. A formula can change colors with Power Fx, for example by status or theme, and it travels with a component or a copied control, with no media files to bring along.',
+  },
+  {
+    q: 'Why are the quotes in my SVG changed?',
+    a: 'The formula is Power Fx text inside double quotes, so the SVG’s attributes are rewritten with single quotes, which SVG treats the same. Any other double quotes are doubled, the way Power Fx expects.',
+  },
+  {
+    q: 'Why does the formula use EncodeUrl?',
+    a: 'Characters such as # and % have a special meaning in a data URI, so a color like #0F6CBD would cut the image short. EncodeUrl makes the whole SVG safe when the app runs.',
+  },
+  {
+    q: 'How do I make a color change with my data?',
+    a: 'Set that color to “From Power Fx” and type an expression that gives color text, such as If(ThisItem.Status = "Done", "#107C10", "#C50F1F"). For a color value, use Mid(JSON(Color.Red), 2, 7).',
+  },
+  {
+    q: 'My icon shows up black. Why?',
+    a: 'Icons made for websites often use currentColor, which means “the text color” on a web page but black inside an image. Pick a new color for it, or drive it from Power Fx.',
+  },
+  {
+    q: 'Is my SVG uploaded anywhere?',
+    a: 'No. Reading, cleaning and converting all happen in your browser, and the file never leaves your device.',
+  },
+];
+---
+
+<Base title={title} description={description} image="/og/svg-to-power-apps.png">
+  <div class="wrap wrap--wide">
+    <header class="page-head">
+      <p class="kicker"><b>Tool</b> · Power Apps · Icons and images</p>
+      <h1>{title}</h1>
+      <p class="page-head__lede">{description}</p>
+    </header>
+
+    <SvgConverter client:load />
+  </div>
+
+  <section class="wrap section" aria-labelledby="sv-faq">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="sv-faq">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq" data-reveal-group>
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

@@ -2041,6 +2041,7 @@ button {
 }
 .bf-input {
   flex: 1;
+  font-variant-ligatures: none;
   width: 100%;
   min-height: 22rem;
   padding: 0.9rem;
@@ -3089,6 +3090,124 @@ button {
   .od-value,
   .od-shortcuts {
     grid-column: 1 / -1;
+  }
+}
+
+/* ── SVG to Power Apps ────────────────────────────────────── */
+
+.sv-stats {
+  font-family: var(--f-mono);
+  font-size: 0.74rem;
+  color: var(--ink-3);
+}
+.sv-stats b {
+  color: var(--ink);
+}
+.sv-stage {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-height: 22rem;
+  padding: 1.5rem;
+  background-color: var(--card);
+  background-image:
+    linear-gradient(45deg, var(--rule) 25%, transparent 25%, transparent 75%, var(--rule) 75%),
+    linear-gradient(45deg, var(--rule) 25%, transparent 25%, transparent 75%, var(--rule) 75%);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    10px 10px;
+}
+.sv-stage img {
+  width: min(100%, 16rem);
+  max-height: 20rem;
+  object-fit: contain;
+}
+.sv-stage .bf-output__empty {
+  max-width: 24rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink-2);
+}
+.sv-colors {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.sv-color {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) 11rem minmax(0, 14rem);
+  align-items: center;
+  gap: 0.75rem;
+}
+.sv-swatch {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+}
+.sv-color__name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sv-color__name code {
+  overflow-wrap: anywhere;
+}
+.sv-color__name small {
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+.sv-picker {
+  width: 100%;
+  height: 2.4rem;
+  padding: 0.15rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--card);
+  cursor: pointer;
+}
+.sv-fx {
+  font-family: var(--f-mono);
+}
+.sv-hint {
+  margin-top: 0.9rem;
+  font-size: 0.88rem;
+  color: var(--ink-2);
+}
+.sv-out .code {
+  max-height: 22rem;
+  overflow: auto;
+}
+.sv-out .code .copy-btn {
+  position: sticky;
+  top: 0;
+}
+.sv-svgcopy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  color: var(--ink-2);
+}
+@media (max-width: 640px) {
+  .sv-color {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+  }
+  .sv-color > select,
+  .sv-color > input {
+    grid-column: 2;
+  }
+  .sv .bf-pane--out {
+    min-height: 0;
+  }
+  .sv-stage {
+    min-height: 14rem;
   }
 }
 

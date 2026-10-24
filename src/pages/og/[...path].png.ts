@@ -66,6 +66,15 @@ export const getStaticPaths = (() => {
       },
     },
     {
+      path: 'svg-to-power-apps',
+      card: {
+        kicker: 'Tool · Power Apps · Icons',
+        title: 'SVG to Power Apps',
+        titleFont: 'display',
+        summary: 'Turn an SVG icon into an Image formula, cleaned and ready to paste, with colors from Power Fx.',
+      },
+    },
+    {
       path: 'list-copier',
       card: {
         kicker: 'Tool · SharePoint · Microsoft Lists',

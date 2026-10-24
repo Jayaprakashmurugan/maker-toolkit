@@ -66,6 +66,13 @@ export const tools: Tool[] = [
     meta: 'Power Automate · Triggers',
   },
   {
+    title: 'SVG to Power Apps',
+    description: 'Turn an SVG icon into an Image formula you can paste, with colors you can drive from Power Fx.',
+    href: '/svg-to-power-apps/',
+    status: 'live',
+    meta: 'Power Apps · Icons',
+  },
+  {
     title: 'Expression Picker',
     description: 'Paste a step’s JSON, click the value you need, and copy its Power Automate expression and Power Apps formula.',
     href: '/json-expression-picker/',

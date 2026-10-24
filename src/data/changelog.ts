@@ -8,6 +8,16 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.12',
+    date: '2026-10-24',
+    title: 'SVG to Power Apps',
+    changes: [
+      'New: SVG to Power Apps turns any SVG into an Image formula, as editable text with EncodeUrl or as base64.',
+      'Cleans out scripts, design-tool leftovers and comments, adds a missing viewBox, and can round numbers to make the formula shorter.',
+      'Finds every color in the SVG so you can change it or drive it from Power Fx, including currentColor icons that would otherwise show black.',
+    ],
+  },
+  {
     version: '1.11',
     date: '2026-10-24',
     title: 'Trigger Condition Builder',

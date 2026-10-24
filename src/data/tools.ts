@@ -73,6 +73,13 @@ export const tools: Tool[] = [
     meta: 'Power Apps · Icons',
   },
   {
+    title: 'Regex Tester for Power Fx',
+    description: 'Test patterns for IsMatch, Match and MatchAll, check them against Power Fx’s rules, and copy the formula.',
+    href: '/regex-tester/',
+    status: 'live',
+    meta: 'Power Apps · Power Fx',
+  },
+  {
     title: 'Expression Picker',
     description: 'Paste a step’s JSON, click the value you need, and copy its Power Automate expression and Power Apps formula.',
     href: '/json-expression-picker/',

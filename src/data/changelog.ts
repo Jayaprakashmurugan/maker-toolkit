@@ -8,6 +8,17 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '1.13',
+    date: '2026-10-24',
+    title: 'Regex Tester for Power Fx',
+    changes: [
+      'New: Regex Tester for IsMatch, Match and MatchAll, with results for each line of your test text or for a whole block.',
+      'Checks a pattern against the Power Fx 1.0 rules and explains each problem in plain words, or tests it the way canvas apps run it today.',
+      'Shows named and numbered submatches and StartMatch, and writes the three formulas with the right MatchOptions.',
+      'Common patterns to start from, including email, Indian mobile numbers, PIN codes and PAN.',
+    ],
+  },
+  {
     version: '1.12',
     date: '2026-10-24',
     title: 'SVG to Power Apps',

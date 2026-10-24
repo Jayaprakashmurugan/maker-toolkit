@@ -35,6 +35,7 @@ npm run preview   # serve dist/ to check the production build
 | `src/components/ODataBuilder.tsx` + `src/lib/odata.ts` | The OData Filter Builder: per-source formatting rules, date shortcuts and the SharePoint internal-name converter. |
 | `src/components/TriggerBuilder.tsx` + `src/lib/triggerCondition.ts` | The Trigger Condition Builder: field paths per trigger, null-safe text checks, presets and AND/OR output. |
 | `src/components/SvgConverter.tsx` + `src/lib/svgPowerApps.ts` | SVG to Power Apps: cleans and re-serializes the SVG with single quotes, finds its colors and builds the Image formula. |
+| `src/components/RegexTester.tsx` + `src/lib/powerFxRegex.ts` | The Regex Tester: Power Fx 1.0 rule checker, translation to an equivalent JavaScript RegExp (run in a worker with a timeout), and formula output. |
 | `src/components/ListCopier.tsx` + `src/lib/spList.ts` | The List Copier: parses SharePoint REST XML/JSON and generates console, Power Automate and PnP scripts. |
 | `src/lib/og.ts` + `src/pages/og/` | Share images (1200×630 PNG) generated for every page at build time. |
 | `src/lib/logo.ts` | The logo's paths and colors: the single source for the header logo, favicons, app icons and brand kit. |

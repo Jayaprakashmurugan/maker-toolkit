@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import RegexTester from '../../components/RegexTester';
+
+const title = 'Regex Tester for Power Fx';
+const description =
+  'Test a pattern for IsMatch, Match and MatchAll against your own text, check it against Power Fx’s regex rules, and copy the formula.';
+
+const faqs = [
+  {
+    q: 'Why does my pattern work on regex websites but not in Power Apps?',
+    a: 'Every language has its own regex dialect. Power Fx 1.0 allows only features that work the same in JavaScript and .NET, so things like a lone hyphen inside [ ], \\d inside [^ ], or (?i) in the middle of a pattern give an authoring error. Choose Power Fx 1.0 and the tester points to each problem.',
+  },
+  {
+    q: 'What is the difference between “Power Apps” and “Power Fx 1.0”?',
+    a: 'Canvas apps today use an earlier version of Power Fx regular expressions with fewer checks and fewer features: no DotAll or FreeSpacing, numbered submatches always on, and simpler Match.Email and Match.Hyphen patterns. Power Fx 1.0 is used by Copilot Studio, Dataverse formulas and other hosts, and is coming to canvas apps behind the “Power Fx V1.0 compatibility” switch.',
+  },
+  {
+    q: 'Why does IsMatch say false when the text contains a match?',
+    a: 'In Power Apps, IsMatch checks the whole text by default (MatchOptions.Complete). Choose “Anywhere” to test with MatchOptions.Contains, which Match and MatchAll use by default.',
+  },
+  {
+    q: 'How do I get a part of the match?',
+    a: 'Name it with (?<name>...), then read it from Match, for example Match(TextInput1.Text, "(?<area>\\d{3})-\\d{4}").area. With NumberedSubMatches, plain ( ) groups are listed in the SubMatches table instead.',
+  },
+  {
+    q: 'Can I put the pattern in a variable?',
+    a: 'No. Power Fx checks the pattern while you write the formula, so it must be fixed text. You can join fixed pieces with &, such as "A" & Match.MultipleDigits.',
+  },
+  {
+    q: 'Are the results exactly what Power Fx returns?',
+    a: 'For Power Fx 1.0 the tester translates your pattern the way the rules define it, including Unicode \\d, \\w, \\s and \\b, so results should match. Always test critical patterns in your app too.',
+  },
+];
+---
+
+<Base title={title} description={description} image="/og/regex-tester.png">
+  <div class="wrap wrap--wide">
+    <header class="page-head">
+      <p class="kicker"><b>Tool</b> · Power Apps · Power Fx</p>
+      <h1>{title}</h1>
+      <p class="page-head__lede">{description}</p>
+    </header>
+
+    <RegexTester client:load />
+  </div>
+
+  <section class="wrap section" aria-labelledby="rx-faq">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="rx-faq">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq" data-reveal-group>
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

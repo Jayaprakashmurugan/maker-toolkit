@@ -75,6 +75,15 @@ export const getStaticPaths = (() => {
       },
     },
     {
+      path: 'regex-tester',
+      card: {
+        kicker: 'Tool · Power Apps · Power Fx',
+        title: 'Regex Tester for Power Fx',
+        titleFont: 'display',
+        summary: 'Test patterns for IsMatch, Match and MatchAll, check them against Power Fx’s rules, copy the formula.',
+      },
+    },
+    {
       path: 'list-copier',
       card: {
         kicker: 'Tool · SharePoint · Microsoft Lists',

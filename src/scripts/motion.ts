@@ -1,4 +1,4 @@
-// Small, purposeful motion: decode titles, type formulas, count numbers, reveal on scroll.
+// Small, purposeful motion: decode titles, count numbers, reveal on scroll.
 // Everything is skipped when the visitor prefers reduced motion.
 
 declare global {
@@ -34,57 +34,6 @@ function scramble(el: HTMLElement) {
     }
   };
   requestAnimationFrame(frame);
-}
-
-/** Copies the first n characters of highlighted code (flat spans + text) into target. */
-function typeInto(target: HTMLElement, source: Node[], n: number) {
-  target.textContent = '';
-  let left = n;
-  for (const node of source) {
-    if (left <= 0) break;
-    const part = (node.textContent ?? '').slice(0, left);
-    left -= part.length;
-    if (node.nodeType === Node.TEXT_NODE) target.append(part);
-    else {
-      const span = node.cloneNode(false) as HTMLElement;
-      span.textContent = part;
-      target.append(span);
-    }
-  }
-}
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-/** Types each formula in the homepage ticker, then shows what it does. */
-function ticker(root: HTMLElement) {
-  const lines = [...root.querySelectorAll<HTMLElement>('.ticker__line')];
-  if (!lines.length) return;
-  const sources = lines.map((l) => [...l.querySelector('code')!.childNodes].map((n) => n.cloneNode(true)));
-  const lengths = sources.map((s) => s.reduce((n, node) => n + (node.textContent ?? '').length, 0));
-  root.classList.add('is-typing');
-
-  let visible = true;
-  new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(root);
-  const waitUntilShown = async () => {
-    while (!visible || document.hidden) await sleep(400);
-  };
-
-  (async () => {
-    for (let i = 0; ; i = (i + 1) % lines.length) {
-      await waitUntilShown();
-      const line = lines[i];
-      const code = line.querySelector('code')!;
-      lines.forEach((l) => l.classList.toggle('is-active', l === line));
-      line.classList.remove('is-done');
-      for (let n = 0; n <= lengths[i]; n++) {
-        typeInto(code, sources[i], n);
-        await sleep(22 + Math.random() * 34);
-      }
-      await sleep(250);
-      line.classList.add('is-done');
-      await sleep(2600);
-    }
-  })();
 }
 
 /** Counts a number up from zero when it scrolls into view. */
@@ -127,7 +76,6 @@ function init() {
   );
 
   document.querySelectorAll<HTMLElement>('[data-reveal], [data-count], [data-scramble]').forEach((el) => once.observe(el));
-  document.querySelectorAll<HTMLElement>('.ticker').forEach(ticker);
 }
 
 init();

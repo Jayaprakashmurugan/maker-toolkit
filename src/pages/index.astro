@@ -1,29 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
-import CodeTicker from '../components/CodeTicker';
-import ToolGrid from '../components/ToolGrid.astro';
-import { categories, tools, toolsIn } from '../data/tools';
+import Portrait from '../components/Portrait.astro';
+import SectionHead from '../components/SectionHead.astro';
+import ToolBrowser from '../components/ToolBrowser.astro';
+import PostGrid from '../components/PostGrid.astro';
+import VideoGrid from '../components/VideoGrid.astro';
+import Icon from '../components/Icon.astro';
+import { tools } from '../data/tools';
+import { videos } from '../data/videos';
 import { desktopReference, powerAppsReference, powerAutomateReference } from '../data/references';
+import { getPosts } from '../lib/posts';
 import { siteConfig } from '../site.config';
 
-const tickerLines = [
-  { code: `Patch(Tasks, ThisItem, { Status: "Done" })`, note: 'Power Apps: mark the task as done', lang: 'powerfx' as const },
-  {
-    code: `formatDateTime(convertTimeZone(utcNow(), 'UTC', 'India Standard Time'), 'dd MMM yyyy')`,
-    note: 'Power Automate: today in India',
-    lang: 'wdl' as const,
-  },
-  { code: `Filter(Tasks, AssignedTo.Email = User().Email, Status <> "Done")`, note: 'Power Apps: my open tasks', lang: 'powerfx' as const },
-  { code: `union(variables('emails'), variables('emails'))`, note: 'Power Automate: remove duplicates', lang: 'wdl' as const },
-  { code: `IfError(Value(txtQty.Text), 0)`, note: 'Power Apps: never crash on bad input', lang: 'powerfx' as const },
-];
-
+const posts = (await getPosts()).filter((p) => !p.data.draft);
 const entries = powerAppsReference.items.length + powerAutomateReference.items.length + desktopReference.items.length;
 const toolCount = tools.filter((t) => t.kind === 'tool').length;
-const groups = categories.map((c) => ({ ...c, tools: toolsIn(c.id) }));
-// Cards are numbered straight through all four groups.
-const starts = groups.map((_, i) => 1 + groups.slice(0, i).reduce((n, g) => n + g.tools.length, 0));
-const tryThese = ['remove duplicates', 'format date', 'Patch', 'trigger condition', 'email table', 'regex'];
+const tryThese = ['remove duplicates', 'format date', 'Patch', 'trigger condition', 'regex'];
+const firstName = siteConfig.author.split(' ')[0];
 
 const faqs = [
   {
@@ -40,127 +33,104 @@ const faqs = [
   },
   {
     q: 'Something is wrong or missing. What do I do?',
-    a: `Report it on the issues page linked in the footer. Corrections and suggestions are welcome.`,
+    a: 'Report it on the issues page linked from the Contact page. Corrections and suggestions are welcome.',
   },
 ];
 ---
 
 <Base description={siteConfig.description}>
-  <section class="wrap hero">
-    <p class="kicker reveal" style="--d:0"><b>Field manual</b> · Vol. 01 · Power Platform</p>
-    <h1 class="hero__title reveal" style="--d:1">
-      <span>Formulas,</span>
-      <span class="hero__accent" data-scramble>decoded.</span>
-    </h1>
-
-    <div class="hero__grid">
-      <div class="reveal" style="--d:3">
-        <p class="hero__lede">
-          A free toolbox for people who build with Power Apps, Power Automate and Dataverse. Search {entries} formulas
-          and expressions, or pick a tool. Everything runs in your browser.
-        </p>
-        <form class="hero-search" role="search" action="/" data-search-form>
-          <label class="visually-hidden" for="hero-q">Search tools, formulas and expressions</label>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
-          <input id="hero-q" type="search" placeholder="Search tools, formulas, expressions…" autocomplete="off" spellcheck="false" data-search-input />
-          <kbd data-search-kbd>Ctrl K</kbd>
-        </form>
-        <p class="hero-search__try">
-          Try
-          {
-            tryThese.map((q) => (
-              <button type="button" class="chip" data-search-query={q}>
-                {q}
-              </button>
-            ))
-          }
-        </p>
-      </div>
-      <div class="reveal" style="--d:4">
-        <CodeTicker lines={tickerLines} />
-      </div>
+  <section class="wrap hero2">
+    <div class="hero2__photo reveal" style="--d:0">
+      <Portrait />
     </div>
+    <div class="hero2__text">
+      <p class="hero2__by reveal" style="--d:1">
+        By <a href="/about/">{siteConfig.author}</a> · {siteConfig.authorRole.replace(/^Microsoft /, '')}
+      </p>
+      <h1 class="hero2__title reveal" style="--d:2">
+        Maker <span class="grad-text" data-scramble>Toolkit</span>
+      </h1>
+      <p class="hero2__lede reveal" style="--d:3">
+        Free tools, guides and videos for <b>Power Apps</b>, <b>Power Automate</b> and <b>Dataverse</b> makers.
+        Search {entries} formulas or pick a tool. Everything runs in your browser.
+      </p>
+      <div class="hero2__actions reveal" style="--d:4">
+        <a class="btn btn--lg" href="/tools/">Explore tools <Icon name="arrow" /></a>
+        <a class="btn btn--outline btn--lg" href="/about/">About me</a>
+      </div>
+      <form class="hero-search reveal" style="--d:5" role="search" action="/" data-search-form>
+        <label class="visually-hidden" for="hero-q">Search tools, formulas and expressions</label>
+        <Icon name="search" />
+        <input id="hero-q" type="search" placeholder="Search tools, formulas, expressions…" autocomplete="off" spellcheck="false" data-search-input />
+        <kbd data-search-kbd>Ctrl K</kbd>
+      </form>
+      <p class="hero-search__try reveal" style="--d:5">
+        Try
+        {
+          tryThese.map((q) => (
+            <button type="button" class="chip" data-search-query={q}>
+              {q}
+            </button>
+          ))
+        }
+      </p>
+    </div>
+  </section>
 
-    <dl class="stats reveal" style="--d:5">
+  <section class="wrap">
+    <dl class="hstats" data-reveal-group>
       <div><dt>Power Fx formulas</dt><dd data-count>{powerAppsReference.items.length}</dd></div>
       <div><dt>Flow expressions</dt><dd data-count>{powerAutomateReference.items.length}</dd></div>
       <div><dt>Desktop formulas</dt><dd data-count>{desktopReference.items.length}</dd></div>
-      <div><dt>Tools</dt><dd data-count>{toolCount}</dd></div>
+      <div><dt>Free tools</dt><dd data-count>{toolCount}</dd></div>
       <div><dt>Cookies</dt><dd>0</dd></div>
     </dl>
   </section>
 
-  <section class="wrap section" id="tools" aria-labelledby="tools-title">
-    <div class="section-head" data-reveal>
-      <div>
-        <p class="kicker">The toolbox</p>
-        <h2 id="tools-title">Every tool, by product</h2>
-      </div>
-      <p>{tools.length} tools and references in four groups. Each one does one job and needs no setup.</p>
-    </div>
-
-    <nav class="cat-jump" aria-label="Tool groups" data-reveal>
-      {
-        groups.map((g) => (
-          <a href={`#${g.id}`} style={`--cat:${g.color}`}>
-            <span class="tcard__dot" aria-hidden="true" />
-            {g.name}
-            <span class="cat-jump__n">{g.tools.length}</span>
-          </a>
-        ))
-      }
-    </nav>
-
-    {
-      groups.map((g, i) => (
-        <section class="cat" id={g.id} aria-labelledby={`${g.id}-title`} style={`--cat:${g.color}`}>
-          <header class="cat__head" data-reveal>
-            <p class="cat__index">{String(i + 1).padStart(2, '0')}</p>
-            <h3 id={`${g.id}-title`}>{g.name}</h3>
-            <p class="cat__summary">{g.summary}</p>
-            <a class="cat__more" href={`/${g.id}/`}>
-              All {g.name} tools <span aria-hidden="true">→</span>
-            </a>
-          </header>
-          <ToolGrid tools={g.tools} start={starts[i]} />
-        </section>
-      ))
-    }
+  <section class="wrap home-section" id="tools" aria-labelledby="h-tools">
+    <SectionHead icon="tools" title="Tools" id="h-tools" more={{ href: '/tools/', label: 'All tools' }} />
+    <ToolBrowser />
   </section>
 
-  <section class="wrap section" aria-labelledby="why-title">
-    <div class="section-head" data-reveal>
+  {
+    posts.length > 0 && (
+      <section class="wrap home-section" aria-labelledby="h-posts">
+        <SectionHead icon="blog" title="Latest blog posts" id="h-posts" more={{ href: '/blog/', label: 'All posts' }} />
+        <PostGrid posts={posts.slice(0, 3)} />
+      </section>
+    )
+  }
+
+  {
+    videos.length > 0 && (
+      <section class="wrap home-section" aria-labelledby="h-videos">
+        <SectionHead icon="video" title="Latest videos" id="h-videos" more={{ href: '/videos/', label: 'All videos' }} />
+        <VideoGrid videos={videos.slice(0, 3)} />
+      </section>
+    )
+  }
+
+  <section class="wrap home-section" aria-labelledby="h-about">
+    <SectionHead icon="user" title="Who builds this" id="h-about" />
+    <div class="intro-card" data-reveal>
+      <Portrait size="md" badge={false} />
       <div>
-        <p class="kicker">How it works</p>
-        <h2 id="why-title">Built for the middle of a build</h2>
+        <p class="intro-card__name">Hi, I'm {firstName}.</p>
+        <p class="intro-card__bio">{siteConfig.authorBio}</p>
+        <ul class="pills" aria-label="Certifications">
+          {siteConfig.authorCerts.map((c) => <li class="pill"><Icon name="award" /> {c.code}</li>)}
+          <li class="pill"><Icon name="pin" /> {siteConfig.authorLocation}</li>
+        </ul>
+        <p class="intro-card__links">
+          <a class="btn btn--outline" href="/about/">More about me <Icon name="arrow" /></a>
+          <a class="btn btn--outline" href="/contact/">Get in touch</a>
+        </p>
       </div>
-    </div>
-    <div class="principles" data-reveal-group>
-      <article class="principle">
-        <p class="kicker"><b>01</b> · Search</p>
-        <h3>Search everything at once</h3>
-        <p>Press Ctrl K anywhere and type “remove duplicates” or “format date” to find the formula, expression or tool that does it.</p>
-      </article>
-      <article class="principle">
-        <p class="kicker"><b>02</b> · Copy</p>
-        <h3>Copy, paste, done</h3>
-        <p>Every syntax line, example and generated formula has a copy button. Paste it straight into the formula bar.</p>
-      </article>
-      <article class="principle">
-        <p class="kicker"><b>03</b> · Private</p>
-        <h3>Private by default</h3>
-        <p>No accounts, no cookies, no tracking of what you type. It is a plain, fast static site.</p>
-      </article>
     </div>
   </section>
 
-  <section class="wrap section" aria-labelledby="faq-title">
-    <div class="section-head" data-reveal>
-      <div>
-        <p class="kicker">Questions</p>
-        <h2 id="faq-title">FAQ</h2>
-      </div>
-    </div>
+  <section class="wrap home-section" aria-labelledby="faq-title">
+    <SectionHead icon="chat" title="Questions" id="faq-title" />
     <div class="faq" data-reveal-group>
       {
         faqs.map((f) => (

@@ -1,0 +1,51 @@
+---
+// Every tool, with tabs to narrow to one category. Without JavaScript, all tools stay visible.
+import { categories, tools, toolsIn, alsoIn } from '../data/tools';
+import ToolGrid from './ToolGrid.astro';
+
+interface Props {
+  level?: 2 | 3;
+}
+
+const { level = 3 } = Astro.props;
+const tabs = [
+  { id: 'all', label: 'All', n: tools.length, color: '' },
+  ...categories.map((c) => ({ id: c.id, label: c.short, n: toolsIn(c.id).length + alsoIn(c.id).length, color: c.color })),
+];
+---
+
+<div class="tbrowser" data-tool-browser>
+  <div class="tbrowser__tabs" role="group" aria-label="Show tools for">
+    {
+      tabs.map((t) => (
+        <button type="button" class="tbrowser__tab" data-filter={t.id} aria-pressed={t.id === 'all' ? 'true' : 'false'} style={t.color ? `--cat:${t.color}` : undefined}>
+          {t.color && <span class="tcard__dot" aria-hidden="true" />}
+          {t.label}
+          <span class="tbrowser__n">{t.n}</span>
+        </button>
+      ))
+    }
+  </div>
+  <p class="visually-hidden" aria-live="polite" data-tool-status></p>
+  <ToolGrid tools={tools} level={level} />
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tool-browser]').forEach((root) => {
+    const status = root.querySelector('[data-tool-status]');
+    const cards = [...root.querySelectorAll<HTMLElement>('.tcard')];
+    root.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.filter!;
+        root.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        let shown = 0;
+        for (const card of cards) {
+          const hit = id === 'all' || (card.dataset.cats ?? '').split(' ').includes(id);
+          card.hidden = !hit;
+          if (hit) shown++;
+        }
+        if (status) status.textContent = `${shown} tools`;
+      }),
+    );
+  });
+</script>

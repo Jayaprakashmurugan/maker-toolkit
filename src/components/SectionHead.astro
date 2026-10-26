@@ -1,0 +1,27 @@
+---
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  icon: IconName;
+  title: string;
+  id: string;
+  /** A "see all" link on the right. */
+  more?: { href: string; label: string };
+}
+
+const { icon, title, id, more } = Astro.props;
+---
+
+<div class="shead" data-reveal>
+  <h2 class="shead__title" id={id}>
+    <span class="shead__icon"><Icon name={icon} /></span>
+    {title}
+  </h2>
+  {
+    more && (
+      <a class="shead__more" href={more.href}>
+        {more.label} <Icon name="arrow" />
+      </a>
+    )
+  }
+</div>

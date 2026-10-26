@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { siteConfig } from '../site.config';
+
+const linkedin = siteConfig.authorLinks.find((l) => l.icon === 'linkedin');
+const github = siteConfig.authorLinks.find((l) => l.icon === 'github');
+
+const ways = [
+  linkedin && {
+    icon: 'linkedin' as const,
+    title: 'Message me on LinkedIn',
+    text: 'The best way to reach me about Power Platform work, collaborations or speaking.',
+    href: linkedin.href,
+    cta: 'Open LinkedIn',
+  },
+  {
+    icon: 'chat' as const,
+    title: 'Report a problem or suggest a tool',
+    text: 'Found a mistake in a formula, or have an idea for a tool? Open an issue on GitHub so others can see it too.',
+    href: siteConfig.feedbackUrl,
+    cta: 'Open an issue',
+  },
+  github && {
+    icon: 'github' as const,
+    title: 'See the code',
+    text: 'This site is open source. Browse it, star it, or send a pull request.',
+    href: github.href,
+    cta: 'Open GitHub',
+  },
+  siteConfig.youtubeUrl && {
+    icon: 'youtube' as const,
+    title: 'Watch on YouTube',
+    text: 'Walkthroughs of the tools and Power Platform tips.',
+    href: siteConfig.youtubeUrl,
+    cta: 'Open YouTube',
+  },
+].filter(Boolean) as { icon: 'linkedin' | 'chat' | 'github' | 'youtube'; title: string; text: string; href: string; cta: string }[];
+---
+
+<Base title="Contact" description={`Get in touch with ${siteConfig.author}: LinkedIn for work and ideas, GitHub for bugs and tool suggestions.`}>
+  <div class="wrap">
+    <PageHead icon="chat" title="Contact" lede="Questions, ideas or work? Here's how to reach me." />
+    <ul class="ways" data-reveal-group>
+      {
+        ways.map((w) => (
+          <li>
+            <a href={w.href} rel="noopener">
+              <span class="ways__icon">
+                <Icon name={w.icon} />
+              </span>
+              <span class="ways__title">{w.title}</span>
+              <span class="ways__text">{w.text}</span>
+              <span class="ways__cta">
+                {w.cta} <Icon name="external" />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>

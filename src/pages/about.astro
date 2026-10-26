@@ -1,11 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Portrait from '../components/Portrait.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Icon from '../components/Icon.astro';
 import { siteConfig } from '../site.config';
-
-const initials = siteConfig.author
-  .split(/\s+/)
-  .map((w) => w[0])
-  .join('');
+import { tools } from '../data/tools';
 
 const personLd = {
   '@context': 'https://schema.org',
@@ -13,38 +13,36 @@ const personLd = {
   name: siteConfig.author,
   jobTitle: siteConfig.authorRole,
   address: { '@type': 'PostalAddress', addressLocality: 'Chennai', addressCountry: 'IN' },
-  sameAs: siteConfig.authorLinks.map((l) => l.href),
+  sameAs: [...siteConfig.authorLinks.map((l) => l.href), ...(siteConfig.youtubeUrl ? [siteConfig.youtubeUrl] : [])],
 };
+
+const skills = ['Power Apps', 'Power Automate', 'Dataverse', 'Power Fx', 'SharePoint', 'Desktop flows', 'Mathematics'];
+
+const now = [
+  { title: 'Maker Toolkit', text: `${tools.length} free tools and references for makers, with more on the way.`, href: '/tools/' },
+  { title: 'Practical guides', text: 'Step-by-step posts that go with each tool, from real projects.', href: '/blog/' },
+  { title: 'Video walkthroughs', text: 'Short videos that show the tools in a real app or flow.', href: '/videos/' },
+];
 ---
 
-<Base
-  title="About"
-  description={`${siteConfig.name} is a free Power Platform reference built by ${siteConfig.author}, ${siteConfig.authorRole}.`}
-  image="/og/about.png"
->
+<Base title="About" description={`${siteConfig.author}, ${siteConfig.authorRole} in ${siteConfig.authorLocation}. ${siteConfig.authorBio}`} image="/og/about.png">
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(personLd)} />
+  <div class="wrap">
+    <PageHead icon="user" title="About me" lede={`${siteConfig.authorRole} in ${siteConfig.authorLocation}, and the person behind ${siteConfig.name}.`} />
 
-  <article class="wrap prose">
-    <p class="kicker"><b>About</b></p>
-    <h1>Small tools for people who build.</h1>
-    <p class="lede">
-      {siteConfig.name} is a free collection of references and utilities for Power Apps and Power Automate makers.
-    </p>
-
-    <section class="author-card" aria-label="Who builds this" data-reveal>
-      <span class="author-card__mark" aria-hidden="true">{initials}</span>
+    <section class="intro-card" aria-label="Introduction" data-reveal>
+      <Portrait size="md" />
       <div>
-        <p class="author-card__name">{siteConfig.author}</p>
-        <p class="author-card__role">{siteConfig.authorRole} · {siteConfig.authorLocation}</p>
-        <p class="author-card__certs">
-          {siteConfig.authorCerts.map((c) => <span class="tag">{c}</span>)}
-          <span class="author-card__certs-label">Microsoft Certified</span>
-        </p>
-        <p class="author-card__links">
+        <p class="intro-card__name">Hi, I'm {siteConfig.author.split(' ')[0]}.</p>
+        <p class="intro-card__bio">{siteConfig.authorBio}</p>
+        <ul class="pills" aria-label="What I work with">
+          {skills.map((s) => <li class="pill">{s}</li>)}
+        </ul>
+        <p class="intro-card__links">
           {
             siteConfig.authorLinks.map((l) => (
-              <a class="related__item" href={l.href} rel="noopener me">
-                {l.label} ↗
+              <a class="btn btn--outline" href={l.href} rel="noopener me">
+                <Icon name={l.icon as 'linkedin' | 'github'} /> {l.label}
               </a>
             ))
           }
@@ -52,34 +50,53 @@ const personLd = {
       </div>
     </section>
 
-    <h2>Why this exists</h2>
-    <p>
-      I'm a Power Platform developer with a background in mathematics, so formulas are where I feel at home. Power Fx
-      is powerful, but its documentation is spread across many pages, and the answer to “how do I…?” is often a
-      formula you've never heard of.
-    </p>
-    <p>
-      {siteConfig.name} puts those answers in one place: every formula with its syntax, what each part means, an
-      example you can paste straight in, and the gotchas that trip makers up.
-    </p>
+    <section class="home-section" aria-labelledby="now">
+      <SectionHead icon="spark" title="What I'm working on" id="now" />
+      <ul class="infocards" data-reveal-group>
+        {
+          now.map((n) => (
+            <li>
+              <a href={n.href}>
+                <span class="infocards__title">{n.title}</span>
+                <span class="infocards__text">{n.text}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
-    <h2>Who it is for</h2>
-    <p>
-      Citizen developers, analysts and pro developers who work in the Power Platform and want a quick answer without
-      opening five tabs.
-    </p>
+    <section class="home-section" aria-labelledby="certs">
+      <SectionHead icon="award" title="Certifications" id="certs" />
+      <ul class="certs" data-reveal-group>
+        {
+          siteConfig.authorCerts.map((c) => (
+            <li>
+              <span class="certs__code">{c.code}</span>
+              <span class="certs__name">
+                <small>Microsoft Certified</small>
+                {c.name}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
-    <h2>How it is made</h2>
-    <p>
-      The site is built with Astro and React and published as static files on Cloudflare. There is no database, no
-      account system and no tracking of what you type. The <a href="https://github.com/Jayaprakashmurugan/maker-toolkit"
-        rel="noopener">source code is on GitHub</a>.
-    </p>
-
-    <h2>Corrections and ideas</h2>
-    <p>
-      Found a mistake, or want a formula or tool added? <a href={siteConfig.feedbackUrl} rel="noopener">Open an issue</a>
-      or message me on <a href={siteConfig.authorLinks[0].href} rel="noopener">LinkedIn</a>.
-    </p>
-  </article>
+    <section class="home-section prose-post about-story" aria-labelledby="why">
+      <SectionHead icon="tools" title="Why Maker Toolkit exists" id="why" />
+      <p>
+        Power Fx and Power Automate expressions are powerful, but the answers are spread across many pages, and the
+        answer to “how do I…?” is often a formula you've never heard of. {siteConfig.name} puts those answers in one
+        place: every formula with an example you can paste straight in, and tools for the jobs that usually take trial
+        and error.
+      </p>
+      <p>
+        It's built with Astro and published as static files on Cloudflare. There's no database, no account and no
+        tracking of what you type. The <a href="https://github.com/Jayaprakashmurugan/maker-toolkit" rel="noopener">source
+        code is on GitHub</a>, and corrections are always welcome: <a href={siteConfig.feedbackUrl} rel="noopener">open an
+        issue</a> or <a href="/contact/">get in touch</a>.
+      </p>
+    </section>
+  </div>
 </Base>

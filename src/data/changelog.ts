@@ -8,6 +8,17 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '2.0',
+    date: '2026-10-26',
+    title: 'A new look, and room for guides and videos',
+    changes: [
+      'A brighter, cleaner design across every page, with a new typeface, rounded cards, an orange accent and a refreshed dark mode.',
+      'A new homepage with every tool in one place and tabs to narrow it to Power Apps, Power Automate, Dataverse or Utilities.',
+      'New Tools, About and Contact pages, and a menu that works on phones.',
+      'The blog and videos are ready: guides and walkthroughs will appear here as they are published.',
+    ],
+  },
+  {
     version: '1.14',
     date: '2026-10-24',
     title: 'One toolbox, four groups, one search',

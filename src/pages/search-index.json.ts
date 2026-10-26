@@ -4,6 +4,7 @@ import type { APIRoute } from 'astro';
 import { references } from '../data/references';
 import { slugify } from '../data/types';
 import { categoryById, tools } from '../data/tools';
+import { getPosts, postUrl } from '../lib/posts';
 
 export interface SearchEntry {
   /** Title. */
@@ -28,7 +29,8 @@ const KINDS: Record<string, { label: string; color: string }> = {
   'desktop-flow-reference': { label: 'Desktop flows', color: categoryById('power-automate').color },
 };
 
-export const GET: APIRoute = () => {
+export const GET: APIRoute = async () => {
+  const posts = (await getPosts()).filter((p) => !p.data.draft);
   const entries: SearchEntry[] = [
     ...tools.map((t) => {
       const cat = categoryById(t.category);
@@ -53,6 +55,15 @@ export const GET: APIRoute = () => {
         c: KINDS[r.slug]?.color ?? '#857f73',
       })),
     ),
+    ...posts.map((p) => ({
+      t: p.data.title,
+      u: postUrl(p),
+      k: 'Blog',
+      g: 'Blog',
+      d: p.data.description,
+      s: ['blog guide', ...p.data.tags].join(' ').toLowerCase(),
+      c: '#f05a28',
+    })),
     { t: 'What’s new', u: '/changelog/', k: 'Page', g: 'Site', d: 'Every release and what changed.', s: 'changelog release updates new', c: '#857f73' },
     { t: 'About', u: '/about/', k: 'Page', g: 'Site', d: 'Who makes this site and why.', s: 'author contact', c: '#857f73' },
     { t: 'Privacy & terms', u: '/privacy/', k: 'Page', g: 'Site', d: 'No cookies, no tracking, nothing leaves your browser.', s: 'privacy cookies terms', c: '#857f73' },

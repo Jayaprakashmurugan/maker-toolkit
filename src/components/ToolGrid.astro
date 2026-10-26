@@ -1,42 +1,35 @@
 ---
 // Equal-weight cards: every tool and reference gets the same size and layout.
 import { categoryById, type Tool } from '../data/tools';
+import Icon from './Icon.astro';
 
 interface Props {
   tools: Tool[];
-  /** Number shown on the first card; numbering continues from it. */
-  start?: number;
-  /** Show the tool's own category on each card (useful when mixing categories). */
-  showCategory?: boolean;
+  /** Heading level for card titles, so they nest under the section heading. */
+  level?: 2 | 3;
 }
 
-const { tools, start = 1, showCategory = false } = Astro.props;
+const { tools, level = 3 } = Astro.props;
+const H = `h${level}` as 'h2' | 'h3';
 ---
 
 <ul class="tcards" data-reveal-group>
   {
-    tools.map((t, i) => {
+    tools.map((t) => {
       const cat = categoryById(t.category);
       return (
-        <li class="tcard" style={`--cat:${cat.color}`}>
+        <li class="tcard" style={`--cat:${cat.color}`} data-cats={[t.category, ...(t.also ?? [])].join(' ')}>
           <a href={t.href}>
             <span class="tcard__top">
-              <span class="tcard__kind">
-                <span class="tcard__dot" aria-hidden="true" />
-                {t.kind === 'reference' ? 'Reference' : 'Tool'}
-                {showCategory && <> · {cat.short}</>}
-              </span>
-              <span class="tcard__num" aria-hidden="true">
-                {String(start + i).padStart(2, '0')}
-              </span>
+              <span class="tcard__dot" aria-hidden="true" />
+              {cat.short}
+              <span class="tcard__kind">{t.kind === 'reference' ? 'Reference' : 'Tool'}</span>
             </span>
-            <span class="tcard__title">{t.title}</span>
+            <H class="tcard__title">{t.title}</H>
             <span class="tcard__desc">{t.description}</span>
             <span class="tcard__foot">
               <span class="tcard__meta">{t.meta}</span>
-              <span class="tcard__arrow" aria-hidden="true">
-                →
-              </span>
+              <Icon name="arrow" class="tcard__arrow" />
             </span>
           </a>
         </li>

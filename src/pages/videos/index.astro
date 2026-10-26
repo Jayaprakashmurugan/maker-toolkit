@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import VideoGrid from '../../components/VideoGrid.astro';
+import Icon from '../../components/Icon.astro';
+import { videos } from '../../data/videos';
+import { siteConfig } from '../../site.config';
+
+const description = 'Short walkthroughs for Power Apps, Power Automate and Dataverse, and the tools on this site in action.';
+---
+
+<Base title="Videos" description={description} image="/og/videos.png">
+  <div class="wrap">
+    <PageHead icon="video" title="Videos" lede={description}>
+      {
+        siteConfig.youtubeUrl && (
+          <a class="btn" href={`${siteConfig.youtubeUrl}?sub_confirmation=1`} rel="noopener">
+            <Icon name="youtube" /> Subscribe on YouTube
+          </a>
+        )
+      }
+    </PageHead>
+
+    {
+      videos.length > 0 ? (
+        <VideoGrid videos={videos} level={2} />
+      ) : (
+        <section class="empty" aria-labelledby="empty-title">
+          <span class="empty__icon">
+            <Icon name="video" />
+          </span>
+          <h2 id="empty-title">Videos are coming soon</h2>
+          <p>Walkthroughs of each tool in a real app or flow are in the works. The tools are ready to use today.</p>
+          <a class="btn" href="/tools/">
+            Explore tools <Icon name="arrow" />
+          </a>
+        </section>
+      )
+    }
+  </div>
+</Base>

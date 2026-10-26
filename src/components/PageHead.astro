@@ -1,0 +1,20 @@
+---
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  icon: IconName;
+  title: string;
+  lede?: string;
+}
+
+const { icon, title, lede } = Astro.props;
+---
+
+<header class="phead">
+  <h1 class="phead__title">
+    <span class="phead__icon"><Icon name={icon} /></span>
+    {title}
+  </h1>
+  {lede && <p class="phead__lede">{lede}</p>}
+  <slot />
+</header>

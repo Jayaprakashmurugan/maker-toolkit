@@ -1,0 +1,114 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Portrait from '../../components/Portrait.astro';
+import { formatDate, getPosts, postCover, postUrl, readingTime, type Post } from '../../lib/posts';
+import { siteConfig } from '../../site.config';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+const { post, newer, older } = Astro.props as { post: Post; newer?: Post; older?: Post };
+const { Content } = await render(post);
+const { title, description, date, updated, tags, video, draft } = post.data;
+
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished: date.toISOString(),
+  dateModified: (updated ?? date).toISOString(),
+  author: { '@type': 'Person', name: siteConfig.author, url: new URL('/about/', Astro.site).href },
+  image: new URL(postCover(post), Astro.site).href,
+  mainEntityOfPage: new URL(postUrl(post), Astro.site).href,
+};
+---
+
+<Base title={title} description={description} image={postCover(post)}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(articleLd)} />
+  <article class="wrap post">
+    <a class="post__back" href="/blog/"><Icon name="arrow" class="flip" /> All posts</a>
+    <header class="post__head">
+      {draft && <p class="post__draft">Draft: only visible while you run the site locally.</p>}
+      {
+        tags.length > 0 && (
+          <p class="post__tags">
+            {tags.map((t) => (
+              <span class="pill">{t}</span>
+            ))}
+          </p>
+        )
+      }
+      <h1>{title}</h1>
+      <p class="post__lede">{description}</p>
+      <p class="post__meta">
+        <span><Icon name="calendar" /> <time datetime={date.toISOString()}>{formatDate(date)}</time></span>
+        {updated && <span>Updated <time datetime={updated.toISOString()}>{formatDate(updated)}</time></span>}
+        <span><Icon name="clock" /> {readingTime(post.body)} min read</span>
+      </p>
+    </header>
+
+    {
+      video && (
+        <div class="post__video">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${video}`}
+            title={`Video: ${title}`}
+            loading="lazy"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          />
+        </div>
+      )
+    }
+
+    <div class="post__body prose-post">
+      <Content />
+    </div>
+
+    <aside class="post__author" aria-label="About the author">
+      <Portrait size="md" badge={false} />
+      <div>
+        <p class="post__author-name">Written by <a href="/about/">{siteConfig.author}</a></p>
+        <p>{siteConfig.authorBio}</p>
+        <p class="post__author-links">
+          {
+            siteConfig.authorLinks.map((l) => (
+              <a href={l.href} rel="noopener me">
+                {l.label}
+              </a>
+            ))
+          }
+        </p>
+      </div>
+    </aside>
+
+    {
+      (newer || older) && (
+        <nav class="post__pager" aria-label="More posts">
+          {older ? (
+            <a href={postUrl(older)}>
+              <span>Older</span>
+              {older.data.title}
+            </a>
+          ) : (
+            <span />
+          )}
+          {newer && (
+            <a href={postUrl(newer)} class="is-next">
+              <span>Newer</span>
+              {newer.data.title}
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</Base>

@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import ToolBrowser from '../../components/ToolBrowser.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Icon from '../../components/Icon.astro';
+import { alsoIn, categories, tools, toolsIn } from '../../data/tools';
+import { references } from '../../data/references';
+
+const description = 'Free, browser-based tools and references for Power Apps, Power Automate and Dataverse. Nothing to install, and nothing you type leaves your browser.';
+---
+
+<Base title="Tools" description={description} image="/og/tools.png">
+  <div class="wrap">
+    <PageHead icon="tools" title="Tools" lede={description}>
+      <button type="button" class="phead__search" data-search-open>
+        <Icon name="search" /> Search {tools.length} tools and {references.reduce((n, r) => n + r.items.length, 0)} formulas <kbd data-search-kbd>Ctrl K</kbd>
+      </button>
+    </PageHead>
+
+    <ToolBrowser level={2} />
+
+    <section class="home-section" aria-labelledby="by-cat">
+      <SectionHead icon="spark" title="Browse by product" id="by-cat" />
+      <ul class="catcards" data-reveal-group>
+        {
+          categories.map((c) => (
+            <li style={`--cat:${c.color}`}>
+              <a href={`/${c.id}/`}>
+                <span class="catcards__name">
+                  <span class="tcard__dot" aria-hidden="true" />
+                  {c.name}
+                </span>
+                <span class="catcards__sum">{c.summary}</span>
+                <span class="catcards__n">
+                  {toolsIn(c.id).length + alsoIn(c.id).length} tools <Icon name="arrow" />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</Base>

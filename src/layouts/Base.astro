@@ -1,12 +1,13 @@
 ---
-import '@fontsource-variable/bricolage-grotesque/standard.css';
-import '@fontsource/atkinson-hyperlegible-next/400.css';
-import '@fontsource/atkinson-hyperlegible-next/700.css';
+import '@fontsource-variable/plus-jakarta-sans';
 import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import { siteConfig } from '../site.config';
 import Logo from '../components/Logo.astro';
-import { categories, toolsIn } from '../data/tools';
+import Icon, { type IconName } from '../components/Icon.astro';
+import { categories, tools, toolsIn } from '../data/tools';
+import { videos } from '../data/videos';
+import { getPosts } from '../lib/posts';
 
 interface Props {
   title?: string;
@@ -22,14 +23,19 @@ const imageUrl = new URL(image, Astro.site);
 const path = Astro.url.pathname;
 const words = siteConfig.name.split(/\s+/);
 
-// One link per category. "match" = tool pages that belong to it (for highlighting).
-// Narrow screens swap the four for a single "Tools" link; search is always there.
-const nav = [
-  ...categories.map((c) => ({ href: `/${c.id}/`, label: c.short, cls: 'nav-wide', match: toolsIn(c.id).map((t) => t.href) })),
-  { href: '/about/', label: 'About', cls: 'nav-wider', match: [] as string[] },
-  { href: '/#tools', label: 'Tools', cls: 'nav-narrow', match: [] as string[] },
+// Blog and Videos appear in the menu once there's something to show.
+const hasPosts = (await getPosts()).some((p) => !p.data.draft);
+const toolPaths = ['/tools/', ...categories.map((c) => `/${c.id}/`), ...tools.map((t) => t.href)];
+const nav: { href: string; label: string; icon: IconName; match: string[] }[] = [
+  { href: '/', label: 'Home', icon: 'home', match: [] },
+  { href: '/tools/', label: 'Tools', icon: 'tools', match: toolPaths },
+  ...(hasPosts ? [{ href: '/blog/', label: 'Blog', icon: 'blog' as const, match: [] }] : []),
+  ...(videos.length ? [{ href: '/videos/', label: 'Videos', icon: 'video' as const, match: [] }] : []),
+  { href: '/about/', label: 'About', icon: 'user', match: [] },
+  { href: '/contact/', label: 'Contact', icon: 'chat', match: [] },
 ];
-const isCurrent = (n: (typeof nav)[number]) => n.href !== '/#tools' && [n.href, ...n.match].some((h) => path.startsWith(h));
+const isCurrent = (n: (typeof nav)[number]) => (n.href === '/' ? path === '/' : [n.href, ...n.match].some((h) => path.startsWith(h)));
+const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label: 'YouTube', href: siteConfig.youtubeUrl, icon: 'youtube' }] : [])];
 ---
 
 <!doctype html>
@@ -62,8 +68,8 @@ const isCurrent = (n: (typeof nav)[number]) => n.href !== '/#tools' && [n.href, 
         <meta name="google-site-verification" content={siteConfig.googleSiteVerification} />
       )
     }
-    <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#121315" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f8fc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)" />
     <script is:inline>
       // Apply a saved theme before first paint to avoid a flash.
       try {
@@ -100,16 +106,16 @@ const isCurrent = (n: (typeof nav)[number]) => n.href !== '/#tools' && [n.href, 
         <nav class="site-nav" aria-label="Main">
           {
             nav.map((n) => (
-              <a href={n.href} class={n.cls} aria-current={isCurrent(n) ? 'page' : undefined}>
+              <a href={n.href} aria-current={isCurrent(n) ? 'page' : undefined}>
+                <Icon name={n.icon} />
                 {n.label}
               </a>
             ))
           }
+        </nav>
+        <div class="site-tools">
           <button type="button" class="search-btn" data-search-open aria-label="Search" aria-keyshortcuts="Control+K Meta+K">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle>
-              <path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-            </svg>
+            <Icon name="search" />
             <span class="search-btn__label">Search</span>
             <kbd data-search-kbd>Ctrl K</kbd>
           </button>
@@ -131,8 +137,21 @@ const isCurrent = (n: (typeof nav)[number]) => n.href !== '/#tools' && [n.href, 
                 stroke-linejoin="round"></path>
             </svg>
           </button>
-        </nav>
+          <button type="button" class="icon-btn menu-btn" popovertarget="mobile-nav" aria-label="Menu">
+            <Icon name="menu" />
+          </button>
+        </div>
       </div>
+      <nav class="mobile-nav" id="mobile-nav" popover aria-label="Menu">
+        {
+          nav.map((n) => (
+            <a href={n.href} aria-current={isCurrent(n) ? 'page' : undefined}>
+              <Icon name={n.icon} />
+              {n.label}
+            </a>
+          ))
+        }
+      </nav>
     </header>
 
     <main id="main">
@@ -141,16 +160,21 @@ const isCurrent = (n: (typeof nav)[number]) => n.href !== '/#tools' && [n.href, 
 
     <footer class="site-footer">
       <div class="wrap wrap--wide site-footer__inner">
-        <div>
+        <div class="site-footer__about">
           <a class="brand" href="/">
             <Logo />
             <span>{siteConfig.name}</span>
           </a>
-          <p class="disclaimer">
-            An independent project. Not affiliated with or endorsed by Microsoft. Power Apps, Power Automate and Power Fx
-            are trademarks of Microsoft Corporation.
+          <p class="site-footer__by">Free tools, guides and videos by {siteConfig.author}.</p>
+          <p class="social">
+            {
+              socials.map((s) => (
+                <a href={s.href} rel="noopener me" aria-label={s.label} title={s.label}>
+                  <Icon name={s.icon as IconName} />
+                </a>
+              ))
+            }
           </p>
-          <p class="site-footer__copy">© {new Date().getFullYear()} {siteConfig.author}</p>
         </div>
         <nav class="footer-cols" aria-label="Footer">
           {
@@ -172,13 +196,25 @@ const isCurrent = (n: (typeof nav)[number]) => n.href !== '/#tools' && [n.href, 
           <div>
             <span class="footer-cols__head">Site</span>
             <ul>
-              <li><a href="/changelog/">What’s new</a></li>
+              {hasPosts && <li><a href="/blog/">Blog</a></li>}
+              {videos.length > 0 && <li><a href="/videos/">Videos</a></li>}
               <li><a href="/about/">About</a></li>
-              <li><a href="/privacy/">Privacy &amp; terms</a></li>
-              <li><a href={siteConfig.feedbackUrl} rel="noopener">Report an issue</a></li>
+              <li><a href="/contact/">Contact</a></li>
+              <li><a href="/changelog/">What’s new</a></li>
             </ul>
           </div>
         </nav>
+      </div>
+      <div class="wrap wrap--wide site-footer__bottom">
+        <p>© {new Date().getFullYear()} {siteConfig.author}</p>
+        <p class="site-footer__legal">
+          <a href="/privacy/">Privacy &amp; terms</a>
+          <a href={siteConfig.feedbackUrl} rel="noopener">Report an issue</a>
+        </p>
+        <p class="disclaimer">
+          Independent project, not affiliated with Microsoft. Power Apps, Power Automate and Power Fx are trademarks of
+          Microsoft Corporation.
+        </p>
       </div>
     </footer>
 

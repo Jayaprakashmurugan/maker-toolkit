@@ -4,13 +4,20 @@ import { renderOg, type OgCard } from '../../lib/og';
 import { references } from '../../data/references';
 import { slugify } from '../../data/types';
 import { siteConfig } from '../../site.config';
-import { categories, toolsIn } from '../../data/tools';
+import { categories, tools, toolsIn } from '../../data/tools';
+import { formatDate, getPosts } from '../../lib/posts';
 
-export const getStaticPaths = (() => {
+export const getStaticPaths = (async () => {
   const pages: { path: string; card: OgCard }[] = [
     {
       path: 'home',
-      card: { kicker: 'Field manual · Power Platform', title: 'Formulas, decoded.', titleFont: 'display', summary: siteConfig.description },
+      card: {
+        kicker: 'Free tools for Power Platform makers',
+        title: 'Maker Toolkit',
+        titleFont: 'display',
+        summary: 'Free tools, guides and videos for Power Apps, Power Automate and Dataverse makers.',
+        byline: { name: siteConfig.author, photo: siteConfig.authorPhoto },
+      },
     },
     ...categories.map((c) => ({
       path: c.id,
@@ -115,10 +122,28 @@ export const getStaticPaths = (() => {
       path: 'about',
       card: {
         kicker: 'About',
-        title: 'Small tools for people who build.',
+        title: siteConfig.author,
         titleFont: 'display',
-        summary: `Built by ${siteConfig.author}, ${siteConfig.authorRole}.`,
+        summary: `${siteConfig.authorRole} in ${siteConfig.authorLocation}, and the person behind ${siteConfig.name}.`,
+        byline: { name: siteConfig.author, photo: siteConfig.authorPhoto },
       },
+    },
+    {
+      path: 'tools',
+      card: {
+        kicker: `${tools.length} free tools and references`,
+        title: 'Tools for Power Platform makers',
+        titleFont: 'display',
+        summary: 'Power Apps, Power Automate and Dataverse. Nothing to install, nothing leaves your browser.',
+      },
+    },
+    {
+      path: 'blog',
+      card: { kicker: 'Blog', title: 'Guides for makers', titleFont: 'display', summary: 'Practical posts on Power Apps, Power Automate and Dataverse.', byline: { name: siteConfig.author, photo: siteConfig.authorPhoto } },
+    },
+    {
+      path: 'videos',
+      card: { kicker: 'Videos', title: 'Walkthroughs and tips', titleFont: 'display', summary: 'Short videos on Power Apps, Power Automate and the tools on this site.', byline: { name: siteConfig.author, photo: siteConfig.authorPhoto } },
     },
     {
       path: 'changelog',
@@ -144,6 +169,18 @@ export const getStaticPaths = (() => {
         },
       });
     }
+  }
+  for (const post of await getPosts()) {
+    pages.push({
+      path: `blog/${post.id}`,
+      card: {
+        kicker: `Blog · ${formatDate(post.data.date)}`,
+        title: post.data.title,
+        titleFont: 'display',
+        summary: post.data.description,
+        byline: { name: siteConfig.author, photo: siteConfig.authorPhoto },
+      },
+    });
   }
   return pages.map((p) => ({ params: { path: p.path }, props: { card: p.card } }));
 }) satisfies GetStaticPaths;

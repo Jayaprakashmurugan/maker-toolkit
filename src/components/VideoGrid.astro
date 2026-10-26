@@ -1,0 +1,35 @@
+---
+import { videoThumb, watchUrl, type Video } from '../data/videos';
+import { formatDate } from '../lib/posts';
+
+interface Props {
+  videos: Video[];
+  level?: 2 | 3;
+}
+
+const { videos, level = 3 } = Astro.props;
+const H = `h${level}` as 'h2' | 'h3';
+---
+
+<ul class="mcards" data-reveal-group>
+  {
+    videos.map((v) => (
+      <li class="mcard mcard--video">
+        <a href={watchUrl(v)} rel="noopener" target="_blank">
+          <span class="mcard__media">
+            <img src={videoThumb(v)} alt="" width="480" height="270" loading="lazy" decoding="async" />
+            <span class="mcard__play" aria-hidden="true" />
+            {v.duration && <span class="mcard__badge mcard__badge--end mcard__badge--bottom">{v.duration}</span>}
+          </span>
+          <span class="mcard__body">
+            <H class="mcard__title">{v.title}</H>
+            {v.description && <span class="mcard__desc">{v.description}</span>}
+            <span class="mcard__meta">
+              <time datetime={v.date}>{formatDate(new Date(v.date))}</time> · Watch on YouTube<span class="visually-hidden"> (opens in a new tab)</span>
+            </span>
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>

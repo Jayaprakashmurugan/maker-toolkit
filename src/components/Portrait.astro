@@ -1,0 +1,38 @@
+---
+// Your photo with a badge under it. Until siteConfig.authorPhoto is set, shows your initials.
+// A .webp file with the same name next to the photo is served to browsers that support it.
+import { existsSync } from 'node:fs';
+import { siteConfig } from '../site.config';
+
+interface Props {
+  size?: 'lg' | 'md';
+  /** Show the certification badge under the photo. */
+  badge?: boolean;
+}
+
+const { size = 'lg', badge = true } = Astro.props;
+const initials = siteConfig.author
+  .split(/\s+/)
+  .map((w) => w[0])
+  .join('');
+const top = siteConfig.authorCerts.at(-1);
+const photo = siteConfig.authorPhoto;
+const webp = photo && photo.replace(/\.(jpe?g|png)$/i, '.webp');
+const hasWebp = webp && webp !== photo && existsSync(`public${webp}`);
+---
+
+<figure class:list={['portrait', `portrait--${size}`]}>
+  {
+    photo ? (
+      <picture>
+        {hasWebp && <source srcset={webp} type="image/webp" />}
+        <img src={photo} alt={siteConfig.author} width="800" height="800" loading={size === 'lg' ? 'eager' : 'lazy'} decoding="async" />
+      </picture>
+    ) : (
+      <span class="portrait__initials" aria-label={siteConfig.author} role="img">
+        {initials}
+      </span>
+    )
+  }
+  {badge && top && <figcaption class="portrait__badge">{top.code} Certified</figcaption>}
+</figure>

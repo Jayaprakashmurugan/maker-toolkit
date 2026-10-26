@@ -1,5 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import SectionHead from '../../components/SectionHead.astro';
 import ToolGrid from '../../components/ToolGrid.astro';
 import { alsoIn, categories, toolsIn, type ToolCategory } from '../../data/tools';
 
@@ -11,42 +13,33 @@ const { cat } = Astro.props as { cat: ToolCategory };
 const own = toolsIn(cat.id);
 const also = alsoIn(cat.id);
 const others = categories.filter((c) => c.id !== cat.id);
-const title = `${cat.name} tools`;
 ---
 
-<Base title={title} description={`${cat.summary} Free, in your browser, no sign-up.`} image={`/og/${cat.id}.png`}>
+<Base title={`${cat.name} tools`} description={`${cat.summary} Free, in your browser, no sign-up.`} image={`/og/${cat.id}.png`}>
   <div class="wrap" style={`--cat:${cat.color}`}>
-    <header class="page-head cat-page__head">
-      <p class="kicker"><b>Category</b> · {own.length} {own.length === 1 ? 'tool' : 'tools'}</p>
-      <h1>{cat.name}</h1>
-      <p class="page-head__lede">{cat.intro}</p>
-    </header>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/tools/">Tools</a> <span aria-hidden="true">/</span> {cat.name}</nav>
+    <PageHead icon="tools" title={cat.name} lede={cat.intro} />
 
-    <ToolGrid tools={own} />
+    <ToolGrid tools={own} level={2} />
 
     {
       also.length > 0 && (
-        <section class="section cat-also" aria-labelledby="also-title">
-          <div class="section-head" data-reveal>
-            <div>
-              <p class="kicker">From other groups</p>
-              <h2 id="also-title">Also useful for {cat.name}</h2>
-            </div>
-          </div>
-          <ToolGrid tools={also} showCategory />
+        <section class="home-section" aria-labelledby="also-title">
+          <SectionHead icon="spark" title={`Also useful for ${cat.name}`} id="also-title" />
+          <ToolGrid tools={also} />
         </section>
       )
     }
 
-    <nav class="section cat-others" aria-label="Other groups">
+    <nav class="home-section" aria-label="Other groups">
       <p class="kicker">More tools</p>
-      <div class="cat-jump">
+      <div class="cat-jump" style="margin-top: 0.9rem">
         {
           others.map((c) => (
             <a href={`/${c.id}/`} style={`--cat:${c.color}`}>
               <span class="tcard__dot" aria-hidden="true" />
               {c.name}
-              <span class="cat-jump__n">{toolsIn(c.id).length}</span>
+              <span class="cat-jump__n">{toolsIn(c.id).length + alsoIn(c.id).length}</span>
             </a>
           ))
         }

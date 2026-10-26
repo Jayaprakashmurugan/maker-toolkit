@@ -24,6 +24,9 @@ npm run preview   # serve dist/ to check the production build
 | `src/data/references.ts` | Ties each dataset to its URL, title, FAQ and search hint. |
 | `src/data/tools.ts` | The four categories and every tool. The homepage, category pages (`/power-apps/` etc.), header, footer and search are all built from it. |
 | `src/components/ToolGrid.astro` | The equal-weight tool cards used on the homepage and category pages. |
+| `src/content/blog/` + `src/content.config.ts` | Blog posts (Markdown) and the fields each post needs. |
+| `src/data/videos.ts` | Your YouTube videos; thumbnails are copied at build time by `src/pages/videos/thumbs/`. |
+| `src/components/Portrait.astro`, `PageHead.astro`, `SectionHead.astro`, `Icon.astro` | Your photo card, page and section headings, and the icon set. |
 | `src/scripts/search.ts` + `src/pages/search-index.json.ts` | Site-wide search (Ctrl K or /) over every tool and reference entry; the index is built at build time and loaded on first use. |
 | `src/data/changelog.ts` | Entries for the "What's new" page. |
 | `src/components/ReferenceIndex.astro` | Shared layout for a reference page (explorer, A–Z index, FAQ). |
@@ -44,6 +47,47 @@ npm run preview   # serve dist/ to check the production build
 | `src/pages/favicon.*.ts`, `[icon].png.ts`, `site.webmanifest.ts`, `brand/` | Favicon, home-screen icons, manifest and brand kit, all generated from `logo.ts`. |
 | `src/pages/` | One file per URL. `[slug].astro` files generate a page per formula or expression. |
 | `src/styles/global.css` | All styling. Colors are CSS variables at the top (light and dark). |
+
+## Write a blog post
+
+1. Add a Markdown file to `src/content/blog/`. The file name becomes the URL: `trigger-conditions.md` → `/blog/trigger-conditions/`.
+2. Start it with this header, then write the post below it in Markdown:
+
+   ```md
+   ---
+   title: Stop flows from triggering themselves
+   description: One or two sentences, shown on cards, in search and when the post is shared.
+   date: 2026-11-02
+   tags: [Power Automate, Triggers]
+   draft: true
+   # video: VIDEO_ID   (optional: a YouTube video shown at the top of the post)
+   ---
+   ```
+
+3. Run `npm run dev` to see it at http://localhost:4321/blog/. Drafts show only there.
+4. When it's ready, change `draft: true` to `draft: false`, commit and push. The post gets its own page, a share image
+   with your photo, a spot on the homepage and in the RSS feed (`/blog/rss.xml`), and Blog appears in the menu.
+
+Use fenced code blocks for formulas. Shiki has no Power Fx grammar, so use `js` for flow expressions and leave
+Power Fx unlabelled, or label it `js` too.
+
+## Add a YouTube video
+
+Add an entry to `src/data/videos.ts` (newest first). The `id` is the part after `watch?v=` in the video's URL:
+
+```ts
+{ id: 'abc123XYZ', title: 'Trigger conditions in 5 minutes', date: '2026-11-02', duration: '5:12', description: '…' },
+```
+
+The thumbnail is copied into the site at build time, the video appears on the homepage and on `/videos/`, and Videos
+appears in the menu. Set `youtubeUrl` in `src/site.config.ts` to your channel's URL to show Subscribe buttons and a
+YouTube icon in the footer.
+
+## Your photo and profile
+
+Your name, role, bio, certifications and links live in `src/site.config.ts`. The photo is
+`public/images/jayaprakash.jpg` (800×800, with a `.webp` copy next to it). To change it, replace both files, keeping the
+names, or point `authorPhoto` at a new file.
 
 ## Add a formula
 

@@ -131,7 +131,7 @@ function render() {
       title.append(...marked(e.t, q));
       const desc = document.createElement('span');
       desc.className = 'sitesearch__desc';
-      desc.textContent = e.k === 'Tool' || e.k === 'Reference' || e.k === 'Page' ? e.d : `${e.g} · ${e.d}`;
+      desc.textContent = e.k === 'Tool' || e.k === 'Reference' || e.k === 'Page' || e.k === 'Blog' ? e.d : `${e.g} · ${e.d}`;
       a.append(kind, title, desc);
       li.append(a);
       li.addEventListener('mousemove', () => active !== i && setActive(i, false));

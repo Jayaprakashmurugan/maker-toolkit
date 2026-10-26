@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import PostGrid from '../../components/PostGrid.astro';
+import Icon from '../../components/Icon.astro';
+import { getPosts } from '../../lib/posts';
+
+const posts = await getPosts();
+const description = 'Practical guides for Power Apps, Power Automate and Dataverse: the formulas, patterns and fixes behind the tools on this site.';
+---
+
+<Base title="Blog" description={description} image="/og/blog.png">
+  <link slot="head" rel="alternate" type="application/rss+xml" title="Maker Toolkit blog" href="/blog/rss.xml" />
+  <div class="wrap">
+    <PageHead icon="blog" title="Blog" lede={description}>
+      {
+        posts.length > 0 && (
+          <a class="phead__link" href="/blog/rss.xml">
+            <Icon name="rss" /> RSS feed
+          </a>
+        )
+      }
+    </PageHead>
+
+    {
+      posts.length > 0 ? (
+        <PostGrid posts={posts} level={2} />
+      ) : (
+        <section class="empty" aria-labelledby="empty-title">
+          <span class="empty__icon">
+            <Icon name="blog" />
+          </span>
+          <h2 id="empty-title">The first posts are on the way</h2>
+          <p>Step-by-step guides that go with each tool are coming soon. In the meantime, the tools are ready to use.</p>
+          <a class="btn" href="/tools/">
+            Explore tools <Icon name="arrow" />
+          </a>
+        </section>
+      )
+    }
+  </div>
+</Base>

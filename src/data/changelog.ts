@@ -8,6 +8,16 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '2.1',
+    date: '2026-10-26',
+    title: 'Eleven articles on the blog',
+    changes: [
+      'All seven articles from Medium and four from LinkedIn now live on the blog, with their images, code and original dates, from role-based security and deep links to Dataverse vs. SharePoint and the new modern Attachments control.',
+      'Power Fx code in posts is now color-coded, and each imported post links back to where it was first published.',
+      'Blog posts appear in site-wide search.',
+    ],
+  },
+  {
     version: '2.0',
     date: '2026-10-26',
     title: 'A new look, and room for guides and videos',

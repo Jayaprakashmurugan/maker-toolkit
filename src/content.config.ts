@@ -5,7 +5,7 @@ import { z } from 'astro/zod';
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     /** One or two sentences: shown on cards, in search results and when the post is shared. */
     description: z.string(),
@@ -16,6 +16,10 @@ const blog = defineCollection({
     draft: z.boolean().default(false),
     /** A YouTube video ID that goes with the post, shown at the top. */
     video: z.string().optional(),
+    /** A header image next to the post, e.g. ./images/my-post/cover.jpg. */
+    cover: image().optional(),
+    /** Where the post first appeared, for posts brought over from Medium or LinkedIn. */
+    source: z.object({ name: z.string(), url: z.string().url() }).optional(),
   }),
 });
 

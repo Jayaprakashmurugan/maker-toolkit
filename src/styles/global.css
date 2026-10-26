@@ -4821,3 +4821,27 @@ html.motion .copy-btn.is-copied {
 main#main {
   padding-bottom: clamp(3rem, 7vw, 5rem);
 }
+
+.post__cover {
+  margin: 2rem 0 0;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+}
+.post__cover img {
+  width: 100%;
+  height: auto;
+}
+.post__meta a {
+  color: var(--accent-ink);
+}
+.prose-post img {
+  height: auto;
+}
+.prose-post p > em:only-child {
+  display: block;
+  margin-top: -0.6em;
+  color: var(--ink-3);
+  font-size: 0.9rem;
+  text-align: center;
+}

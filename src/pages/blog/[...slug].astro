@@ -1,5 +1,6 @@
 ---
 import { render } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import Portrait from '../../components/Portrait.astro';
@@ -16,7 +17,7 @@ export async function getStaticPaths() {
 
 const { post, newer, older } = Astro.props as { post: Post; newer?: Post; older?: Post };
 const { Content } = await render(post);
-const { title, description, date, updated, tags, video, draft } = post.data;
+const { title, description, date, updated, tags, video, draft, cover, source } = post.data;
 
 const articleLd = {
   '@context': 'https://schema.org',
@@ -52,8 +53,26 @@ const articleLd = {
         <span><Icon name="calendar" /> <time datetime={date.toISOString()}>{formatDate(date)}</time></span>
         {updated && <span>Updated <time datetime={updated.toISOString()}>{formatDate(updated)}</time></span>}
         <span><Icon name="clock" /> {readingTime(post.body)} min read</span>
+        {
+          source && (
+            <span>
+              <Icon name="external" /> First published on{' '}
+              <a href={source.url} rel="noopener">
+                {source.name}
+              </a>
+            </span>
+          )
+        }
       </p>
     </header>
+
+    {
+      cover && !video && (
+        <figure class="post__cover">
+          <Image src={cover} alt="" widths={[720, 1200, 1600]} sizes="(max-width: 800px) 100vw, 768px" loading="eager" />
+        </figure>
+      )
+    }
 
     {
       video && (

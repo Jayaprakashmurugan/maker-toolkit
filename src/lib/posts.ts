@@ -18,7 +18,8 @@ export function readingTime(markdown = ''): number {
   return Math.max(1, Math.round(words / 220));
 }
 
-export const formatDate = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+export const formatDate = (d: Date) => `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 
 export const postUrl = (p: Post) => `/blog/${p.id}/`;
 export const postCover = (p: Post) => `/og/blog/${p.id}.png`;

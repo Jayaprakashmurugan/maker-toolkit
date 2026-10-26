@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { formatDate, postCover, postUrl, readingTime, type Post } from '../lib/posts';
 
 interface Props {
@@ -16,7 +17,13 @@ const H = `h${level}` as 'h2' | 'h3';
       <li class="mcard">
         <a href={postUrl(p)}>
           <span class="mcard__media">
-            <img src={postCover(p)} alt="" width="1200" height="630" loading="lazy" decoding="async" />
+            {
+              p.data.cover ? (
+                <Image src={p.data.cover} alt="" widths={[420, 840]} sizes="(max-width: 640px) 100vw, 400px" loading="lazy" />
+              ) : (
+                <img src={postCover(p)} alt="" width="1200" height="630" loading="lazy" decoding="async" />
+              )
+            }
             <span class="mcard__badge mcard__badge--end">
               <time datetime={p.data.date.toISOString()}>{formatDate(p.data.date)}</time>
             </span>

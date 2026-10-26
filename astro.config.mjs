@@ -10,4 +10,11 @@ export default defineConfig({
   site: 'https://maker-toolkit.jay365.workers.dev',
   trailingSlash: 'ignore',
   integrations: [react(), sitemap({ filter: (page) => !page.includes('/404') })],
+  markdown: {
+    shikiConfig: {
+      theme: 'github-dark',
+      // Shiki has no Power Fx grammar; JavaScript colours its calls, strings and comments well enough.
+      langAlias: { powerfx: 'javascript', 'power-fx': 'javascript', wdl: 'javascript' },
+    },
+  },
 });

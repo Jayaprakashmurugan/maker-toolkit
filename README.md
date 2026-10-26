@@ -61,6 +61,7 @@ npm run preview   # serve dist/ to check the production build
    tags: [Power Automate, Triggers]
    draft: true
    # video: VIDEO_ID   (optional: a YouTube video shown at the top of the post)
+   # cover: ./images/my-post/cover.jpg   (optional: header image, also used as the card thumbnail)
    ---
    ```
 
@@ -68,8 +69,11 @@ npm run preview   # serve dist/ to check the production build
 4. When it's ready, change `draft: true` to `draft: false`, commit and push. The post gets its own page, a share image
    with your photo, a spot on the homepage and in the RSS feed (`/blog/rss.xml`), and Blog appears in the menu.
 
-Use fenced code blocks for formulas. Shiki has no Power Fx grammar, so use `js` for flow expressions and leave
-Power Fx unlabelled, or label it `js` too.
+Put a post's images in `src/content/blog/images/<post-name>/` and link them with `![](./images/<post-name>/1.png)`;
+Astro resizes them and serves WebP. Label code blocks ` ```powerfx ` for Power Fx (it's highlighted with the
+JavaScript grammar, set in `astro.config.mjs`) and ` ```js ` or ` ```json ` for flow expressions and JSON.
+
+Posts brought over from Medium or LinkedIn keep a `source:` field (`name` and `url`) that shows as "First published on…".
 
 ## Add a YouTube video
 

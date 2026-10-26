@@ -5874,3 +5874,92 @@ body {
   overflow-x: clip;
   overflow-y: visible;
 }
+
+/* ── Product chips: official icons, always with the product name ── */
+
+.pchips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--ink-2);
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+.pchip img {
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+.pchip--text {
+  padding: 0.08rem 0.45rem;
+  border: 1px solid var(--rule-2);
+  border-radius: 6px;
+  color: var(--ink-3);
+}
+.pchips--md {
+  gap: 0.5rem;
+}
+.pchips--md .pchip {
+  padding: 0.35rem 0.75rem 0.35rem 0.45rem;
+  border: 1px solid var(--rule-2);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.pchips--md .pchip img {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+.pchips--md .pchip--text {
+  padding: 0.35rem 0.8rem;
+  color: var(--ink-2);
+}
+.works {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  margin-top: 1.25rem;
+}
+.works__label {
+  color: var(--ink-3);
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.tbrowser__tab img {
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+.phead__title--icon {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15em 0.3em;
+}
+.phead__icon {
+  flex: none;
+  width: 0.85em;
+  height: 0.85em;
+}
+.tcard__meta b {
+  color: var(--ink-2);
+  font-weight: 600;
+}

@@ -1,6 +1,7 @@
 ---
 // The full reference page: header, interactive explorer, how-to, A–Z index and FAQ.
 import Base from '../layouts/Base.astro';
+import WorksWith from './WorksWith.astro';
 import ReferenceExplorer from './ReferenceExplorer';
 import { slugify, type Reference } from '../data/types';
 
@@ -26,6 +27,7 @@ const byLetter = Object.entries(
       <p class="kicker"><b>Reference</b> · {ref.kicker}</p>
       <h1>{ref.title}</h1>
       <p class="page-head__lede">{ref.description}</p>
+      <WorksWith href={`/${ref.slug}/`} />
       <p class="page-head__meta">
         <span><b>{ref.items.length}</b> {ref.noun}</span>
         <span><b>{ref.categories.length}</b> categories</span>

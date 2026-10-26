@@ -1,0 +1,25 @@
+---
+// Labelled product chips: the official icon (where Microsoft allows it) always next to the product's full name.
+import { PRODUCTS, type ProductId } from '../data/products';
+
+interface Props {
+  products: ProductId[];
+  size?: 'sm' | 'md';
+}
+
+const { products, size = 'sm' } = Astro.props;
+---
+
+<ul class:list={['pchips', `pchips--${size}`]}>
+  {
+    products.map((id) => {
+      const p = PRODUCTS[id];
+      return (
+        <li class:list={['pchip', { 'pchip--text': !p.icon }]}>
+          {p.icon && <img src={p.icon} alt="" width="96" height="96" loading="lazy" decoding="async" />}
+          <span>{p.name}</span>
+        </li>
+      );
+    })
+  }
+</ul>

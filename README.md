@@ -22,6 +22,7 @@ npm run preview   # serve dist/ to check the production build
 | `src/data/power-automate-expressions.ts` | Power Automate expression functions and their categories. |
 | `src/data/desktop-formulas.ts` | Power Fx for desktop flows: Microsoft's list of 130 functions, reusing Power Apps entries with desktop examples. |
 | `src/data/references.ts` | Ties each dataset to its URL, title, FAQ and search hint. |
+| `src/data/products.ts` + `public/products/` | The Microsoft products a tool works with. Icons are Microsoft's official Power Platform icons, used unmodified and always next to the product name, per Microsoft's terms (see `public/products/NOTICE.txt`). |
 | `src/data/tools.ts` | The four categories and every tool. The homepage, category pages (`/power-apps/` etc.), header, footer and search are all built from it. |
 | `src/components/ToolGrid.astro` | The equal-weight tool cards used on the homepage and category pages. |
 | `src/content/blog/` + `src/content.config.ts` | Blog posts (Markdown) and the fields each post needs. |

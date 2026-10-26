@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import WorksWith from '../../components/WorksWith.astro';
 import ODataBuilder from '../../components/ODataBuilder';
 
 const title = 'OData Filter Builder';
@@ -36,6 +37,7 @@ const faqs = [
       <p class="kicker"><b>Tool</b> · Power Automate · SharePoint + Dataverse</p>
       <h1>{title}</h1>
       <p class="page-head__lede">{description}</p>
+      <WorksWith href="/odata-filter-builder/" />
     </header>
 
     <ODataBuilder client:load />

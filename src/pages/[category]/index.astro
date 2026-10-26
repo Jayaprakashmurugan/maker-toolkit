@@ -4,6 +4,7 @@ import PageHead from '../../components/PageHead.astro';
 import SectionHead from '../../components/SectionHead.astro';
 import ToolGrid from '../../components/ToolGrid.astro';
 import { alsoIn, categories, toolsIn, type ToolCategory } from '../../data/tools';
+import { PRODUCTS } from '../../data/products';
 
 export function getStaticPaths() {
   return categories.map((cat) => ({ params: { category: cat.id }, props: { cat } }));
@@ -17,7 +18,7 @@ const others = categories.filter((c) => c.id !== cat.id);
 
 <Base title={`${cat.name} tools`} description={`${cat.summary} Free, in your browser, no sign-up.`} image={`/og/${cat.id}.png`}>
   <div class="wrap" style={`--cat:${cat.color}`}>
-    <PageHead path={`~/tools/${cat.id}`} title={cat.name} lede={cat.intro} />
+    <PageHead path={`~/tools/${cat.id}`} title={cat.name} lede={cat.intro} icon={cat.product && PRODUCTS[cat.product].icon} />
 
     <ToolGrid tools={own} level={2} />
 

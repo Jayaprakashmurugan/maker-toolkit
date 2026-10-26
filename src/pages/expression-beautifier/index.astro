@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import WorksWith from '../../components/WorksWith.astro';
 import Beautifier from '../../components/Beautifier';
 
 const title = 'Expression Beautifier';
@@ -36,6 +37,7 @@ const faqs = [
       <p class="kicker"><b>Tool</b> · Power Automate + Power Fx</p>
       <h1>{title}</h1>
       <p class="page-head__lede">{description}</p>
+      <WorksWith href="/expression-beautifier/" />
     </header>
 
     <Beautifier client:load />

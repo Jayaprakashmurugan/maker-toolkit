@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import WorksWith from '../../components/WorksWith.astro';
 import ListCopier from '../../components/ListCopier';
 
 const title = 'List Copier';
@@ -40,6 +41,7 @@ const faqs = [
       <p class="kicker"><b>Tool</b> · SharePoint · Microsoft Lists</p>
       <h1>{title}</h1>
       <p class="page-head__lede">{description}</p>
+      <WorksWith href="/list-copier/" />
     </header>
 
     <ListCopier client:load />

@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import WorksWith from '../../components/WorksWith.astro';
 import ExpressionPicker from '../../components/ExpressionPicker';
 
 const title = 'Expression Picker';
@@ -40,6 +41,7 @@ const faqs = [
       <p class="kicker"><b>Tool</b> · Power Automate · JSON to expression</p>
       <h1>{title}</h1>
       <p class="page-head__lede">{description}</p>
+      <WorksWith href="/json-expression-picker/" />
     </header>
 
     <ExpressionPicker client:load />

@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import WorksWith from '../../components/WorksWith.astro';
 import RegexTester from '../../components/RegexTester';
 
 const title = 'Regex Tester for Power Fx';
@@ -40,6 +41,7 @@ const faqs = [
       <p class="kicker"><b>Tool</b> · Power Apps · Power Fx</p>
       <h1>{title}</h1>
       <p class="page-head__lede">{description}</p>
+      <WorksWith href="/regex-tester/" />
     </header>
 
     <RegexTester client:load />

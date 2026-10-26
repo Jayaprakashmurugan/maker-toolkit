@@ -1,0 +1,7 @@
+These are Microsoft's official Power Platform product icons (Power Apps, Power Automate, Dataverse,
+Power Platform), downloaded unmodified from https://learn.microsoft.com/power-platform/guidance/icons.
+
+They are trademarks of Microsoft Corporation. Microsoft permits their use in architectural diagrams,
+training materials and documentation. This site uses them only to show which Microsoft product each
+tool or reference works with, always next to the product's name. They are not the site's own branding,
+and the site is not affiliated with or endorsed by Microsoft.

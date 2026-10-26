@@ -2,6 +2,7 @@
 // Equal-weight cards: every tool and reference gets the same size and layout.
 import { categoryById, type Tool } from '../data/tools';
 import Icon from './Icon.astro';
+import ProductChips from './ProductChips.astro';
 
 interface Props {
   tools: Tool[];
@@ -21,14 +22,14 @@ const H = `h${level}` as 'h2' | 'h3';
         <li class="tcard" style={`--cat:${cat.color}`} data-cats={[t.category, ...(t.also ?? [])].join(' ')}>
           <a href={t.href}>
             <span class="tcard__top">
-              <span class="tcard__dot" aria-hidden="true" />
-              {cat.short}
-              <span class="tcard__kind">{t.kind === 'reference' ? 'Reference' : 'Tool'}</span>
+              <ProductChips products={t.works} />
             </span>
             <H class="tcard__title">{t.title}</H>
             <span class="tcard__desc">{t.description}</span>
             <span class="tcard__foot">
-              <span class="tcard__meta">{t.meta}</span>
+              <span class="tcard__meta">
+                <b>{t.kind === 'reference' ? 'Reference' : 'Tool'}</b> · {t.meta}
+              </span>
               <Icon name="arrow" class="tcard__arrow" />
             </span>
           </a>

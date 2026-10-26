@@ -8,6 +8,15 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '3.2',
+    date: '2026-10-26',
+    title: 'Official product icons',
+    changes: [
+      'Every tool and reference now shows which products it works with, using Microsoft’s official Power Apps, Power Automate and Dataverse icons next to each product’s name.',
+      'Tool pages have a “Works with” row, and the tool tabs and group pages show their product’s icon.',
+    ],
+  },
+  {
     version: '3.1',
     date: '2026-10-26',
     title: 'Power Platform colors and a Maker ID',

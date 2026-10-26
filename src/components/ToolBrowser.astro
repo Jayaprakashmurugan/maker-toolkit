@@ -2,6 +2,7 @@
 // Every tool, with tabs to narrow to one category. Without JavaScript, all tools stay visible.
 import { categories, tools, toolsIn, alsoIn } from '../data/tools';
 import ToolGrid from './ToolGrid.astro';
+import { PRODUCTS } from '../data/products';
 
 interface Props {
   level?: 2 | 3;
@@ -9,8 +10,14 @@ interface Props {
 
 const { level = 3 } = Astro.props;
 const tabs = [
-  { id: 'all', label: 'All', n: tools.length, color: '' },
-  ...categories.map((c) => ({ id: c.id, label: c.short, n: toolsIn(c.id).length + alsoIn(c.id).length, color: c.color })),
+  { id: 'all', label: 'All', n: tools.length, color: '', icon: '' },
+  ...categories.map((c) => ({
+    id: c.id,
+    label: c.short,
+    n: toolsIn(c.id).length + alsoIn(c.id).length,
+    color: c.color,
+    icon: (c.product && PRODUCTS[c.product].icon) || '',
+  })),
 ];
 ---
 
@@ -19,7 +26,7 @@ const tabs = [
     {
       tabs.map((t) => (
         <button type="button" class="tbrowser__tab" data-filter={t.id} aria-pressed={t.id === 'all' ? 'true' : 'false'} style={t.color ? `--cat:${t.color}` : undefined}>
-          {t.color && <span class="tcard__dot" aria-hidden="true" />}
+          {t.icon ? <img src={t.icon} alt="" width="96" height="96" /> : t.color && <span class="tcard__dot" aria-hidden="true" />}
           {t.label}
           <span class="tbrowser__n">{t.n}</span>
         </button>

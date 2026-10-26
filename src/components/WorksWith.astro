@@ -1,0 +1,20 @@
+---
+// "Works with" row for a tool or reference page header, looked up from src/data/tools.ts by the page's address.
+import { tools } from '../data/tools';
+import ProductChips from './ProductChips.astro';
+
+interface Props {
+  href: string;
+}
+
+const tool = tools.find((t) => t.href === Astro.props.href);
+---
+
+{
+  tool && (
+    <div class="works">
+      <span class="works__label">Works with</span>
+      <ProductChips products={tool.works} size="md" />
+    </div>
+  )
+}

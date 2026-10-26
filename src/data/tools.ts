@@ -1,4 +1,5 @@
 import { desktopReference, powerAppsReference, powerAutomateReference } from './references';
+import type { ProductId } from './products';
 
 export type CategoryId = 'power-apps' | 'power-automate' | 'dataverse-sharepoint' | 'developer-utilities';
 
@@ -13,12 +14,15 @@ export interface ToolCategory {
   intro: string;
   /** Marker color for cards and search results. */
   color: string;
+  /** The Microsoft product the group is about, shown with its official icon. */
+  product?: ProductId;
 }
 
 /** The four parts of the site, in display order. Each has a page at /<id>/. */
 export const categories: ToolCategory[] = [
   {
     id: 'power-apps',
+    product: 'power-apps',
     name: 'Power Apps',
     short: 'Power Apps',
     summary: 'Formulas, patterns and assets for canvas apps.',
@@ -27,6 +31,7 @@ export const categories: ToolCategory[] = [
   },
   {
     id: 'power-automate',
+    product: 'power-automate',
     name: 'Power Automate',
     short: 'Power Automate',
     summary: 'Expressions, triggers, emails and cards for cloud and desktop flows.',
@@ -35,6 +40,7 @@ export const categories: ToolCategory[] = [
   },
   {
     id: 'dataverse-sharepoint',
+    product: 'dataverse',
     name: 'Dataverse/SharePoint',
     short: 'Dataverse/SharePoint',
     summary: 'Query, filter and move data in Dataverse and SharePoint.',
@@ -66,6 +72,8 @@ export interface Tool {
   meta: string;
   /** Extra words people might search for. */
   keywords?: string;
+  /** Microsoft products the tool works with, shown as "works with" labels. */
+  works: ProductId[];
 }
 
 export const tools: Tool[] = [
@@ -73,6 +81,7 @@ export const tools: Tool[] = [
     title: powerAppsReference.title,
     description: 'Search Power Fx formulas by name or by task. Copy syntax and examples in one click.',
     href: `/${powerAppsReference.slug}/`,
+    works: ['power-apps'],
     kind: 'reference',
     category: 'power-apps',
     meta: `${powerAppsReference.items.length} formulas · ${powerAppsReference.categories.length} categories`,
@@ -82,6 +91,7 @@ export const tools: Tool[] = [
     title: 'Regex Tester for Power Fx',
     description: 'Test patterns for IsMatch, Match and MatchAll, check them against Power Fx’s rules, and copy the formula.',
     href: '/regex-tester/',
+    works: ['power-apps'],
     kind: 'tool',
     category: 'power-apps',
     also: ['dataverse-sharepoint'],
@@ -92,6 +102,7 @@ export const tools: Tool[] = [
     title: 'SVG to Power Apps',
     description: 'Turn an SVG icon into an Image formula you can paste, with colors you can drive from Power Fx.',
     href: '/svg-to-power-apps/',
+    works: ['power-apps'],
     kind: 'tool',
     category: 'power-apps',
     meta: 'Image control · Icons',
@@ -101,6 +112,7 @@ export const tools: Tool[] = [
     title: powerAutomateReference.title,
     description: 'Every workflow expression function: strings, dates, collections, conversions and more.',
     href: `/${powerAutomateReference.slug}/`,
+    works: ['power-automate'],
     kind: 'reference',
     category: 'power-automate',
     meta: `${powerAutomateReference.items.length} expressions · ${powerAutomateReference.categories.length} categories`,
@@ -110,6 +122,7 @@ export const tools: Tool[] = [
     title: desktopReference.title,
     description: 'The Power Fx functions for desktop flows, with desktop-style examples and the rules that differ from Power Apps.',
     href: `/${desktopReference.slug}/`,
+    works: ['power-automate'],
     kind: 'reference',
     category: 'power-automate',
     meta: `${desktopReference.items.length} formulas · ${desktopReference.categories.length} categories`,
@@ -119,6 +132,7 @@ export const tools: Tool[] = [
     title: 'Trigger Condition Builder',
     description: 'Make a flow start only when it should: build trigger conditions for SharePoint, Dataverse and Outlook.',
     href: '/trigger-condition-builder/',
+    works: ['power-automate', 'sharepoint', 'dataverse', 'outlook'],
     kind: 'tool',
     category: 'power-automate',
     also: ['dataverse-sharepoint'],
@@ -129,6 +143,7 @@ export const tools: Tool[] = [
     title: 'JSON Schema Helper',
     description: 'Paste sample JSON and get a Parse JSON schema that won’t fail on nulls, plus an expression for every field.',
     href: '/json-schema-helper/',
+    works: ['power-automate'],
     kind: 'tool',
     category: 'power-automate',
     also: ['developer-utilities'],
@@ -139,6 +154,7 @@ export const tools: Tool[] = [
     title: 'HTML Table Styler',
     description: 'Make Create HTML table look good in Outlook and Gmail. Pick a style, preview it, copy one Compose step.',
     href: '/html-table-styler/',
+    works: ['power-automate', 'outlook'],
     kind: 'tool',
     category: 'power-automate',
     meta: 'Emails · Create HTML table',
@@ -148,6 +164,7 @@ export const tools: Tool[] = [
     title: 'Adaptive Card Builder',
     description: 'Teams cards for approvals, alerts and forms: start from a template, preview it like Teams, copy the JSON.',
     href: '/adaptive-card-builder/',
+    works: ['power-automate', 'teams'],
     kind: 'tool',
     category: 'power-automate',
     meta: 'Teams · Approvals',
@@ -157,6 +174,7 @@ export const tools: Tool[] = [
     title: 'OData Filter Builder',
     description: 'Build the Filter Query for SharePoint Get items or Dataverse List rows, with the right quotes and dates.',
     href: '/odata-filter-builder/',
+    works: ['power-automate', 'dataverse', 'sharepoint'],
     kind: 'tool',
     category: 'dataverse-sharepoint',
     also: ['power-automate'],
@@ -167,6 +185,7 @@ export const tools: Tool[] = [
     title: 'List Copier',
     description: 'Copy a SharePoint list and its columns to another site or tenant, with no app registration needed.',
     href: '/list-copier/',
+    works: ['sharepoint'],
     kind: 'tool',
     category: 'dataverse-sharepoint',
     meta: 'SharePoint · Microsoft Lists',
@@ -176,6 +195,7 @@ export const tools: Tool[] = [
     title: 'Expression Beautifier',
     description: 'Paste a long one-line expression and get it back indented, color-coded and checked.',
     href: '/expression-beautifier/',
+    works: ['power-automate', 'power-apps'],
     kind: 'tool',
     category: 'developer-utilities',
     also: ['power-automate', 'power-apps'],
@@ -186,6 +206,7 @@ export const tools: Tool[] = [
     title: 'Expression Picker',
     description: 'Paste a step’s JSON, click the value you need, and copy its Power Automate expression and Power Apps formula.',
     href: '/json-expression-picker/',
+    works: ['power-automate', 'power-apps'],
     kind: 'tool',
     category: 'developer-utilities',
     also: ['power-automate', 'power-apps'],

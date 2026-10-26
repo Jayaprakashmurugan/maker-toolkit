@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import WorksWith from '../../components/WorksWith.astro';
 import SvgConverter from '../../components/SvgConverter';
 
 const title = 'SVG to Power Apps';
@@ -40,6 +41,7 @@ const faqs = [
       <p class="kicker"><b>Tool</b> · Power Apps · Icons and images</p>
       <h1>{title}</h1>
       <p class="page-head__lede">{description}</p>
+      <WorksWith href="/svg-to-power-apps/" />
     </header>
 
     <SvgConverter client:load />

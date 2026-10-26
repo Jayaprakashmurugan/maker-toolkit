@@ -6,14 +6,17 @@ interface Props {
   path: string;
   title: string;
   lede?: string;
+  /** Official icon of the Microsoft product the page is about (the title names it). */
+  icon?: string;
 }
 
-const { path, title, lede } = Astro.props;
+const { path, title, lede, icon } = Astro.props;
 ---
 
 <header class="phead">
   <p class="phead__path"><span>{path}</span><span class="caret" aria-hidden="true"></span></p>
-  <h1 class="phead__title">
+  <h1 class:list={['phead__title', { 'phead__title--icon': icon }]}>
+    {icon && <img class="phead__icon" src={icon} alt="" width="96" height="96" />}
     {/* Long names like Dataverse/SharePoint may wrap after the slash on small screens. */}
     {title.split('/').map((part, i) => (i > 0 ? <>/<wbr />{part}</> : part))}
   </h1>

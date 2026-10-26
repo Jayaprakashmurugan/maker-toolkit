@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import IdCard from '../components/IdCard.astro';
+import ProfileCard from '../components/ProfileCard.astro';
 import SectionHead from '../components/SectionHead.astro';
 import ToolBrowser from '../components/ToolBrowser.astro';
 import PostList from '../components/PostList.astro';
@@ -12,6 +12,7 @@ import { desktopReference, powerAppsReference, powerAutomateReference } from '..
 import { getPosts } from '../lib/posts';
 import { fxHtml } from '../lib/fxHtml';
 import { siteConfig } from '../site.config';
+import { current } from '../data/experience';
 
 const posts = (await getPosts()).filter((p) => !p.data.draft);
 const entries = powerAppsReference.items.length + powerAutomateReference.items.length + desktopReference.items.length;
@@ -104,7 +105,7 @@ const faqs = [
       </div>
 
       <div class="tile tile--me">
-        <IdCard eager />
+        <ProfileCard eager />
         <a class="tile__link" href="/about/">About me <Icon name="arrow" /></a>
       </div>
 
@@ -173,7 +174,9 @@ const faqs = [
     <div class="band" data-reveal>
       <p class="band__idx" id="h-whoami">// whoami</p>
       <p class="band__text">
-        I'm <b>{firstName}</b>, a {siteConfig.authorRole.replace(/^Microsoft /, '')} in {siteConfig.authorLocation.split(',')[0]}.{' '}
+        I'm <b>{firstName}</b>,{' '}
+        {current ? `${current.title} at ${current.company}` : `a ${siteConfig.authorRole.replace(/^Microsoft /, '')}`}, based in{' '}
+        {siteConfig.authorLocation.split(',')[0]}.{' '}
         {siteConfig.authorBio}
       </p>
       <p class="band__actions">

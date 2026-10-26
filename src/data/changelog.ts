@@ -8,6 +8,15 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '3.3',
+    date: '2026-10-26',
+    title: 'Work experience and a cleaner profile card',
+    changes: [
+      'The About page now has my work experience: every role with its dates and skills, and a career bar from 2016 to today.',
+      'A new profile card: the photo runs edge to edge with the name on it, followed by where I work now, where I’m based and my certifications.',
+    ],
+  },
+  {
     version: '3.2',
     date: '2026-10-26',
     title: 'Official product icons',

@@ -27,7 +27,7 @@ npm run preview   # serve dist/ to check the production build
 | `src/components/ToolGrid.astro` | The equal-weight tool cards used on the homepage and category pages. |
 | `src/content/blog/` + `src/content.config.ts` | Blog posts (Markdown) and the fields each post needs. |
 | `src/data/videos.ts` | Your YouTube videos; thumbnails are copied at build time by `src/pages/videos/thumbs/`. |
-| `src/components/Portrait.astro`, `PageHead.astro`, `SectionHead.astro`, `Icon.astro` | Your photo card, page and section headings, and the icon set. |
+| `src/components/ProfileCard.astro`, `Portrait.astro`, `PageHead.astro`, `SectionHead.astro`, `Icon.astro` | Your profile card, the small photo under posts, page and section headings, and the icon set. |
 | `src/scripts/search.ts` + `src/pages/search-index.json.ts` | Site-wide search (Ctrl K or /) over every tool and reference entry; the index is built at build time and loaded on first use. |
 | `src/data/changelog.ts` | Entries for the "What's new" page. |
 | `src/components/ReferenceIndex.astro` | Shared layout for a reference page (explorer, A–Z index, FAQ). |
@@ -93,6 +93,11 @@ YouTube icon in the footer.
 Your name, role, bio, certifications and links live in `src/site.config.ts`. The photo is
 `public/images/jayaprakash.jpg` (800×800, with a `.webp` copy next to it). To change it, replace both files, keeping the
 names, or point `authorPhoto` at a new file.
+
+Work history lives in `src/data/experience.ts` (copied from LinkedIn). It drives the About page's
+Experience section and career bar, and the newest job without an `end` date shows as "now" on the profile card
+(`src/components/ProfileCard.astro`) and in the homepage intro. Durations are worked out at build time, so a new
+deploy keeps them current. When you change jobs, add the role at the top and give the old one an `end`.
 
 ## Add a formula
 

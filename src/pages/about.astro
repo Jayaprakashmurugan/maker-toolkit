@@ -1,44 +1,59 @@
 ---
 import Base from '../layouts/Base.astro';
-import IdCard from '../components/IdCard.astro';
+import ProfileCard from '../components/ProfileCard.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Icon from '../components/Icon.astro';
 import { siteConfig } from '../site.config';
-import { tools } from '../data/tools';
-import { getPosts, postUrl } from '../lib/posts';
+import { barSpan, current, duration, experience, jobSpan, monthLabel } from '../data/experience';
 
-const posts = (await getPosts()).filter((p) => !p.data.draft);
 const firstName = siteConfig.author.split(' ')[0];
-const hello = posts.find((p) => p.id === 'hello-everyone');
-const firstLinkedIn = posts.filter((p) => p.data.source?.name === 'LinkedIn').at(-1);
 
 const personLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: siteConfig.author,
-  jobTitle: siteConfig.authorRole,
+  jobTitle: current?.title ?? siteConfig.authorRole,
+  ...(current && { worksFor: { '@type': 'Organization', name: current.company } }),
   address: { '@type': 'PostalAddress', addressLocality: 'Chennai', addressCountry: 'IN' },
   sameAs: [...siteConfig.authorLinks.map((l) => l.href), ...(siteConfig.youtubeUrl ? [siteConfig.youtubeUrl] : [])],
 };
 
-const skills = ['Power Apps', 'Power Automate', 'Dataverse', 'Power Fx', 'SharePoint', 'Desktop flows', 'Model-driven apps', 'Mathematics'];
-
-// Every step here comes from the posts on this site.
-const journey = [
-  { when: '2016', title: 'Started in tech as a data analyst', text: 'Working with data science tools, before low-code platforms caught my attention.', href: hello && postUrl(hello) },
-  { when: 'Then', title: 'Moved to the Power Platform', text: 'Low-code and no-code became a big part of my work, and Microsoft’s Power Platform became my focus.' },
-  { when: '2023', title: 'Started writing on Medium', text: 'Practical Power Apps posts: role-based security, fewer If statements, deep links and best practices.', href: '/blog/' },
-  { when: '2024', title: 'Writing on LinkedIn', text: 'Time conversion in Power Apps, and choosing between Dataverse and SharePoint.', href: firstLinkedIn && postUrl(firstLinkedIn) },
-  { when: '2026', title: 'Launched Maker Toolkit', text: `${tools.length} free tools and references for makers, with the blog and videos in one place.`, href: '/tools/' },
+// From the "Core expertise" and "Methods & tools" lists on LinkedIn.
+const skills = [
+  'Power Apps', 'Canvas apps', 'Model-driven apps', 'Code apps', 'Power Automate', 'Dataverse', 'Data modeling',
+  'Power Fx', 'Copilot Studio', 'ALM', 'Azure DevOps', 'PAC CLI', 'XrmToolBox', 'SharePoint', 'React', 'TypeScript',
 ];
+
+// The career bar runs from the first job to today.
+const firstYear = Math.min(...experience.map((j) => Number(jobSpan(j).start.slice(0, 4))));
+const thisYear = new Date().getFullYear();
+const work = experience.flatMap((j) =>
+  j.roles.map((r) => ({ ...barSpan(firstYear, r.start, r.end), color: r.color, label: `${r.title}, ${j.company}: ${monthLabel(r.start)} – ${monthLabel(r.end)}` })),
+);
+const ticks = Array.from({ length: thisYear - firstYear + 1 }, (_, i) => firstYear + i).filter(
+  (y, i, all) => i % 2 === 0 || y === all.at(-1),
+);
+const tickPos = (y: number) => barSpan(firstYear, `${y}-01`).left;
+const careerYears = duration(jobSpan(experience.at(-1)!).start);
+// Time on the Power Platform: from the first role with it in the title.
+const ppStart = experience.flatMap((j) => j.roles).filter((r) => /Power Platform/.test(r.title)).at(-1)?.start;
+
+const initialsOf = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter((w) => /^[A-Za-z]/.test(w))
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('');
+
 ---
 
-<Base title="About" description={`${siteConfig.author}, ${siteConfig.authorRole} in ${siteConfig.authorLocation}. ${siteConfig.authorBio}`} image="/og/about.png">
+<Base title="About" description={`${siteConfig.author}, ${current ? `${current.title} at ${current.company}` : siteConfig.authorRole} in ${siteConfig.authorLocation}. ${siteConfig.authorBio}`} image="/og/about.png">
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(personLd)} />
   <div class="wrap about3">
     <aside class="about3__side">
       <div class="about3__card">
-        <IdCard eager />
+        <ProfileCard eager />
         <p class="about3__links">
           {
             siteConfig.authorLinks.map((l) => (
@@ -62,19 +77,93 @@ const journey = [
         {skills.map((s) => <li>{s}</li>)}
       </ul>
 
-      <section class="home-section" aria-labelledby="journey">
-        <SectionHead index="01 · journey" title="How I got here" id="journey" />
-        <ol class="timeline" data-reveal-group>
+      <section class="home-section" aria-labelledby="experience">
+        <SectionHead index="01 · experience" title="Where I've worked" id="experience" />
+        <div class="xp-intro">
+          <p>
+            I build enterprise applications on the Microsoft Power Platform: Canvas Apps, Model-Driven Apps, Code Apps,
+            Power Automate flows, and Dataverse data models. My work covers the full stack, from schema design and
+            security roles through UI, integration, and deployment pipelines.
+          </p>
+          <p>
+            Alongside delivery, I train and enable teams, walking developers through architecture decisions, code, and ALM
+            practices so they can own and extend what we've built. My current focus is Code Apps, Copilot Studio, and
+            agent development on Dataverse.
+          </p>
+        </div>
+
+        <figure class="career" data-reveal aria-label={`Career timeline, ${firstYear} to today`}>
+          <div class="career__head">
+            <span>{firstYear} → today</span>
+            <span>
+              {ppStart && (
+                <>
+                  <b>{duration(ppStart)}</b> on Power Platform ·{' '}
+                </>
+              )}
+              <b>{careerYears}</b> working
+            </span>
+          </div>
+          <div class="career__row">
+            <span class="career__lbl">work</span>
+            <div class="career__lane">
+              {
+                work.map((s, i) => (
+                  <i style={`--l:${s.left.toFixed(2)}%;--w:${s.width.toFixed(2)}%;--c:${s.color};--d:${i}`} title={s.label} />
+                ))
+              }
+            </div>
+          </div>
+          <div class="career__ticks" aria-hidden="true">
+            <span></span>
+            <div>{ticks.map((y) => <span style={`--l:${tickPos(y).toFixed(2)}%`}>{y}</span>)}</div>
+          </div>
+        </figure>
+
+        <ol class="xp" data-reveal-group>
           {
-            journey.map((j) => (
-              <li>
-                <span class="timeline__when">{j.when}</span>
-                <div class="timeline__body">
-                  <p class="timeline__title">{j.href ? <a href={j.href}>{j.title}</a> : j.title}</p>
-                  <p class="timeline__text">{j.text}</p>
-                </div>
-              </li>
-            ))
+            experience.map((job) => {
+              const span = jobSpan(job);
+              return (
+                <li class="xp__job">
+                  <header class="xp__head">
+                    <span class="xp__mono" aria-hidden="true">
+                      {initialsOf(job.company)}
+                    </span>
+                    <div>
+                      <p class="xp__company">
+                        {job.url ? (
+                          <a href={job.url} rel="noopener">
+                            {job.company}
+                          </a>
+                        ) : (
+                          job.company
+                        )}
+                      </p>
+                      <p class="xp__meta">
+                        {job.terms} · {duration(span.start, span.end)}
+                      </p>
+                    </div>
+                    {!span.end && <span class="xp__now">Now</span>}
+                  </header>
+                  {job.about && <p class="xp__about">{job.about}</p>}
+                  <ol class="xp__roles">
+                    {job.roles.map((r, i) => (
+                      <li class:list={['xp__role', { 'is-current': !r.end }]} style={`--c:${r.color}`}>
+                        <p class="xp__title">{r.title}</p>
+                        <p class="xp__when">
+                          {monthLabel(r.start)} – {monthLabel(r.end)} · {duration(r.start, r.end)}
+                          {i < job.roles.length - 1 && <span class="xp__up">↑ promoted</span>}
+                        </p>
+                        <ul class="xp__skills" aria-label="Skills">
+                          {r.skills.map((s) => <li>{s}</li>)}
+                        </ul>
+                      </li>
+                    ))}
+                  </ol>
+                </li>
+              );
+            })
           }
         </ol>
       </section>

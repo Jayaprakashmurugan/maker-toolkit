@@ -153,7 +153,7 @@ function pointerEffects() {
     ),
   );
 
-  // The Maker ID badge tilts toward the pointer, and its sheen follows.
+  // The profile card tilts toward the pointer, and its sheen follows.
   document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((el) => {
     el.addEventListener(
       'pointermove',

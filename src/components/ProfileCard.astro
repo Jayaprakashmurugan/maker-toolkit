@@ -1,0 +1,71 @@
+---
+// The profile: a full-bleed photo with the name on it, then a short record of where I work, where I'm based
+// and my certifications. It tilts toward the pointer with a soft sheen (src/scripts/motion.ts).
+import { existsSync } from 'node:fs';
+import { siteConfig } from '../site.config';
+import { current } from '../data/experience';
+
+interface Props {
+  /** Load the photo right away (above the fold). */
+  eager?: boolean;
+}
+
+const { eager = false } = Astro.props;
+const photo = siteConfig.authorPhoto;
+const webp = photo && photo.replace(/\.(jpe?g|png)$/i, '.webp');
+const hasWebp = webp && webp !== photo && existsSync(`public${webp}`);
+const initials = siteConfig.author
+  .split(/\s+/)
+  .map((w) => w[0])
+  .join('');
+const role = current?.title ?? siteConfig.authorRole.replace(/^Microsoft /, '');
+---
+
+<div class="profile" data-tilt>
+  <div class="profile__body">
+    <div class="profile__photo">
+      {
+        photo ? (
+          <picture>
+            {hasWebp && <source srcset={webp} type="image/webp" />}
+            <img src={photo} alt={siteConfig.author} width="800" height="800" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+          </picture>
+        ) : (
+          <span class="profile__initials" role="img" aria-label={siteConfig.author}>
+            {initials}
+          </span>
+        )
+      }
+      <div class="profile__id">
+        <p class="profile__name">{siteConfig.author}</p>
+        <p class="profile__role">{role}</p>
+      </div>
+    </div>
+    <dl class="profile__rec">
+      {
+        current && (
+          <div>
+            <dt>now</dt>
+            <dd>
+              <span class="profile__live" aria-hidden="true" />
+              {current.company}
+            </dd>
+          </div>
+        )
+      }
+      <div>
+        <dt>based</dt>
+        <dd>{siteConfig.authorLocation}</dd>
+      </div>
+      <div>
+        <dt>certs</dt>
+        <dd>
+          <ul class="profile__certs" aria-label="Microsoft certifications">
+            {siteConfig.authorCerts.map((c) => <li title={`Microsoft Certified: ${c.name}`}>{c.code}</li>)}
+          </ul>
+        </dd>
+      </div>
+    </dl>
+  </div>
+  <span class="profile__shine" aria-hidden="true"></span>
+</div>

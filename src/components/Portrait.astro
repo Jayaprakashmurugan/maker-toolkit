@@ -1,59 +1,21 @@
 ---
-// Your photo as a round avatar, optionally inside a slowly turning ring of text.
-// A .webp file with the same name next to the photo is served to browsers that support it.
+// A small rounded-square photo with a gradient frame (the author box under posts).
+// The full profile is the Maker ID badge in IdCard.astro.
 import { existsSync } from 'node:fs';
 import { siteConfig } from '../site.config';
 
-interface Props {
-  size?: 'lg' | 'md' | 'sm';
-  /** Show the rotating ring of text around the photo. */
-  ring?: boolean;
-}
-
-const { size = 'lg', ring = size !== 'sm' } = Astro.props;
-const initials = siteConfig.author
-  .split(/\s+/)
-  .map((w) => w[0])
-  .join('');
 const photo = siteConfig.authorPhoto;
 const webp = photo && photo.replace(/\.(jpe?g|png)$/i, '.webp');
 const hasWebp = webp && webp !== photo && existsSync(`public${webp}`);
-const top = siteConfig.authorCerts.at(-1);
-const ringText = [siteConfig.authorRole.replace(/^Microsoft /, ''), top && `${top.code} certified`, siteConfig.authorLocation]
-  .filter(Boolean)
-  .join(' ✦ ')
-  .toUpperCase();
-// Unique per instance, so several avatars can sit on one page.
-const id = `ring-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
-<figure class:list={['avatar', `avatar--${size}`, { 'avatar--ring': ring }]}>
-  {
-    ring && (
-      <svg class="avatar__ring" viewBox="0 0 200 200" aria-hidden="true">
-        <defs>
-          <path id={id} d="M100,100 m-88,0 a88,88 0 1,1 176,0 a88,88 0 1,1 -176,0" />
-        </defs>
-        <text>
-          <textPath href={`#${id}`} textLength="545" lengthAdjust="spacing">
-            {ringText} ✦
-          </textPath>
-        </text>
-      </svg>
-    )
-  }
-  <span class="avatar__img">
-    {
-      photo ? (
-        <picture>
-          {hasWebp && <source srcset={webp} type="image/webp" />}
-          <img src={photo} alt={siteConfig.author} width="800" height="800" loading={size === 'lg' ? 'eager' : 'lazy'} decoding="async" />
-        </picture>
-      ) : (
-        <span class="avatar__initials" role="img" aria-label={siteConfig.author}>
-          {initials}
-        </span>
-      )
-    }
-  </span>
-</figure>
+{
+  photo && (
+    <figure class="avatar-sq">
+      <picture>
+        {hasWebp && <source srcset={webp} type="image/webp" />}
+        <img src={photo} alt={siteConfig.author} width="800" height="800" loading="lazy" decoding="async" />
+      </picture>
+    </figure>
+  )
+}

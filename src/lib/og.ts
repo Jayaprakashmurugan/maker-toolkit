@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { inflateSync } from 'node:zlib';
-import { markPaths } from './logo';
+import { markPaths, slashGradient } from './logo';
 
 export interface OgCard {
   kicker: string;
@@ -117,12 +117,14 @@ const C = {
   ink2: '#a6afbd',
   ink3: '#6c7686',
   rule: '#1d2330',
-  accent: '#c8f560',
-  accent2: '#5ee7df',
-  accentInk: '#d4ff6e',
+  apps: '#d16be0',
+  accent: '#4c8dff',
+  data: '#1fb5a6',
+  bi: '#f2c811',
+  accentInk: '#8fb7ff',
   code: '#0d1118',
   codeInk: '#e2e8f0',
-  fn: '#c8f560',
+  fn: '#f2c811',
 };
 // Family names as stored in the @fontsource files (one family per weight).
 const MONO = 'JetBrains Mono ExtraBold';
@@ -194,23 +196,26 @@ export function renderOg(card: OgCard & { host: string }): Buffer {
 
   const photo = card.byline?.photo ? dataUri(card.byline.photo) : null;
   const foot = card.byline
-    ? `${photo ? `<clipPath id="face"><circle cx="${X + 26}" cy="590" r="26"/></clipPath><image href="${photo}" x="${X}" y="564" width="52" height="52" clip-path="url(#face)" preserveAspectRatio="xMidYMid slice"/>` : ''}
+    ? `${photo ? `<rect x="${X - 2}" y="562" width="56" height="56" rx="14" fill="url(#g)"/><clipPath id="face"><rect x="${X}" y="564" width="52" height="52" rx="12"/></clipPath><image href="${photo}" x="${X}" y="564" width="52" height="52" clip-path="url(#face)" preserveAspectRatio="xMidYMid slice"/>` : ''}
   <text x="${X + (photo ? 68 : 0)}" y="598" font-family="${DISPLAY}" font-weight="700" font-size="21" fill="${C.ink}">${esc(card.byline.name)}</text>`
     : `<text x="${X}" y="598" font-family="${BODY}" font-size="23" fill="${C.ink2}">${esc(card.host)}</text>`;
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="${C.accent}"/>
-      <stop offset="1" stop-color="${C.accent2}"/>
+      <stop offset="0" stop-color="${C.apps}"/>
+      <stop offset="0.42" stop-color="${C.accent}"/>
+      <stop offset="0.78" stop-color="${C.data}"/>
+      <stop offset="1" stop-color="${C.bi}"/>
     </linearGradient>
+    ${slashGradient('slash')}
     <radialGradient id="glow1" cx="0.92" cy="0.05" r="0.6">
-      <stop offset="0" stop-color="${C.accent}" stop-opacity="0.22"/>
-      <stop offset="1" stop-color="${C.accent}" stop-opacity="0"/>
+      <stop offset="0" stop-color="${C.apps}" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="${C.apps}" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="glow2" cx="0.7" cy="1" r="0.6">
-      <stop offset="0" stop-color="${C.accent2}" stop-opacity="0.16"/>
-      <stop offset="1" stop-color="${C.accent2}" stop-opacity="0"/>
+      <stop offset="0" stop-color="${C.accent}" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="${C.accent}" stop-opacity="0"/>
     </radialGradient>
     <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
       <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
@@ -225,7 +230,7 @@ export function renderOg(card: OgCard & { host: string }): Buffer {
   <g transform="translate(${X} 62)">
     <g transform="scale(0.875)">
       <rect width="64" height="64" rx="15" fill="${C.card}" stroke="#2a3242" stroke-width="2"/>
-      ${markPaths(C.ink, C.accent)}
+      ${markPaths(C.ink, 'url(#slash)')}
     </g>
   </g>
   <text x="${X + 72}" y="99" font-family="${DISPLAY}" font-weight="700" font-size="26" fill="${C.ink}">Maker<tspan fill="${C.accent}">/</tspan>Toolkit</text>
@@ -245,13 +250,14 @@ export function renderOg(card: OgCard & { host: string }): Buffer {
 export function renderLockup(theme: 'light' | 'dark'): Buffer {
   const bg = theme === 'light' ? '#f2f3ee' : C.paper;
   const text = theme === 'light' ? '#0b0d12' : C.ink;
-  const slash = theme === 'light' ? '#5c9a00' : C.accent;
+  const slash = theme === 'light' ? '#2f6fe4' : C.accent;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320">
+  <defs>${slashGradient('slash')}</defs>
   <rect width="1200" height="320" fill="${bg}"/>
   <g transform="translate(70 60)">
     <g transform="scale(3.125)">
       <rect width="64" height="64" rx="14" fill="${C.card}"/>
-      ${markPaths(C.ink, C.accent)}
+      ${markPaths(C.ink, 'url(#slash)')}
     </g>
   </g>
   <text x="320" y="196" font-family="${DISPLAY}" font-weight="700" font-size="92" letter-spacing="-4" fill="${text}">Maker<tspan fill="${slash}">/</tspan>Toolkit</text>

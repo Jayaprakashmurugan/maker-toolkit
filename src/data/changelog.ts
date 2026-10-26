@@ -8,6 +8,16 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '3.1',
+    date: '2026-10-26',
+    title: 'Power Platform colors and a Maker ID',
+    changes: [
+      'A new color scheme taken from the Power Platform family: Power Apps magenta, Power Automate blue, Dataverse/SharePoint teal and Power BI gold, with each tool group in its own color.',
+      'The profile is now a Maker ID badge that tilts toward your cursor with a holographic sheen.',
+      'The data group is now called Dataverse/SharePoint everywhere, at /dataverse-sharepoint/. The old address redirects.',
+    ],
+  },
+  {
     version: '3.0',
     date: '2026-10-26',
     title: 'A formula console of our own',

@@ -4,7 +4,7 @@ export const siteConfig = {
   name: 'Maker Toolkit',
   tagline: 'Free tools for Power Platform makers',
   description:
-    'Free, browser-based tools, guides and videos for Power Apps, Power Automate and Dataverse makers. No sign-up, no cookies.',
+    'Free, browser-based tools, guides and videos for Power Apps, Power Automate and Dataverse/SharePoint makers. No sign-up, no cookies.',
   // Where people can report a mistake or suggest a formula. Replace with your GitHub repo's issues page.
   feedbackUrl: 'https://github.com/Jayaprakashmurugan/maker-toolkit/issues',
   author: 'Jayaprakash Murugan',

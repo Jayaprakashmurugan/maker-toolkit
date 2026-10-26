@@ -13,7 +13,10 @@ const { path, title, lede } = Astro.props;
 
 <header class="phead">
   <p class="phead__path"><span>{path}</span><span class="caret" aria-hidden="true"></span></p>
-  <h1 class="phead__title">{title}</h1>
+  <h1 class="phead__title">
+    {/* Long names like Dataverse/SharePoint may wrap after the slash on small screens. */}
+    {title.split('/').map((part, i) => (i > 0 ? <>/<wbr />{part}</> : part))}
+  </h1>
   {lede && <p class="phead__lede">{lede}</p>}
   <slot />
 </header>

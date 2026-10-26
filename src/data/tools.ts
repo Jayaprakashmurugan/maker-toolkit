@@ -1,6 +1,6 @@
 import { desktopReference, powerAppsReference, powerAutomateReference } from './references';
 
-export type CategoryId = 'power-apps' | 'power-automate' | 'dataverse' | 'developer-utilities';
+export type CategoryId = 'power-apps' | 'power-automate' | 'dataverse-sharepoint' | 'developer-utilities';
 
 export interface ToolCategory {
   id: CategoryId;
@@ -23,7 +23,7 @@ export const categories: ToolCategory[] = [
     short: 'Power Apps',
     summary: 'Formulas, patterns and assets for canvas apps.',
     intro: 'Look up any Power Fx formula, test the patterns you validate input with, and turn icons into formulas you can theme.',
-    color: '#b18cff',
+    color: '#d16be0',
   },
   {
     id: 'power-automate',
@@ -31,15 +31,15 @@ export const categories: ToolCategory[] = [
     short: 'Power Automate',
     summary: 'Expressions, triggers, emails and cards for cloud and desktop flows.',
     intro: 'Every expression function, plus builders for the parts of a flow that usually take trial and error: trigger conditions, Parse JSON schemas, HTML emails and Teams cards.',
-    color: '#5aa7ff',
+    color: '#4c8dff',
   },
   {
-    id: 'dataverse',
-    name: 'Dataverse',
-    short: 'Dataverse',
+    id: 'dataverse-sharepoint',
+    name: 'Dataverse/SharePoint',
+    short: 'Dataverse/SharePoint',
     summary: 'Query, filter and move data in Dataverse and SharePoint.',
     intro: 'Tools for the data layer: filter queries that return the right rows, and copying list structures between sites and tenants.',
-    color: '#34d8a0',
+    color: '#1fb5a6',
   },
   {
     id: 'developer-utilities',
@@ -47,7 +47,7 @@ export const categories: ToolCategory[] = [
     short: 'Utilities',
     summary: 'Format, read and debug formulas and JSON from any product.',
     intro: 'General-purpose helpers for the middle of a build: make a long expression readable, or turn a step’s JSON output into the exact expression you need.',
-    color: '#ffb547',
+    color: '#f2c811',
   },
 ];
 
@@ -84,7 +84,7 @@ export const tools: Tool[] = [
     href: '/regex-tester/',
     kind: 'tool',
     category: 'power-apps',
-    also: ['dataverse'],
+    also: ['dataverse-sharepoint'],
     meta: 'IsMatch · Match · MatchAll',
     keywords: 'regular expression validate input email phone pattern',
   },
@@ -121,7 +121,7 @@ export const tools: Tool[] = [
     href: '/trigger-condition-builder/',
     kind: 'tool',
     category: 'power-automate',
-    also: ['dataverse'],
+    also: ['dataverse-sharepoint'],
     meta: 'Triggers · Settings',
     keywords: 'trigger condition loop stop flow running filter',
   },
@@ -158,7 +158,7 @@ export const tools: Tool[] = [
     description: 'Build the Filter Query for SharePoint Get items or Dataverse List rows, with the right quotes and dates.',
     href: '/odata-filter-builder/',
     kind: 'tool',
-    category: 'dataverse',
+    category: 'dataverse-sharepoint',
     also: ['power-automate'],
     meta: 'List rows · Get items',
     keywords: 'odata filter query list rows get items sharepoint',
@@ -168,7 +168,7 @@ export const tools: Tool[] = [
     description: 'Copy a SharePoint list and its columns to another site or tenant, with no app registration needed.',
     href: '/list-copier/',
     kind: 'tool',
-    category: 'dataverse',
+    category: 'dataverse-sharepoint',
     meta: 'SharePoint · Microsoft Lists',
     keywords: 'sharepoint list copy columns migrate tenant pnp',
   },

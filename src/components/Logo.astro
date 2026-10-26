@@ -1,11 +1,20 @@
 ---
 // Inline logo mark. Colors come from CSS (.logo__*), so it follows light and dark themes.
-import { LEFT, RIGHT, SLASH } from '../lib/logo';
+import { LEFT, RIGHT, SLASH, SLASH_COLORS } from '../lib/logo';
+
+// Unique per instance, since the logo appears more than once on a page.
+const id = `slash-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
 <svg class="logo" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id={id} x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color={SLASH_COLORS[0]}></stop>
+      <stop offset="1" stop-color={SLASH_COLORS[1]}></stop>
+    </linearGradient>
+  </defs>
   <rect class="logo__tile" width="64" height="64" rx="14"></rect>
   <path class="logo__bracket logo__bracket--left" d={LEFT}></path>
   <path class="logo__bracket logo__bracket--right" d={RIGHT}></path>
-  <path class="logo__slash" d={SLASH}></path>
+  <path class="logo__slash" d={SLASH} stroke={`url(#${id})`}></path>
 </svg>

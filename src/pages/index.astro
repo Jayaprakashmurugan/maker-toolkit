@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import Portrait from '../components/Portrait.astro';
+import IdCard from '../components/IdCard.astro';
 import SectionHead from '../components/SectionHead.astro';
 import ToolBrowser from '../components/ToolBrowser.astro';
 import PostList from '../components/PostList.astro';
@@ -77,7 +77,7 @@ const faqs = [
         </h1>
         <div>
           <p class="hero3__lede">
-            Free tools, guides and videos for <b>Power Apps</b>, <b>Power Automate</b> and <b>Dataverse</b>.
+            Free tools, guides and videos for <b>Power Apps</b>, <b>Power Automate</b> and <b>Dataverse/SharePoint</b>.
             Search {entries} formulas or pick a tool. Everything runs in your browser.
           </p>
           <div class="hero3__actions">
@@ -104,12 +104,7 @@ const faqs = [
       </div>
 
       <div class="tile tile--me">
-        <Portrait size="lg" />
-        <p class="tile--me__name">{siteConfig.author}</p>
-        <p class="tile--me__role">{siteConfig.authorRole.replace(/^Microsoft /, '')}</p>
-        <ul class="certchips" aria-label="Microsoft certifications">
-          {siteConfig.authorCerts.map((c) => <li title={`Microsoft Certified: ${c.name}`}>{c.code}</li>)}
-        </ul>
+        <IdCard eager />
         <a class="tile__link" href="/about/">About me <Icon name="arrow" /></a>
       </div>
 

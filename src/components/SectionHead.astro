@@ -16,7 +16,9 @@ const { title, id, index, more } = Astro.props;
 <div class="shead" data-reveal>
   <div>
     {index && <p class="shead__idx">// {index}</p>}
-    <h2 class="shead__title" id={id}>{title}</h2>
+    <h2 class="shead__title" id={id}>
+      {title.split('/').map((part, i) => (i > 0 ? <>/<wbr />{part}</> : part))}
+    </h2>
   </div>
   {
     more && (

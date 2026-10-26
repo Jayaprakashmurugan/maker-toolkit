@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import Portrait from '../components/Portrait.astro';
+import IdCard from '../components/IdCard.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Icon from '../components/Icon.astro';
 import { siteConfig } from '../site.config';
@@ -37,11 +37,8 @@ const journey = [
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(personLd)} />
   <div class="wrap about3">
     <aside class="about3__side">
-      <div class="about3__card" data-reveal>
-        <Portrait size="lg" />
-        <p class="about3__name">{siteConfig.author}</p>
-        <p class="about3__role">{siteConfig.authorRole.replace(/^Microsoft /, '')}</p>
-        <p class="about3__loc"><Icon name="pin" /> {siteConfig.authorLocation}</p>
+      <div class="about3__card">
+        <IdCard eager />
         <p class="about3__links">
           {
             siteConfig.authorLinks.map((l) => (

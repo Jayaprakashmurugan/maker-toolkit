@@ -1,7 +1,13 @@
-// The Maker Toolkit mark: formula brackets cut by the lime slash from "Maker/Toolkit".
+// The Maker Toolkit mark: formula brackets cut by a slash that runs from Power Apps magenta to Power Automate blue.
 // Single source for the header logo, favicons, app icons, share images and brand kit.
 
-export const COLORS = { ink: '#0e121a', paper: '#eef1f6', accent: '#c8f560' };
+export const COLORS = { ink: '#0e121a', paper: '#eef1f6', accent: '#7d86ff' };
+/** The slash's gradient, top to bottom. */
+export const SLASH_COLORS = ['#e07be9', '#4c8dff'] as const;
+
+/** A <linearGradient> for the slash; reference it with stroke="url(#id)". */
+export const slashGradient = (id: string) =>
+  `<linearGradient id="${id}" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${SLASH_COLORS[0]}"/><stop offset="1" stop-color="${SLASH_COLORS[1]}"/></linearGradient>`;
 
 // Paths in a 64×64 box.
 export const LEFT = 'M23.5 14.5c-6.6 4.6-9.8 10.6-9.8 17.5s3.2 12.9 9.8 17.5';
@@ -31,9 +37,9 @@ export function markSvg({ rounded = true, scale = 1, themed = false } = {}): str
     : '';
   const paths = themed
     ? `<path class="b" d="${LEFT} ${RIGHT}" fill="none" stroke-width="${BRACKET_WIDTH}" stroke-linecap="round"/>` +
-      `<path d="${SLASH}" stroke="${COLORS.accent}" stroke-width="${SLASH_WIDTH}" stroke-linecap="round"/>`
-    : markPaths();
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">${style}<rect${themed ? ' class="t"' : ''} width="64" height="64"${rounded ? ' rx="14"' : ''} fill="${COLORS.ink}"/><g transform="translate(${offset} ${offset}) scale(${scale})">${paths}</g></svg>`;
+      `<path d="${SLASH}" stroke="url(#s)" stroke-width="${SLASH_WIDTH}" stroke-linecap="round"/>`
+    : markPaths(COLORS.paper, 'url(#s)');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><defs>${slashGradient('s')}</defs>${style}<rect${themed ? ' class="t"' : ''} width="64" height="64"${rounded ? ' rx="14"' : ''} fill="${COLORS.ink}"/><g transform="translate(${offset} ${offset}) scale(${scale})">${paths}</g></svg>`;
 }
 
 /** Wraps PNG data in a .ico container (modern ICO files can hold PNG images). */

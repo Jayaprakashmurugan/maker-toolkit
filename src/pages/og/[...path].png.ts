@@ -15,7 +15,7 @@ export const getStaticPaths = (async () => {
         kicker: 'Free tools for Power Platform makers',
         title: 'Maker Toolkit',
         titleFont: 'display',
-        summary: 'Free tools, guides and videos for Power Apps, Power Automate and Dataverse makers.',
+        summary: 'Free tools, guides and videos for Power Apps, Power Automate and Dataverse/SharePoint makers.',
         byline: { name: siteConfig.author, photo: siteConfig.authorPhoto },
       },
     },
@@ -134,12 +134,12 @@ export const getStaticPaths = (async () => {
         kicker: `${tools.length} free tools and references`,
         title: 'Tools for Power Platform makers',
         titleFont: 'display',
-        summary: 'Power Apps, Power Automate and Dataverse. Nothing to install, nothing leaves your browser.',
+        summary: 'Power Apps, Power Automate and Dataverse/SharePoint. Nothing to install, nothing leaves your browser.',
       },
     },
     {
       path: 'blog',
-      card: { kicker: 'Blog', title: 'Guides for makers', titleFont: 'display', summary: 'Practical posts on Power Apps, Power Automate and Dataverse.', byline: { name: siteConfig.author, photo: siteConfig.authorPhoto } },
+      card: { kicker: 'Blog', title: 'Guides for makers', titleFont: 'display', summary: 'Practical posts on Power Apps, Power Automate and Dataverse/SharePoint.', byline: { name: siteConfig.author, photo: siteConfig.authorPhoto } },
     },
     {
       path: 'videos',

@@ -27,7 +27,7 @@ ${p.data.tags.map((t) => `      <category>${esc(t)}</category>`).join('\n')}
     <title>${esc(siteConfig.name)} blog</title>
     <link>${new URL('/blog/', base).href}</link>
     <atom:link href="${new URL('/blog/rss.xml', base).href}" rel="self" type="application/rss+xml"/>
-    <description>Guides for Power Apps, Power Automate and Dataverse by ${esc(siteConfig.author)}.</description>
+    <description>Guides for Power Apps, Power Automate and Dataverse/SharePoint by ${esc(siteConfig.author)}.</description>
     <language>en</language>
 ${items}
   </channel>

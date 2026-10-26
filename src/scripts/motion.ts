@@ -128,7 +128,10 @@ function pointerEffects() {
       'pointermove',
       perFrame((e: PointerEvent) => {
         const r = list.getBoundingClientRect();
-        list.style.setProperty('--px', `${e.clientX - r.left}px`);
+        // Keep the preview inside the list: near the right edge it shows to the left of the pointer.
+        const thumb = list.querySelector<HTMLElement>('.plist__thumb')?.offsetWidth ?? 320;
+        const x = e.clientX - r.left;
+        list.style.setProperty('--px', `${x + thumb + 48 > r.width ? x - thumb - 48 : x}px`);
         list.style.setProperty('--py', `${e.clientY - r.top}px`);
       }),
       { passive: true },
@@ -149,6 +152,28 @@ function pointerEffects() {
       { passive: true },
     ),
   );
+
+  // The Maker ID badge tilts toward the pointer, and its sheen follows.
+  document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((el) => {
+    el.addEventListener(
+      'pointermove',
+      perFrame((e: PointerEvent) => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+        el.classList.add('is-tilting');
+        el.style.setProperty('--rx', `${((0.5 - py) * 14).toFixed(2)}deg`);
+        el.style.setProperty('--ry', `${((px - 0.5) * 16).toFixed(2)}deg`);
+        el.style.setProperty('--sx', `${(px * 100).toFixed(1)}%`);
+        el.style.setProperty('--sy', `${(py * 100).toFixed(1)}%`);
+      }),
+    );
+    el.addEventListener('pointerleave', () => {
+      el.classList.remove('is-tilting');
+      el.style.removeProperty('--rx');
+      el.style.removeProperty('--ry');
+    });
+  });
 
   // Buttons lean toward the pointer.
   document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {

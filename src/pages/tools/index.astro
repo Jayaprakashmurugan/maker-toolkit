@@ -12,7 +12,7 @@ const description = 'Free, browser-based tools and references for Power Apps, Po
 
 <Base title="Tools" description={description} image="/og/tools.png">
   <div class="wrap">
-    <PageHead icon="tools" title="Tools" lede={description}>
+    <PageHead path="~/tools" title="Tools" lede={description}>
       <button type="button" class="phead__search" data-search-open>
         <Icon name="search" /> Search {tools.length} tools and {references.reduce((n, r) => n + r.items.length, 0)} formulas <kbd data-search-kbd>Ctrl K</kbd>
       </button>
@@ -21,7 +21,7 @@ const description = 'Free, browser-based tools and references for Power Apps, Po
     <ToolBrowser level={2} />
 
     <section class="home-section" aria-labelledby="by-cat">
-      <SectionHead icon="spark" title="Browse by product" id="by-cat" />
+      <SectionHead index="by product" title="Browse by product" id="by-cat" />
       <ul class="catcards" data-reveal-group>
         {
           categories.map((c) => (

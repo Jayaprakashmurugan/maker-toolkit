@@ -1,20 +1,19 @@
 ---
-import Icon, { type IconName } from './Icon.astro';
+// Page heading: a terminal-style path ("~/tools") over a large title.
 
 interface Props {
-  icon: IconName;
+  /** Shown above the title like a path in a terminal, e.g. "~/tools". */
+  path: string;
   title: string;
   lede?: string;
 }
 
-const { icon, title, lede } = Astro.props;
+const { path, title, lede } = Astro.props;
 ---
 
 <header class="phead">
-  <h1 class="phead__title">
-    <span class="phead__icon"><Icon name={icon} /></span>
-    {title}
-  </h1>
+  <p class="phead__path"><span>{path}</span><span class="caret" aria-hidden="true"></span></p>
+  <h1 class="phead__title">{title}</h1>
   {lede && <p class="phead__lede">{lede}</p>}
   <slot />
 </header>

@@ -1,22 +1,23 @@
 ---
-import Icon, { type IconName } from './Icon.astro';
+// Section heading: a code-comment index ("// 01") over a large title, with an optional "see all" link.
+import Icon from './Icon.astro';
 
 interface Props {
-  icon: IconName;
   title: string;
   id: string;
-  /** A "see all" link on the right. */
+  /** Shown above the title as a code comment, e.g. "01 · tools". */
+  index?: string;
   more?: { href: string; label: string };
 }
 
-const { icon, title, id, more } = Astro.props;
+const { title, id, index, more } = Astro.props;
 ---
 
 <div class="shead" data-reveal>
-  <h2 class="shead__title" id={id}>
-    <span class="shead__icon"><Icon name={icon} /></span>
-    {title}
-  </h2>
+  <div>
+    {index && <p class="shead__idx">// {index}</p>}
+    <h2 class="shead__title" id={id}>{title}</h2>
+  </div>
   {
     more && (
       <a class="shead__more" href={more.href}>

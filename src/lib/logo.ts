@@ -1,7 +1,7 @@
-// The Maker Toolkit mark: formula brackets cut by the orange slash from "Maker/Toolkit".
+// The Maker Toolkit mark: formula brackets cut by the lime slash from "Maker/Toolkit".
 // Single source for the header logo, favicons, app icons, share images and brand kit.
 
-export const COLORS = { ink: '#1b1a17', paper: '#f3efe6', accent: '#e8461a' };
+export const COLORS = { ink: '#0e121a', paper: '#eef1f6', accent: '#c8f560' };
 
 // Paths in a 64×64 box.
 export const LEFT = 'M23.5 14.5c-6.6 4.6-9.8 10.6-9.8 17.5s3.2 12.9 9.8 17.5';
@@ -27,7 +27,7 @@ export function markPaths(stroke = COLORS.paper, accent = COLORS.accent): string
 export function markSvg({ rounded = true, scale = 1, themed = false } = {}): string {
   const offset = (64 - 64 * scale) / 2;
   const style = themed
-    ? `<style>.t{fill:${COLORS.ink}}.b{stroke:${COLORS.paper}}@media (prefers-color-scheme:dark){.t{fill:${COLORS.paper}}.b{stroke:${COLORS.ink}}}</style>`
+    ? `<style>.t{fill:${COLORS.ink}}.b{stroke:${COLORS.paper}}@media (prefers-color-scheme:dark){.t{fill:#1a2130}}</style>`
     : '';
   const paths = themed
     ? `<path class="b" d="${LEFT} ${RIGHT}" fill="none" stroke-width="${BRACKET_WIDTH}" stroke-linecap="round"/>` +

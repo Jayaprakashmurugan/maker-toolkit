@@ -1,5 +1,6 @@
 ---
-import '@fontsource-variable/plus-jakarta-sans';
+import '@fontsource-variable/unbounded';
+import '@fontsource-variable/instrument-sans';
 import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import { siteConfig } from '../site.config';
@@ -26,13 +27,13 @@ const words = siteConfig.name.split(/\s+/);
 // Blog and Videos appear in the menu once there's something to show.
 const hasPosts = (await getPosts()).some((p) => !p.data.draft);
 const toolPaths = ['/tools/', ...categories.map((c) => `/${c.id}/`), ...tools.map((t) => t.href)];
-const nav: { href: string; label: string; icon: IconName; match: string[] }[] = [
-  { href: '/', label: 'Home', icon: 'home', match: [] },
-  { href: '/tools/', label: 'Tools', icon: 'tools', match: toolPaths },
-  ...(hasPosts ? [{ href: '/blog/', label: 'Blog', icon: 'blog' as const, match: [] }] : []),
-  ...(videos.length ? [{ href: '/videos/', label: 'Videos', icon: 'video' as const, match: [] }] : []),
-  { href: '/about/', label: 'About', icon: 'user', match: [] },
-  { href: '/contact/', label: 'Contact', icon: 'chat', match: [] },
+const postCount = (await getPosts()).filter((p) => !p.data.draft).length;
+const nav: { href: string; label: string; count?: number; match: string[] }[] = [
+  { href: '/tools/', label: 'Tools', count: tools.length, match: toolPaths },
+  ...(hasPosts ? [{ href: '/blog/', label: 'Blog', count: postCount, match: [] }] : []),
+  ...(videos.length ? [{ href: '/videos/', label: 'Videos', count: videos.length, match: [] }] : []),
+  { href: '/about/', label: 'About', match: [] },
+  { href: '/contact/', label: 'Contact', match: [] },
 ];
 const isCurrent = (n: (typeof nav)[number]) => (n.href === '/' ? path === '/' : [n.href, ...n.match].some((h) => path.startsWith(h)));
 const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label: 'YouTube', href: siteConfig.youtubeUrl, icon: 'youtube' }] : [])];
@@ -68,13 +69,11 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
         <meta name="google-site-verification" content={siteConfig.googleSiteVerification} />
       )
     }
-    <meta name="theme-color" content="#f6f8fc" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#07090d" />
     <script is:inline>
-      // Apply a saved theme before first paint to avoid a flash.
+      // Dark is the default; apply a saved choice before first paint to avoid a flash.
       try {
-        const t = localStorage.getItem('theme');
-        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light';
       } catch {}
       // Enable entrance animations unless the visitor prefers reduced motion.
       // Safety net: if the motion script never runs, show everything after 2.5 s.
@@ -90,8 +89,14 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
   <body>
     <a class="skip" href="#main">Skip to content</a>
 
+    <div class="bg" aria-hidden="true">
+      <div class="bg__aurora"></div>
+      <div class="bg__grid"></div>
+      <div class="bg__grain"></div>
+    </div>
+
     <header class="site-header">
-      <div class="wrap wrap--wide site-header__inner">
+      <div class="nav-shell">
         <a class="brand" href="/" aria-label={`${siteConfig.name} home`}>
           <Logo />
           <span class="brand__text">
@@ -107,8 +112,8 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
           {
             nav.map((n) => (
               <a href={n.href} aria-current={isCurrent(n) ? 'page' : undefined}>
-                <Icon name={n.icon} />
                 {n.label}
+                {n.count !== undefined && <sup aria-hidden="true">{n.count}</sup>}
               </a>
             ))
           }
@@ -119,7 +124,7 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
             <span class="search-btn__label">Search</span>
             <kbd data-search-kbd>Ctrl K</kbd>
           </button>
-          <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+          <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="Switch between dark and light">
             <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"></circle>
               <path
@@ -143,11 +148,12 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
         </div>
       </div>
       <nav class="mobile-nav" id="mobile-nav" popover aria-label="Menu">
+        <a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a>
         {
           nav.map((n) => (
             <a href={n.href} aria-current={isCurrent(n) ? 'page' : undefined}>
-              <Icon name={n.icon} />
               {n.label}
+              {n.count !== undefined && <sup aria-hidden="true">{n.count}</sup>}
             </a>
           ))
         }
@@ -159,6 +165,17 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
     </main>
 
     <footer class="site-footer">
+      <div class="footer-mark" aria-hidden="true">
+        <div class="footer-mark__track">
+          {
+            Array.from({ length: 4 }, (_, i) => (
+              <span class:list={{ 'is-outline': i % 2 === 1 }}>
+                Maker<i>/</i>Toolkit
+              </span>
+            ))
+          }
+        </div>
+      </div>
       <div class="wrap wrap--wide site-footer__inner">
         <div class="site-footer__about">
           <a class="brand" href="/">
@@ -296,11 +313,9 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
 
       document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
         const root = document.documentElement;
-        const dark = root.dataset.theme
-          ? root.dataset.theme === 'dark'
-          : window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const next = dark ? 'light' : 'dark';
-        root.dataset.theme = next;
+        const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+        if (next === 'light') root.dataset.theme = 'light';
+        else delete root.dataset.theme;
         try {
           localStorage.setItem('theme', next);
         } catch {}

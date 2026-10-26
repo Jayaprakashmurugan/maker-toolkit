@@ -17,15 +17,14 @@ const others = categories.filter((c) => c.id !== cat.id);
 
 <Base title={`${cat.name} tools`} description={`${cat.summary} Free, in your browser, no sign-up.`} image={`/og/${cat.id}.png`}>
   <div class="wrap" style={`--cat:${cat.color}`}>
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="/tools/">Tools</a> <span aria-hidden="true">/</span> {cat.name}</nav>
-    <PageHead icon="tools" title={cat.name} lede={cat.intro} />
+    <PageHead path={`~/tools/${cat.id}`} title={cat.name} lede={cat.intro} />
 
     <ToolGrid tools={own} level={2} />
 
     {
       also.length > 0 && (
         <section class="home-section" aria-labelledby="also-title">
-          <SectionHead icon="spark" title={`Also useful for ${cat.name}`} id="also-title" />
+          <SectionHead index="from other groups" title={`Also useful for ${cat.name}`} id="also-title" />
           <ToolGrid tools={also} />
         </section>
       )

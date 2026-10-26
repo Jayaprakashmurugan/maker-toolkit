@@ -23,7 +23,7 @@ export const categories: ToolCategory[] = [
     short: 'Power Apps',
     summary: 'Formulas, patterns and assets for canvas apps.',
     intro: 'Look up any Power Fx formula, test the patterns you validate input with, and turn icons into formulas you can theme.',
-    color: '#9b4dca',
+    color: '#b18cff',
   },
   {
     id: 'power-automate',
@@ -31,7 +31,7 @@ export const categories: ToolCategory[] = [
     short: 'Power Automate',
     summary: 'Expressions, triggers, emails and cards for cloud and desktop flows.',
     intro: 'Every expression function, plus builders for the parts of a flow that usually take trial and error: trigger conditions, Parse JSON schemas, HTML emails and Teams cards.',
-    color: '#2f6fde',
+    color: '#5aa7ff',
   },
   {
     id: 'dataverse',
@@ -39,7 +39,7 @@ export const categories: ToolCategory[] = [
     short: 'Dataverse',
     summary: 'Query, filter and move data in Dataverse and SharePoint.',
     intro: 'Tools for the data layer: filter queries that return the right rows, and copying list structures between sites and tenants.',
-    color: '#0d8a6a',
+    color: '#34d8a0',
   },
   {
     id: 'developer-utilities',
@@ -47,7 +47,7 @@ export const categories: ToolCategory[] = [
     short: 'Utilities',
     summary: 'Format, read and debug formulas and JSON from any product.',
     intro: 'General-purpose helpers for the middle of a build: make a long expression readable, or turn a step’s JSON output into the exact expression you need.',
-    color: '#e8461a',
+    color: '#ffb547',
   },
 ];
 

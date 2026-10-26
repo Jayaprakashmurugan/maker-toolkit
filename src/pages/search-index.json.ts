@@ -62,7 +62,7 @@ export const GET: APIRoute = async () => {
       g: 'Blog',
       d: p.data.description,
       s: ['blog guide', ...p.data.tags].join(' ').toLowerCase(),
-      c: '#f05a28',
+      c: '#c8f560',
     })),
     { t: 'What’s new', u: '/changelog/', k: 'Page', g: 'Site', d: 'Every release and what changed.', s: 'changelog release updates new', c: '#857f73' },
     { t: 'About', u: '/about/', k: 'Page', g: 'Site', d: 'Who makes this site and why.', s: 'author contact', c: '#857f73' },

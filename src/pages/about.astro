@@ -1,11 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHead from '../components/PageHead.astro';
 import Portrait from '../components/Portrait.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Icon from '../components/Icon.astro';
 import { siteConfig } from '../site.config';
 import { tools } from '../data/tools';
+import { getPosts, postUrl } from '../lib/posts';
+
+const posts = (await getPosts()).filter((p) => !p.data.draft);
+const firstName = siteConfig.author.split(' ')[0];
+const hello = posts.find((p) => p.id === 'hello-everyone');
+const firstLinkedIn = posts.filter((p) => p.data.source?.name === 'LinkedIn').at(-1);
 
 const personLd = {
   '@context': 'https://schema.org',
@@ -16,87 +21,102 @@ const personLd = {
   sameAs: [...siteConfig.authorLinks.map((l) => l.href), ...(siteConfig.youtubeUrl ? [siteConfig.youtubeUrl] : [])],
 };
 
-const skills = ['Power Apps', 'Power Automate', 'Dataverse', 'Power Fx', 'SharePoint', 'Desktop flows', 'Mathematics'];
+const skills = ['Power Apps', 'Power Automate', 'Dataverse', 'Power Fx', 'SharePoint', 'Desktop flows', 'Model-driven apps', 'Mathematics'];
 
-const now = [
-  { title: 'Maker Toolkit', text: `${tools.length} free tools and references for makers, with more on the way.`, href: '/tools/' },
-  { title: 'Practical guides', text: 'Step-by-step posts that go with each tool, from real projects.', href: '/blog/' },
-  { title: 'Video walkthroughs', text: 'Short videos that show the tools in a real app or flow.', href: '/videos/' },
+// Every step here comes from the posts on this site.
+const journey = [
+  { when: '2016', title: 'Started in tech as a data analyst', text: 'Working with data science tools, before low-code platforms caught my attention.', href: hello && postUrl(hello) },
+  { when: 'Then', title: 'Moved to the Power Platform', text: 'Low-code and no-code became a big part of my work, and Microsoft’s Power Platform became my focus.' },
+  { when: '2023', title: 'Started writing on Medium', text: 'Practical Power Apps posts: role-based security, fewer If statements, deep links and best practices.', href: '/blog/' },
+  { when: '2024', title: 'Writing on LinkedIn', text: 'Time conversion in Power Apps, and choosing between Dataverse and SharePoint.', href: firstLinkedIn && postUrl(firstLinkedIn) },
+  { when: '2026', title: 'Launched Maker Toolkit', text: `${tools.length} free tools and references for makers, with the blog and videos in one place.`, href: '/tools/' },
 ];
 ---
 
 <Base title="About" description={`${siteConfig.author}, ${siteConfig.authorRole} in ${siteConfig.authorLocation}. ${siteConfig.authorBio}`} image="/og/about.png">
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(personLd)} />
-  <div class="wrap">
-    <PageHead icon="user" title="About me" lede={`${siteConfig.authorRole} in ${siteConfig.authorLocation}, and the person behind ${siteConfig.name}.`} />
-
-    <section class="intro-card" aria-label="Introduction" data-reveal>
-      <Portrait size="md" />
-      <div>
-        <p class="intro-card__name">Hi, I'm {siteConfig.author.split(' ')[0]}.</p>
-        <p class="intro-card__bio">{siteConfig.authorBio}</p>
-        <ul class="pills" aria-label="What I work with">
-          {skills.map((s) => <li class="pill">{s}</li>)}
-        </ul>
-        <p class="intro-card__links">
+  <div class="wrap about3">
+    <aside class="about3__side">
+      <div class="about3__card" data-reveal>
+        <Portrait size="lg" />
+        <p class="about3__name">{siteConfig.author}</p>
+        <p class="about3__role">{siteConfig.authorRole.replace(/^Microsoft /, '')}</p>
+        <p class="about3__loc"><Icon name="pin" /> {siteConfig.authorLocation}</p>
+        <p class="about3__links">
           {
             siteConfig.authorLinks.map((l) => (
-              <a class="btn btn--outline" href={l.href} rel="noopener me">
+              <a class="btn btn--outline" href={l.href} rel="noopener me" data-magnetic>
                 <Icon name={l.icon as 'linkedin' | 'github'} /> {l.label}
               </a>
             ))
           }
         </p>
       </div>
-    </section>
+    </aside>
 
-    <section class="home-section" aria-labelledby="now">
-      <SectionHead icon="spark" title="What I'm working on" id="now" />
-      <ul class="infocards" data-reveal-group>
-        {
-          now.map((n) => (
-            <li>
-              <a href={n.href}>
-                <span class="infocards__title">{n.title}</span>
-                <span class="infocards__text">{n.text}</span>
-              </a>
-            </li>
-          ))
-        }
+    <div class="about3__main">
+      <header class="phead">
+        <p class="phead__path"><span>~/about</span><span class="caret" aria-hidden="true"></span></p>
+        <h1 class="phead__title">Hi, I'm {firstName}.</h1>
+        <p class="phead__lede">{siteConfig.authorBio}</p>
+      </header>
+
+      <ul class="skills" aria-label="What I work with" data-reveal-group>
+        {skills.map((s) => <li>{s}</li>)}
       </ul>
-    </section>
 
-    <section class="home-section" aria-labelledby="certs">
-      <SectionHead icon="award" title="Certifications" id="certs" />
-      <ul class="certs" data-reveal-group>
-        {
-          siteConfig.authorCerts.map((c) => (
-            <li>
-              <span class="certs__code">{c.code}</span>
-              <span class="certs__name">
-                <small>Microsoft Certified</small>
-                {c.name}
-              </span>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
+      <section class="home-section" aria-labelledby="journey">
+        <SectionHead index="01 · journey" title="How I got here" id="journey" />
+        <ol class="timeline" data-reveal-group>
+          {
+            journey.map((j) => (
+              <li>
+                <span class="timeline__when">{j.when}</span>
+                <div class="timeline__body">
+                  <p class="timeline__title">{j.href ? <a href={j.href}>{j.title}</a> : j.title}</p>
+                  <p class="timeline__text">{j.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
 
-    <section class="home-section prose-post about-story" aria-labelledby="why">
-      <SectionHead icon="tools" title="Why Maker Toolkit exists" id="why" />
-      <p>
-        Power Fx and Power Automate expressions are powerful, but the answers are spread across many pages, and the
-        answer to “how do I…?” is often a formula you've never heard of. {siteConfig.name} puts those answers in one
-        place: every formula with an example you can paste straight in, and tools for the jobs that usually take trial
-        and error.
-      </p>
-      <p>
-        It's built with Astro and published as static files on Cloudflare. There's no database, no account and no
-        tracking of what you type. The <a href="https://github.com/Jayaprakashmurugan/maker-toolkit" rel="noopener">source
-        code is on GitHub</a>, and corrections are always welcome: <a href={siteConfig.feedbackUrl} rel="noopener">open an
-        issue</a> or <a href="/contact/">get in touch</a>.
-      </p>
-    </section>
+      <section class="home-section" aria-labelledby="certs">
+        <SectionHead index="02 · certified" title="Certifications" id="certs" />
+        <ul class="certs" data-reveal-group>
+          {
+            siteConfig.authorCerts.map((c) => (
+              <li>
+                <span class="certs__code">{c.code}</span>
+                <span class="certs__name">
+                  <small>Microsoft Certified</small>
+                  {c.name}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="home-section about3__story" aria-labelledby="why">
+        <SectionHead index="03 · why" title="Why Maker Toolkit exists" id="why" />
+        <div class="prose-post">
+        <p>
+          Power Fx and Power Automate expressions are powerful, but the answers are spread across many pages, and the
+          answer to “how do I…?” is often a formula you've never heard of. {siteConfig.name} puts those answers in one
+          place: every formula with an example you can paste straight in, and tools for the jobs that usually take trial
+          and error.
+        </p>
+        <p>
+          It's built with Astro and published as static files on Cloudflare. There's no database, no account and no
+          tracking of what you type. The <a href="https://github.com/Jayaprakashmurugan/maker-toolkit" rel="noopener"
+            >source code is on GitHub</a
+          >, and corrections are always welcome: <a href={siteConfig.feedbackUrl} rel="noopener">open an issue</a> or{' '}
+          <a href="/contact/">get in touch</a>.
+        </p>
+        </div>
+      </section>
+    </div>
   </div>
 </Base>

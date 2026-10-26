@@ -3,20 +3,37 @@ import Base from '../layouts/Base.astro';
 import Portrait from '../components/Portrait.astro';
 import SectionHead from '../components/SectionHead.astro';
 import ToolBrowser from '../components/ToolBrowser.astro';
-import PostGrid from '../components/PostGrid.astro';
+import PostList from '../components/PostList.astro';
 import VideoGrid from '../components/VideoGrid.astro';
 import Icon from '../components/Icon.astro';
 import { tools } from '../data/tools';
 import { videos } from '../data/videos';
 import { desktopReference, powerAppsReference, powerAutomateReference } from '../data/references';
 import { getPosts } from '../lib/posts';
+import { fxHtml } from '../lib/fxHtml';
 import { siteConfig } from '../site.config';
 
 const posts = (await getPosts()).filter((p) => !p.data.draft);
 const entries = powerAppsReference.items.length + powerAutomateReference.items.length + desktopReference.items.length;
 const toolCount = tools.filter((t) => t.kind === 'tool').length;
-const tryThese = ['remove duplicates', 'format date', 'Patch', 'trigger condition', 'regex'];
 const firstName = siteConfig.author.split(' ')[0];
+const tryThese = ['remove duplicates', 'format date', 'Patch', 'trigger condition', 'regex'];
+
+// The formula bar types these one after another.
+const formulas = [
+  { code: `Patch(Tasks, ThisItem, { Status: "Done" })`, note: 'Power Apps · mark a task as done' },
+  { code: `Filter(Tasks, Owner.Email = User().Email)`, note: 'Power Apps · only my tasks' },
+  { code: `IsMatch(txtEmail.Text, Match.Email)`, note: 'Power Fx · is this an email?' },
+  { code: `formatDateTime(utcNow(), 'dd MMM yyyy')`, note: 'Power Automate · today, readable' },
+  { code: `@equals(triggerOutputs()?['body/Created'], triggerOutputs()?['body/Modified'])`, note: 'Trigger condition · new items only' },
+];
+
+const marquee = [
+  'Patch', 'Filter', 'LookUp', 'ForAll', 'With', 'Collect', 'Switch', 'IfError', 'ParseJSON', 'Sequence', 'GroupBy',
+  'formatDateTime', 'triggerBody', 'coalesce', 'union', 'split', 'IsMatch', 'Navigate', 'UpdateContext', 'Sort',
+];
+
+const headline = ['Formulas,', 'tools & fixes', 'for makers.'];
 
 const faqs = [
   {
@@ -39,64 +56,111 @@ const faqs = [
 ---
 
 <Base description={siteConfig.description}>
-  <section class="wrap hero2">
-    <div class="hero2__photo reveal" style="--d:0">
-      <Portrait />
-    </div>
-    <div class="hero2__text">
-      <p class="hero2__by reveal" style="--d:1">
-        By <a href="/about/">{siteConfig.author}</a> · {siteConfig.authorRole.replace(/^Microsoft /, '')}
-      </p>
-      <h1 class="hero2__title reveal" style="--d:2">
-        Maker <span class="grad-text" data-scramble>Toolkit</span>
-      </h1>
-      <p class="hero2__lede reveal" style="--d:3">
-        Free tools, guides and videos for <b>Power Apps</b>, <b>Power Automate</b> and <b>Dataverse</b> makers.
-        Search {entries} formulas or pick a tool. Everything runs in your browser.
-      </p>
-      <div class="hero2__actions reveal" style="--d:4">
-        <a class="btn btn--lg" href="/tools/">Explore tools <Icon name="arrow" /></a>
-        <a class="btn btn--outline btn--lg" href="/about/">About me</a>
+  <section class="wrap hero3" data-glow>
+    <div class="bento">
+      <div class="tile tile--intro">
+        <p class="mono-path">~/maker-toolkit<span class="caret" aria-hidden="true"></span></p>
+        <h1 class="h-display" aria-label={headline.join(' ')}>
+          {
+            headline.map((line, i) => (
+              <span class="h-line" aria-hidden="true">
+                {i === headline.length - 1 ? (
+                  <>
+                    <span class="w" style={`--i:${i}`}>for</span> <span class="w grad-text" style={`--i:${i + 1}`}>makers.</span>
+                  </>
+                ) : (
+                  <span class="w" style={`--i:${i}`}>{line}</span>
+                )}
+              </span>
+            ))
+          }
+        </h1>
+        <div>
+          <p class="hero3__lede">
+            Free tools, guides and videos for <b>Power Apps</b>, <b>Power Automate</b> and <b>Dataverse</b>.
+            Search {entries} formulas or pick a tool. Everything runs in your browser.
+          </p>
+          <div class="hero3__actions">
+            <a class="btn btn--lg" href="/tools/" data-magnetic>Explore tools <Icon name="arrow" /></a>
+            <a class="btn btn--outline btn--lg" href="/blog/" data-magnetic>Read the blog</a>
+          </div>
+          <form class="cmd" role="search" action="/" data-search-form>
+            <label class="visually-hidden" for="hero-q">Search tools, formulas and expressions</label>
+            <span class="cmd__prompt" aria-hidden="true">&gt;</span>
+            <input id="hero-q" type="search" placeholder="search 481 formulas, tools, posts…" autocomplete="off" spellcheck="false" data-search-input />
+            <kbd data-search-kbd>Ctrl K</kbd>
+          </form>
+          <p class="cmd__try">
+            try
+            {
+              tryThese.map((q) => (
+                <button type="button" class="chip" data-search-query={q}>
+                  {q}
+                </button>
+              ))
+            }
+          </p>
+        </div>
       </div>
-      <form class="hero-search reveal" style="--d:5" role="search" action="/" data-search-form>
-        <label class="visually-hidden" for="hero-q">Search tools, formulas and expressions</label>
-        <Icon name="search" />
-        <input id="hero-q" type="search" placeholder="Search tools, formulas, expressions…" autocomplete="off" spellcheck="false" data-search-input />
-        <kbd data-search-kbd>Ctrl K</kbd>
-      </form>
-      <p class="hero-search__try reveal" style="--d:5">
-        Try
-        {
-          tryThese.map((q) => (
-            <button type="button" class="chip" data-search-query={q}>
-              {q}
-            </button>
-          ))
-        }
-      </p>
+
+      <div class="tile tile--me">
+        <Portrait size="lg" />
+        <p class="tile--me__name">{siteConfig.author}</p>
+        <p class="tile--me__role">{siteConfig.authorRole.replace(/^Microsoft /, '')}</p>
+        <ul class="certchips" aria-label="Microsoft certifications">
+          {siteConfig.authorCerts.map((c) => <li title={`Microsoft Certified: ${c.name}`}>{c.code}</li>)}
+        </ul>
+        <a class="tile__link" href="/about/">About me <Icon name="arrow" /></a>
+      </div>
+
+      <div class="tile tile--formula" data-typer>
+        <div class="console__bar">
+          <span class="console__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="console__file">formula-bar.fx</span>
+          <span class="console__note" data-typer-note>{formulas[0].note}</span>
+        </div>
+        <div class="console__body">
+          <span class="console__ln" aria-hidden="true">1</span>
+          <span class="console__eq" aria-hidden="true">fx</span>
+          <code class="console__code" data-typer-out set:html={fxHtml(formulas[0].code)} />
+        </div>
+        <div hidden>
+          {formulas.map((f) => <span data-typer-line data-note={f.note} set:html={fxHtml(f.code)} />)}
+        </div>
+      </div>
+
+      <dl class="tile tile--stats">
+        <div><dt>Power Fx formulas</dt><dd data-count>{powerAppsReference.items.length}</dd></div>
+        <div><dt>Flow expressions</dt><dd data-count>{powerAutomateReference.items.length}</dd></div>
+        <div><dt>Free tools</dt><dd data-count>{toolCount}</dd></div>
+        <div><dt>Articles</dt><dd data-count>{posts.length}</dd></div>
+      </dl>
     </div>
   </section>
 
-  <section class="wrap">
-    <dl class="hstats" data-reveal-group>
-      <div><dt>Power Fx formulas</dt><dd data-count>{powerAppsReference.items.length}</dd></div>
-      <div><dt>Flow expressions</dt><dd data-count>{powerAutomateReference.items.length}</dd></div>
-      <div><dt>Desktop formulas</dt><dd data-count>{desktopReference.items.length}</dd></div>
-      <div><dt>Free tools</dt><dd data-count>{toolCount}</dd></div>
-      <div><dt>Cookies</dt><dd>0</dd></div>
-    </dl>
-  </section>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      {
+        [...marquee, ...marquee].map((m) => (
+          <span>
+            {m}
+            <b>()</b>
+          </span>
+        ))
+      }
+    </div>
+  </div>
 
   <section class="wrap home-section" id="tools" aria-labelledby="h-tools">
-    <SectionHead icon="tools" title="Tools" id="h-tools" more={{ href: '/tools/', label: 'All tools' }} />
+    <SectionHead index="01 · tools" title="Every tool, one place" id="h-tools" more={{ href: '/tools/', label: 'All tools' }} />
     <ToolBrowser />
   </section>
 
   {
     posts.length > 0 && (
       <section class="wrap home-section" aria-labelledby="h-posts">
-        <SectionHead icon="blog" title="Latest blog posts" id="h-posts" more={{ href: '/blog/', label: 'All posts' }} />
-        <PostGrid posts={posts.slice(0, 3)} />
+        <SectionHead index="02 · writing" title="Latest from the blog" id="h-posts" more={{ href: '/blog/', label: `All ${posts.length} posts` }} />
+        <PostList posts={posts.slice(0, 5)} />
       </section>
     )
   }
@@ -104,33 +168,28 @@ const faqs = [
   {
     videos.length > 0 && (
       <section class="wrap home-section" aria-labelledby="h-videos">
-        <SectionHead icon="video" title="Latest videos" id="h-videos" more={{ href: '/videos/', label: 'All videos' }} />
+        <SectionHead index="03 · videos" title="Latest videos" id="h-videos" more={{ href: '/videos/', label: 'All videos' }} />
         <VideoGrid videos={videos.slice(0, 3)} />
       </section>
     )
   }
 
-  <section class="wrap home-section" aria-labelledby="h-about">
-    <SectionHead icon="user" title="Who builds this" id="h-about" />
-    <div class="intro-card" data-reveal>
-      <Portrait size="md" badge={false} />
-      <div>
-        <p class="intro-card__name">Hi, I'm {firstName}.</p>
-        <p class="intro-card__bio">{siteConfig.authorBio}</p>
-        <ul class="pills" aria-label="Certifications">
-          {siteConfig.authorCerts.map((c) => <li class="pill"><Icon name="award" /> {c.code}</li>)}
-          <li class="pill"><Icon name="pin" /> {siteConfig.authorLocation}</li>
-        </ul>
-        <p class="intro-card__links">
-          <a class="btn btn--outline" href="/about/">More about me <Icon name="arrow" /></a>
-          <a class="btn btn--outline" href="/contact/">Get in touch</a>
-        </p>
-      </div>
+  <section class="wrap home-section" aria-labelledby="h-whoami">
+    <div class="band" data-reveal>
+      <p class="band__idx" id="h-whoami">// whoami</p>
+      <p class="band__text">
+        I'm <b>{firstName}</b>, a {siteConfig.authorRole.replace(/^Microsoft /, '')} in {siteConfig.authorLocation.split(',')[0]}.{' '}
+        {siteConfig.authorBio}
+      </p>
+      <p class="band__actions">
+        <a class="btn btn--outline" href="/about/" data-magnetic>More about me <Icon name="arrow" /></a>
+        <a class="btn btn--outline" href="/contact/" data-magnetic>Get in touch</a>
+      </p>
     </div>
   </section>
 
   <section class="wrap home-section" aria-labelledby="faq-title">
-    <SectionHead icon="chat" title="Questions" id="faq-title" />
+    <SectionHead index="04 · faq" title="Questions" id="faq-title" />
     <div class="faq" data-reveal-group>
       {
         faqs.map((f) => (

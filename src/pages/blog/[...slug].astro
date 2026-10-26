@@ -33,6 +33,7 @@ const articleLd = {
 ---
 
 <Base title={title} description={description} image={postCover(post)}>
+  <div class="progress" aria-hidden="true"></div>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(articleLd)} />
   <article class="wrap post">
     <a class="post__back" href="/blog/"><Icon name="arrow" class="flip" /> All posts</a>
@@ -93,7 +94,7 @@ const articleLd = {
     </div>
 
     <aside class="post__author" aria-label="About the author">
-      <Portrait size="md" badge={false} />
+      <Portrait size="sm" />
       <div>
         <p class="post__author-name">Written by <a href="/about/">{siteConfig.author}</a></p>
         <p>{siteConfig.authorBio}</p>

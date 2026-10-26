@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
-import PostGrid from '../../components/PostGrid.astro';
+import PostList from '../../components/PostList.astro';
 import Icon from '../../components/Icon.astro';
 import { getPosts } from '../../lib/posts';
 
@@ -12,7 +12,7 @@ const description = 'Practical guides for Power Apps, Power Automate and Dataver
 <Base title="Blog" description={description} image="/og/blog.png">
   <link slot="head" rel="alternate" type="application/rss+xml" title="Maker Toolkit blog" href="/blog/rss.xml" />
   <div class="wrap">
-    <PageHead icon="blog" title="Blog" lede={description}>
+    <PageHead path="~/blog" title="Blog" lede={description}>
       {
         posts.length > 0 && (
           <a class="phead__link" href="/blog/rss.xml">
@@ -24,7 +24,7 @@ const description = 'Practical guides for Power Apps, Power Automate and Dataver
 
     {
       posts.length > 0 ? (
-        <PostGrid posts={posts} level={2} />
+        <PostList posts={posts} level={2} />
       ) : (
         <section class="empty" aria-labelledby="empty-title">
           <span class="empty__icon">

@@ -1,0 +1,51 @@
+---
+// Posts as an editorial list. On desktop, a post's cover follows the cursor while you hover its row;
+// on touch screens it shows as a small thumbnail.
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { postCover, postUrl, readingTime, type Post } from '../lib/posts';
+
+interface Props {
+  posts: Post[];
+  level?: 2 | 3;
+}
+
+const { posts, level = 3 } = Astro.props;
+const H = `h${level}` as 'h2' | 'h3';
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+---
+
+<ol class="plist" data-preview-list data-reveal-group>
+  {
+    posts.map((p) => {
+      const d = p.data.date;
+      return (
+        <li class="plist__item">
+          <a href={postUrl(p)}>
+            <span class="plist__thumb" aria-hidden="true">
+              {p.data.cover ? (
+                <Image src={p.data.cover} alt="" widths={[320, 640]} sizes="320px" loading="lazy" />
+              ) : (
+                <img src={postCover(p)} alt="" width="1200" height="630" loading="lazy" decoding="async" />
+              )}
+            </span>
+            <time class="plist__date" datetime={d.toISOString()}>
+              <span>{d.getUTCFullYear()}</span>
+              {MONTHS[d.getUTCMonth()]} {String(d.getUTCDate()).padStart(2, '0')}
+            </time>
+            <span class="plist__body">
+              <H class="plist__title">{p.data.title}</H>
+              <span class="plist__meta">
+                {p.data.tags.slice(0, 3).join(' · ')}
+                <span>{readingTime(p.body)} min</span>
+                {p.data.source && <span>via {p.data.source.name}</span>}
+                {p.data.draft && <span class="plist__draft">Draft</span>}
+              </span>
+            </span>
+            <Icon name="arrow" class="plist__arrow" />
+          </a>
+        </li>
+      );
+    })
+  }
+</ol>

@@ -8,6 +8,18 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '3.0',
+    date: '2026-10-26',
+    title: 'A formula console of our own',
+    changes: [
+      'A completely new look: dark by default with signal lime and aqua, the Unbounded display font, and a warm-grey light mode.',
+      'A new homepage: a live formula bar that types real Power Fx and flow expressions, a scrolling strip of function names, and a bento layout.',
+      'Tool cards light up where your cursor is, buttons lean toward it, and blog posts preview their cover as you hover the list.',
+      'A floating navigation bar, a reading-progress bar on posts, an About timeline and a giant animated wordmark in the footer.',
+      'All motion turns off automatically if your device is set to reduce motion.',
+    ],
+  },
+  {
     version: '2.1',
     date: '2026-10-26',
     title: 'Eleven articles on the blog',

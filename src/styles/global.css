@@ -5055,14 +5055,19 @@ h4 {
 
 /* ── Profile card ─────────────────────────────────────────── */
 
+/* The angle of the border's gradient, registered so it can be animated. */
+@property --spin {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
 .profile {
   --rx: 0deg;
   --ry: 0deg;
   position: relative;
   width: min(100%, 17rem);
-  padding: 1.5px;
+  padding: 2px;
   border-radius: 24px;
-  background: var(--grad);
   box-shadow: var(--shadow-lg);
   text-align: left;
   transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));
@@ -5072,10 +5077,38 @@ h4 {
 .profile.is-tilting {
   transition: transform 0.08s linear;
 }
+/* The gradient border (::before) and its soft glow (::after), turning clockwise. */
+.profile::before,
+.profile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(from var(--spin, 0deg), #e07be9, #7b9cff, #2ec7b6, #f2c811, #e07be9);
+}
+.profile::after {
+  z-index: -2;
+  inset: 6px;
+  filter: blur(20px);
+  opacity: 0.45;
+}
+:root[data-theme='light'] .profile::after {
+  opacity: 0.3;
+}
+html.motion .profile::before,
+html.motion .profile::after {
+  animation: border-spin 6s linear infinite;
+}
+@keyframes border-spin {
+  to {
+    --spin: 360deg;
+  }
+}
 .profile__body {
   position: relative;
   overflow: hidden;
-  border-radius: 22.5px;
+  border-radius: 22px;
   background: linear-gradient(180deg, #111621, #0a0d14);
   color: #eef1f6;
 }
@@ -5149,22 +5182,28 @@ html.motion .profile:hover .profile__photo img {
 }
 .profile__rec > div {
   display: grid;
-  grid-template-columns: 3.4rem minmax(0, 1fr);
+  grid-template-columns: 1.8rem minmax(0, 1fr);
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.7rem;
   padding-block: 0.45rem;
 }
 .profile__rec > div + div {
   border-top: 1px dashed rgb(255 255 255 / 0.09);
 }
+/* Each row's icon sits on a small tile in its own color (--ic). */
 .profile__rec dt {
-  color: #6f7a8c;
-  font-family: var(--f-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--ic) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ic) 38%, transparent);
+  color: var(--ic);
 }
-.profile__rec dt::after {
-  content: ':';
+.profile__rec dt .icon {
+  width: 0.95rem;
+  height: 0.95rem;
 }
 .profile__rec dd {
   display: flex;
@@ -5172,6 +5211,17 @@ html.motion .profile:hover .profile__photo img {
   gap: 0.45rem;
   margin: 0;
   color: #e3e8f0;
+}
+.profile__now {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+  color: #7fd9cf;
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 .profile__live {
   position: relative;
@@ -5228,8 +5278,8 @@ html.motion .profile__live::after {
 /* Sheen that follows the pointer. */
 .profile__shine {
   position: absolute;
-  inset: 1.5px;
-  border-radius: 22.5px;
+  inset: 2px;
+  border-radius: 22px;
   background: linear-gradient(
     115deg,
     transparent 30%,

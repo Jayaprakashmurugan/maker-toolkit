@@ -1,9 +1,11 @@
 ---
-// The profile: a full-bleed photo with the name on it, then a short record of where I work, where I'm based
-// and my certifications. It tilts toward the pointer with a soft sheen (src/scripts/motion.ts).
+// The profile: a full-bleed photo with the name on it, then where I work, where I'm based and my certifications,
+// each with an icon. The gradient border turns clockwise, and the card tilts toward the pointer with a soft sheen
+// (src/scripts/motion.ts).
 import { existsSync } from 'node:fs';
 import { siteConfig } from '../site.config';
 import { current } from '../data/experience';
+import Icon from './Icon.astro';
 
 interface Props {
   /** Load the photo right away (above the fold). */
@@ -44,21 +46,33 @@ const role = current?.title ?? siteConfig.authorRole.replace(/^Microsoft /, '');
     <dl class="profile__rec">
       {
         current && (
-          <div>
-            <dt>now</dt>
+          <div style="--ic:#4c8dff">
+            <dt>
+              <Icon name="building" />
+              <span class="visually-hidden">Works at</span>
+            </dt>
             <dd>
-              <span class="profile__live" aria-hidden="true" />
               {current.company}
+              <span class="profile__now">
+                <span class="profile__live" aria-hidden="true" />
+                now
+              </span>
             </dd>
           </div>
         )
       }
-      <div>
-        <dt>based</dt>
+      <div style="--ic:#1fb5a6">
+        <dt>
+          <Icon name="pin" />
+          <span class="visually-hidden">Based in</span>
+        </dt>
         <dd>{siteConfig.authorLocation}</dd>
       </div>
-      <div>
-        <dt>certs</dt>
+      <div style="--ic:#d16be0">
+        <dt>
+          <Icon name="badge" />
+          <span class="visually-hidden">Certifications</span>
+        </dt>
         <dd>
           <ul class="profile__certs" aria-label="Microsoft certifications">
             {siteConfig.authorCerts.map((c) => <li title={`Microsoft Certified: ${c.name}`}>{c.code}</li>)}

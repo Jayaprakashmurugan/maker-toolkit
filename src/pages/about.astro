@@ -24,19 +24,18 @@ const skills = [
   'Power Fx', 'Copilot Studio', 'ALM', 'Azure DevOps', 'PAC CLI', 'XrmToolBox', 'SharePoint', 'React', 'TypeScript',
 ];
 
-// The career bar runs from the first job to today.
-const firstYear = Math.min(...experience.map((j) => Number(jobSpan(j).start.slice(0, 4))));
+// The career bar runs from the first role to today, with a tick each January.
+const firstMonth = experience.map((j) => jobSpan(j).start).sort()[0];
+const firstYear = Number(firstMonth.slice(0, 4));
 const thisYear = new Date().getFullYear();
 const work = experience.flatMap((j) =>
-  j.roles.map((r) => ({ ...barSpan(firstYear, r.start, r.end), color: r.color, label: `${r.title}, ${j.company}: ${monthLabel(r.start)} – ${monthLabel(r.end)}` })),
+  j.roles.map((r) => ({ ...barSpan(firstMonth, r.start, r.end), color: r.color, label: `${r.title}, ${j.company}: ${monthLabel(r.start)} – ${monthLabel(r.end)}` })),
 );
-const ticks = Array.from({ length: thisYear - firstYear + 1 }, (_, i) => firstYear + i).filter(
-  (y, i, all) => i % 2 === 0 || y === all.at(-1),
-);
-const tickPos = (y: number) => barSpan(firstYear, `${y}-01`).left;
+const years = Array.from({ length: thisYear - firstYear }, (_, i) => firstYear + 1 + i);
+// Every year fits on a short bar; a long one shows every other year.
+const ticks = years.length <= 7 ? years : years.filter((y, i) => i % 2 === 0 || y === thisYear);
+const tickPos = (y: number) => barSpan(firstMonth, `${y}-01`).left;
 const careerYears = duration(jobSpan(experience.at(-1)!).start);
-// Time on the Power Platform: from the first role with it in the title.
-const ppStart = experience.flatMap((j) => j.roles).filter((r) => /Power Platform/.test(r.title)).at(-1)?.start;
 
 const initialsOf = (name: string) =>
   name
@@ -94,14 +93,9 @@ const initialsOf = (name: string) =>
 
         <figure class="career" data-reveal aria-label={`Career timeline, ${firstYear} to today`}>
           <div class="career__head">
-            <span>{firstYear} → today</span>
+            <span>{monthLabel(firstMonth)} → today</span>
             <span>
-              {ppStart && (
-                <>
-                  <b>{duration(ppStart)}</b> on Power Platform ·{' '}
-                </>
-              )}
-              <b>{careerYears}</b> working
+              <b>{careerYears}</b> on Power Platform
             </span>
           </div>
           <div class="career__row">

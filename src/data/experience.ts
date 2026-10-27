@@ -1,4 +1,4 @@
-// Work history, taken from the LinkedIn profile (checked 2026-10-26).
+// Power Platform work history, taken from the LinkedIn profile (checked 2026-10-26).
 // Newest first. Dates are 'YYYY-MM'; a role with no `end` is the current one.
 // Durations are counted the way LinkedIn counts them (both months included), at build time.
 
@@ -48,21 +48,6 @@ export const experience: Job[] = [
       },
     ],
   },
-  {
-    company: 'Panuval Book Store',
-    url: 'https://www.linkedin.com/company/7820265/',
-    terms: 'Part-time · On-site',
-    about: 'One of the largest bookstores in South India.',
-    roles: [
-      {
-        title: 'Social Media Coordinator',
-        start: '2016-08',
-        end: '2022-07',
-        color: 'var(--pp-bi)',
-        skills: ['Social media', 'SEO', 'Web design', 'Data visualization', 'Photoshop', 'Communication'],
-      },
-    ],
-  },
 ];
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -100,9 +85,9 @@ export const current = (() => {
   return job && { company: job.company, title: job.roles[0].title, since: job.roles[0].start };
 })();
 
-/** Where a stretch of time sits on a bar running from January of `from` to now, in percent. */
-export function barSpan(from: number, start: string, end?: string) {
-  const origin = from * 12;
+/** Where a stretch of time sits on a bar running from the month `from` ('YYYY-MM') to now, in percent. */
+export function barSpan(from: string, start: string, end?: string) {
+  const origin = toMonths(from);
   const span = toMonths() + 1 - origin;
   const a = toMonths(start) - origin;
   const b = toMonths(end) + 1 - origin;

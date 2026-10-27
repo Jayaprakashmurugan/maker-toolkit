@@ -12,8 +12,8 @@ export const changelog: Release[] = [
     date: '2026-10-26',
     title: 'Work experience and a cleaner profile card',
     changes: [
-      'The About page now has my work experience: every role with its dates and skills, and a career bar from 2016 to today.',
-      'A new profile card: the photo runs edge to edge with the name on it, followed by where I work now, where I’m based and my certifications.',
+      'The About page now has my Power Platform work experience: every role with its dates and skills, and a career bar up to today.',
+      'A new profile card: the photo runs edge to edge with the name on it, followed by where I work now, where I’m based and my certifications, each with its own icon. Its gradient border slowly turns clockwise.',
     ],
   },
   {

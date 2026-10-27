@@ -8,6 +8,15 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    version: '3.4',
+    date: '2026-10-28',
+    title: 'Cards that lean in',
+    changes: [
+      'Cards all over the site now tilt toward your cursor with a soft sheen, like the profile card: tools, categories, formulas, videos, certifications and more. Bigger cards tilt less, and it stays off on touch screens and when you prefer reduced motion.',
+      'On the homepage the profile card now stands on its own, and the hero search no longer repeats the Ctrl K hint shown in the header.',
+    ],
+  },
+  {
     version: '3.3',
     date: '2026-10-26',
     title: 'Work experience and a cleaner profile card',

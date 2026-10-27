@@ -1,5 +1,5 @@
 // Purposeful motion: decode titles, type formulas, count numbers, reveal on scroll, and pointer effects
-// (spotlight cards, magnetic buttons, hero glow, post previews). Anything that moves on its own is skipped
+// (spotlight cards, tilting cards, magnetic buttons, hero glow, post previews). Anything that moves on its own is skipped
 // when the visitor prefers reduced motion; pointer effects only run with a mouse or trackpad.
 
 declare global {
@@ -153,26 +153,56 @@ function pointerEffects() {
     ),
   );
 
-  // The profile card tilts toward the pointer, and its sheen follows.
-  document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((el) => {
-    el.addEventListener(
-      'pointermove',
-      perFrame((e: PointerEvent) => {
-        const r = el.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-        el.classList.add('is-tilting');
-        el.style.setProperty('--rx', `${((0.5 - py) * 14).toFixed(2)}deg`);
-        el.style.setProperty('--ry', `${((px - 0.5) * 16).toFixed(2)}deg`);
-        el.style.setProperty('--sx', `${(px * 100).toFixed(1)}%`);
-        el.style.setProperty('--sy', `${(py * 100).toFixed(1)}%`);
-      }),
-    );
-    el.addEventListener('pointerleave', () => {
-      el.classList.remove('is-tilting');
-      el.style.removeProperty('--rx');
-      el.style.removeProperty('--ry');
-    });
+  // Cards all over the site tilt toward the pointer with a soft sheen, like the profile card.
+  // Big cards tilt less. [data-tilt="15"] sets the angle and means the card brings its own sheen and styles.
+  const TILT =
+    '[data-tilt], .tcard > a, .catcards a, .ways a, .mcard > a, .card, .aside-card, .certs li, .xp__job, .tile--formula, .tile--stats';
+  let tilted: HTMLElement | null = null;
+  const untilt = (el: HTMLElement) => {
+    el.classList.remove('is-tilting');
+    el.removeAttribute('data-tilting');
+    el.style.removeProperty('--rx');
+    el.style.removeProperty('--ry');
+  };
+  /** First hover: make room for the sheen. Skipped inside React islands, which own their markup. */
+  const prepare = (el: HTMLElement) => {
+    el.dataset.tiltReady = '';
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    if (el.closest('astro-island')) return;
+    const shine = document.createElement('span');
+    shine.className = 'tilt-shine';
+    shine.setAttribute('aria-hidden', 'true');
+    el.append(shine);
+  };
+  document.addEventListener(
+    'pointermove',
+    perFrame((e: PointerEvent) => {
+      const el = (e.target as Element).closest<HTMLElement>(TILT);
+      if (el !== tilted) {
+        if (tilted) untilt(tilted);
+        tilted = el;
+      }
+      if (!el || !el.matches(':hover')) return;
+      const own = el.dataset.tilt !== undefined;
+      if (!own && el.dataset.tiltReady === undefined) prepare(el);
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      const max = Number(el.dataset.tilt) || Math.min(10, 2800 / r.width);
+      el.style.setProperty('--rx', `${((0.5 - py) * max).toFixed(2)}deg`);
+      el.style.setProperty('--ry', `${((px - 0.5) * max * 1.1).toFixed(2)}deg`);
+      el.style.setProperty('--sx', `${(px * 100).toFixed(1)}%`);
+      el.style.setProperty('--sy', `${(py * 100).toFixed(1)}%`);
+      if (own) el.classList.add('is-tilting');
+      else el.setAttribute('data-tilting', '');
+    }),
+    { passive: true },
+  );
+  document.addEventListener('pointerout', (e) => {
+    if (tilted && !tilted.contains(e.relatedTarget as Node | null)) {
+      untilt(tilted);
+      tilted = null;
+    }
   });
 
   // Buttons lean toward the pointer.

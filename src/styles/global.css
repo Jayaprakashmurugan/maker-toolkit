@@ -3959,6 +3959,7 @@ h4 {
     radial-gradient(120% 90% at 100% 0%, var(--accent-soft), transparent 55%),
     var(--card);
 }
+/* The profile card stands on its own here: no tile box behind it. */
 .tile--me {
   grid-column: span 4;
   grid-row: span 2;
@@ -3968,6 +3969,13 @@ h4 {
   justify-content: center;
   text-align: center;
   gap: 0.35rem;
+  padding-inline: 0;
+  overflow: visible;
+  border: 0;
+  background: none;
+}
+.tile--me::before {
+  display: none;
 }
 .tile--formula {
   grid-column: span 7;
@@ -6207,4 +6215,61 @@ body {
 .tcard__meta b {
   color: var(--ink-2);
   font-weight: 600;
+}
+
+/* ── Tilt: cards lean toward the pointer with a soft sheen (motion.ts) ── */
+
+html.motion [data-tilt-ready][data-tilting] {
+  z-index: 1;
+  transform: perspective(1000px) translateY(var(--lift, -3px)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition:
+    transform 0.12s ease-out,
+    border-color 0.25s,
+    box-shadow 0.3s,
+    background-color 0.25s;
+  transition-delay: 0s;
+}
+/* Once a card has revealed itself, it settles back without the reveal's stagger delay. */
+html.motion [data-tilt-ready][data-reveal].is-visible {
+  transition-delay: 0s;
+}
+/* Cards inside React islands (formula cards) can't take an extra element, so their sheen is a pseudo-element. */
+.tilt-shine,
+.card[data-tilt-ready]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgb(255 255 255 / 0.08) 42%,
+    rgb(224 123 233 / 0.16) 48%,
+    rgb(123 156 255 / 0.16) 54%,
+    rgb(242 200 17 / 0.1) 60%,
+    transparent 72%
+  );
+  background-size: 260% 260%;
+  background-position: var(--sx, 50%) var(--sy, 50%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+[data-tilting] > .tilt-shine,
+.card[data-tilting]::after {
+  opacity: 1;
+}
+:root[data-theme='light'] .tilt-shine,
+:root[data-theme='light'] .card[data-tilt-ready]::after {
+  background-image: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgb(209 107 224 / 0.1) 46%,
+    rgb(76 141 255 / 0.1) 54%,
+    rgb(242 200 17 / 0.08) 60%,
+    transparent 72%
+  );
+  mix-blend-mode: multiply;
 }

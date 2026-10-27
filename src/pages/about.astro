@@ -5,8 +5,10 @@ import SectionHead from '../components/SectionHead.astro';
 import Icon from '../components/Icon.astro';
 import { siteConfig } from '../site.config';
 import { barSpan, current, duration, experience, jobSpan, monthLabel } from '../data/experience';
+import { about, expertise, toolbox } from '../data/profile';
 
 const firstName = siteConfig.author.split(' ')[0];
+const linkedIn = siteConfig.authorLinks.find((l) => l.icon === 'linkedin')?.href;
 
 const personLd = {
   '@context': 'https://schema.org',
@@ -14,15 +16,10 @@ const personLd = {
   name: siteConfig.author,
   jobTitle: current?.title ?? siteConfig.authorRole,
   ...(current && { worksFor: { '@type': 'Organization', name: current.company } }),
+  knowsAbout: [...new Set(toolbox.flatMap((g) => g.items))],
   address: { '@type': 'PostalAddress', addressLocality: 'Chennai', addressCountry: 'IN' },
   sameAs: [...siteConfig.authorLinks.map((l) => l.href), ...(siteConfig.youtubeUrl ? [siteConfig.youtubeUrl] : [])],
 };
-
-// From the "Core expertise" and "Methods & tools" lists on LinkedIn.
-const skills = [
-  'Power Apps', 'Canvas apps', 'Model-driven apps', 'Code apps', 'Power Automate', 'Dataverse', 'Data modeling',
-  'Power Fx', 'Copilot Studio', 'ALM', 'Azure DevOps', 'PAC CLI', 'XrmToolBox', 'SharePoint', 'React', 'TypeScript',
-];
 
 // The career bar runs from the first role to today, with a tick each January.
 const firstMonth = experience.map((j) => jobSpan(j).start).sort()[0];
@@ -72,24 +69,72 @@ const initialsOf = (name: string) =>
         <p class="phead__lede">{siteConfig.authorBio}</p>
       </header>
 
-      <ul class="skills" aria-label="What I work with" data-reveal-group>
-        {skills.map((s) => <li>{s}</li>)}
-      </ul>
+      <section class="home-section" aria-labelledby="what">
+        <SectionHead index="01 · about" title="What I do" id="what" />
+        <div class="whatido" data-reveal-group>
+          {
+            about.map((p) => (
+              <Fragment>
+                <p>
+                  {p.text
+                    .split(/(LinkedIn)/)
+                    .map((part) => (part === 'LinkedIn' && linkedIn ? <a href={linkedIn} rel="noopener me">LinkedIn</a> : part))}
+                </p>
+                {p.focus && (
+                  <p class="focus">
+                    <span class="focus__tag">
+                      <span class="focus__dot" aria-hidden="true" />
+                      Now
+                    </span>
+                    <span>{p.focus}</span>
+                  </p>
+                )}
+              </Fragment>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="home-section" aria-labelledby="expertise">
+        <SectionHead index="02 · expertise" title="Core expertise" id="expertise" />
+        <ul class="expertise" data-reveal-group>
+          {
+            expertise.map((e, i) => (
+              <li style={`--c:${e.color}`}>
+                <span class="expertise__icon">
+                  <Icon name={e.icon} />
+                </span>
+                <span class="expertise__n" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <p class="expertise__title">{e.title}</p>
+                <p class="expertise__detail">{e.detail}</p>
+              </li>
+            ))
+          }
+        </ul>
+
+        <h3 class="toolbox__head" id="tools">Methods &amp; tools</h3>
+        <dl class="toolbox" aria-labelledby="tools" data-reveal>
+          {
+            toolbox.map((g) => (
+              <div>
+                <dt>{g.group}</dt>
+                <dd>
+                  <ul>
+                    {g.items.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
 
       <section class="home-section" aria-labelledby="experience">
-        <SectionHead index="01 · experience" title="Where I've worked" id="experience" />
-        <div class="xp-intro">
-          <p>
-            I build enterprise applications on the Microsoft Power Platform: Canvas Apps, Model-Driven Apps, Code Apps,
-            Power Automate flows, and Dataverse data models. My work covers the full stack, from schema design and
-            security roles through UI, integration, and deployment pipelines.
-          </p>
-          <p>
-            Alongside delivery, I train and enable teams, walking developers through architecture decisions, code, and ALM
-            practices so they can own and extend what we've built. My current focus is Code Apps, Copilot Studio, and
-            agent development on Dataverse.
-          </p>
-        </div>
+        <SectionHead index="03 · experience" title="Where I've worked" id="experience" />
 
         <figure class="career" data-reveal aria-label={`Career timeline, ${firstYear} to today`}>
           <div class="career__head">
@@ -163,7 +208,7 @@ const initialsOf = (name: string) =>
       </section>
 
       <section class="home-section" aria-labelledby="certs">
-        <SectionHead index="02 · certified" title="Certifications" id="certs" />
+        <SectionHead index="04 · certified" title="Certifications" id="certs" />
         <ul class="certs" data-reveal-group>
           {
             siteConfig.authorCerts.map((c) => (
@@ -180,7 +225,7 @@ const initialsOf = (name: string) =>
       </section>
 
       <section class="home-section about3__story" aria-labelledby="why">
-        <SectionHead index="03 · why" title="Why Maker Toolkit exists" id="why" />
+        <SectionHead index="05 · why" title="Why Maker Toolkit exists" id="why" />
         <div class="prose-post">
         <p>
           Power Fx and Power Automate expressions are powerful, but the answers are spread across many pages, and the

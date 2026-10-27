@@ -5381,32 +5381,177 @@ html.motion .profile:not(.is-tilting) {
   gap: 0.5rem;
   margin-top: 1rem;
 }
-.skills {
+/* ── About: what I do, core expertise, methods & tools ───── */
+
+.whatido {
+  display: grid;
+  gap: 1rem;
+  max-width: 64ch;
+  color: var(--ink-2);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+.whatido > p:first-child {
+  color: var(--ink);
+  font-size: 1.14rem;
+}
+.whatido a {
+  color: var(--accent-ink);
+}
+/* The current focus, pulled out of its paragraph. */
+.focus {
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.9rem;
+  padding: 0.9rem 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--pp-data) 38%, transparent);
+  border-radius: 14px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--pp-data) 13%, transparent), transparent 85%);
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.focus > span:last-child {
+  flex: 1 1 18rem;
+}
+.focus__tag {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
   gap: 0.45rem;
+  color: var(--pp-data);
+  font-family: var(--f-mono);
+  font-size: 0.66rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.focus__dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 10px currentColor;
+}
+html.motion .focus__dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  animation: live-ping 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) infinite;
+}
+.expertise {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr));
+  gap: 1rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.skills li {
-  padding: 0.35rem 0.75rem;
+.expertise li {
+  position: relative;
+  padding: 1.2rem 1.2rem 1.3rem;
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 70% at 0% 0%, color-mix(in srgb, var(--c) 12%, transparent), transparent 60%),
+    var(--card);
+}
+.expertise__icon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--c) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 40%, transparent);
+  color: var(--c);
+}
+.expertise__icon .icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.expertise__n {
+  position: absolute;
+  top: 1.15rem;
+  right: 1.2rem;
+  color: var(--ink-3);
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+}
+.expertise__title {
+  margin-top: 0.95rem;
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+.expertise__detail {
+  margin-top: 0.4rem;
+  color: var(--ink-3);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+.toolbox__head {
+  margin: 2.25rem 0 0.9rem;
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+}
+.toolbox {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  background: var(--card);
+}
+.toolbox > div {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.85rem 1.2rem;
+}
+.toolbox > div + div {
+  border-top: 1px solid var(--rule);
+}
+.toolbox dt {
+  color: var(--ink-3);
+  font-family: var(--f-mono);
+  font-size: 0.74rem;
+}
+.toolbox dd {
+  margin: 0;
+}
+.toolbox ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.toolbox li {
+  padding: 0.28rem 0.65rem;
   border: 1px solid var(--rule-2);
-  border-radius: 10px;
+  border-radius: 9px;
   color: var(--ink-2);
   font-family: var(--f-mono);
-  font-size: 0.8rem;
+  font-size: 0.76rem;
 }
+@media (max-width: 600px) {
+  .toolbox > div {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Experience: career bar, jobs and roles ───────────────── */
 
-.xp-intro {
-  max-width: 62ch;
-  margin-bottom: 1.5rem;
-  color: var(--ink-2);
-}
-.xp-intro p + p {
-  margin-top: 0.8rem;
-}
 .career {
   margin: 0 0 1.25rem;
   padding: 1rem 1.25rem 0.85rem;

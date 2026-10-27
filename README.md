@@ -96,6 +96,9 @@ Your name, role, bio, certifications and links live in `src/site.config.ts`. The
 `public/images/jayaprakash.jpg` (800×800, with a `.webp` copy next to it). To change it, replace both files, keeping the
 names, or point `authorPhoto` at a new file.
 
+The About page's "What I do", "Core expertise" and "Methods & tools" live in `src/data/profile.ts` (from the LinkedIn
+About section); a paragraph's `focus` line is shown as a highlighted "Now" note.
+
 Work history lives in `src/data/experience.ts` (copied from LinkedIn). It drives the About page's
 Experience section and career bar, and the newest job without an `end` date shows as "now" on the profile card
 (`src/components/ProfileCard.astro`) and in the homepage intro. Durations are worked out at build time, so a new

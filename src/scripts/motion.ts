@@ -156,7 +156,7 @@ function pointerEffects() {
   // Cards all over the site tilt toward the pointer with a soft sheen, like the profile card.
   // Big cards tilt less. [data-tilt="15"] sets the angle and means the card brings its own sheen and styles.
   const TILT =
-    '[data-tilt], .tcard > a, .catcards a, .ways a, .mcard > a, .card, .aside-card, .certs li, .xp__job, .tile--formula, .tile--stats';
+    '[data-tilt], .tcard > a, .catcards a, .ways a, .mcard > a, .card, .aside-card, .certs li, .expertise li, .xp__job, .tile--formula, .tile--stats';
   let tilted: HTMLElement | null = null;
   const untilt = (el: HTMLElement) => {
     el.classList.remove('is-tilting');

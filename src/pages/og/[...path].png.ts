@@ -147,7 +147,7 @@ export const getStaticPaths = (async () => {
     },
     {
       path: 'changelog',
-      card: { kicker: 'Changelog', title: 'What’s new', titleFont: 'display', summary: 'New tools, more formulas and fixes, newest first.' },
+      card: { kicker: 'Changelog', title: 'What’s new', titleFont: 'display', summary: 'New tools, tool updates and blog posts, newest first.' },
     },
   ];
 

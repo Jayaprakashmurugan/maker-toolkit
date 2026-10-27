@@ -902,6 +902,14 @@ button {
   letter-spacing: 0.08em;
   color: var(--ink-2);
 }
+.tag--tool {
+  border-color: color-mix(in srgb, var(--pp-automate) 50%, transparent);
+  color: var(--pp-automate);
+}
+.tag--blog {
+  border-color: color-mix(in srgb, var(--pp-apps) 50%, transparent);
+  color: var(--pp-apps);
+}
 .panel__name {
   margin-top: 1rem;
   font-family: var(--f-mono);

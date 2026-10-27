@@ -64,7 +64,7 @@ export const GET: APIRoute = async () => {
       s: ['blog guide', ...p.data.tags].join(' ').toLowerCase(),
       c: '#4c8dff',
     })),
-    { t: 'What’s new', u: '/changelog/', k: 'Page', g: 'Site', d: 'Every release and what changed.', s: 'changelog release updates new', c: '#857f73' },
+    { t: 'What’s new', u: '/changelog/', k: 'Page', g: 'Site', d: 'New tools, tool updates and blog posts.', s: 'changelog release updates new', c: '#857f73' },
     { t: 'About', u: '/about/', k: 'Page', g: 'Site', d: 'Who makes this site and why.', s: 'author contact', c: '#857f73' },
     { t: 'Privacy & terms', u: '/privacy/', k: 'Page', g: 'Site', d: 'No cookies, no tracking, nothing leaves your browser.', s: 'privacy cookies terms', c: '#857f73' },
   ];

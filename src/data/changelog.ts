@@ -1,6 +1,7 @@
-// Newest first. Add an entry whenever you ship something visitors would notice.
+// What's new: new tools, tool improvements and blog posts only, newest first.
+// Changes to the site's look, the profile or the About page don't go here.
 export interface Release {
-  version: string;
+  kind: 'tool' | 'blog';
   date: string; // YYYY-MM-DD
   title: string;
   changes: string[];
@@ -8,90 +9,45 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
-    version: '3.4',
-    date: '2026-10-28',
-    title: 'Cards that lean in',
-    changes: [
-      'Cards all over the site now tilt toward your cursor with a soft sheen, like the profile card: tools, categories, formulas, videos, certifications and more. Bigger cards tilt less, and it stays off on touch screens and when you prefer reduced motion.',
-      'On the homepage the profile card now stands on its own, and the hero search no longer repeats the Ctrl K hint shown in the header.',
-      'The About page has a new “What I do” section, my core expertise and my methods and tools.',
-      'Blog posts no longer show their date, where they were first published or the “Written by” box, and the post list numbers posts instead of dating them.',
-    ],
-  },
-  {
-    version: '3.3',
+    kind: 'tool',
     date: '2026-10-26',
-    title: 'Work experience and a cleaner profile card',
-    changes: [
-      'The About page now has my Power Platform work experience: every role with its dates and skills, and a career bar up to today.',
-      'A new profile card: the photo runs edge to edge with the name on it, followed by where I work now, where I’m based and my certifications, each with its own icon. Its gradient border slowly turns clockwise.',
-    ],
-  },
-  {
-    version: '3.2',
-    date: '2026-10-26',
-    title: 'Official product icons',
+    title: 'See what each tool works with',
     changes: [
       'Every tool and reference now shows which products it works with, using Microsoft’s official Power Apps, Power Automate and Dataverse icons next to each product’s name.',
       'Tool pages have a “Works with” row, and the tool tabs and group pages show their product’s icon.',
+      'The Dataverse tools are now grouped as Dataverse/SharePoint, at /dataverse-sharepoint/. The old address redirects.',
     ],
   },
   {
-    version: '3.1',
-    date: '2026-10-26',
-    title: 'Power Platform colors and a Maker ID',
-    changes: [
-      'A new color scheme taken from the Power Platform family: Power Apps magenta, Power Automate blue, Dataverse/SharePoint teal and Power BI gold, with each tool group in its own color.',
-      'The profile is now a Maker ID badge that tilts toward your cursor with a holographic sheen.',
-      'The data group is now called Dataverse/SharePoint everywhere, at /dataverse-sharepoint/. The old address redirects.',
-    ],
-  },
-  {
-    version: '3.0',
-    date: '2026-10-26',
-    title: 'A formula console of our own',
-    changes: [
-      'A completely new look: dark by default with signal lime and aqua, the Unbounded display font, and a warm-grey light mode.',
-      'A new homepage: a live formula bar that types real Power Fx and flow expressions, a scrolling strip of function names, and a bento layout.',
-      'Tool cards light up where your cursor is, buttons lean toward it, and blog posts preview their cover as you hover the list.',
-      'A floating navigation bar, a reading-progress bar on posts, an About timeline and a giant animated wordmark in the footer.',
-      'All motion turns off automatically if your device is set to reduce motion.',
-    ],
-  },
-  {
-    version: '2.1',
+    kind: 'blog',
     date: '2026-10-26',
     title: 'Eleven articles on the blog',
     changes: [
-      'All seven articles from Medium and four from LinkedIn now live on the blog, with their images, code and original dates, from role-based security and deep links to Dataverse vs. SharePoint and the new modern Attachments control.',
-      'Power Fx code in posts is now color-coded, and each imported post links back to where it was first published.',
+      'All seven articles from Medium and four from LinkedIn now live on the blog, with their images and code, from role-based security and deep links to Dataverse vs. SharePoint and the new modern Attachments control.',
+      'Power Fx code in posts is now color-coded.',
       'Blog posts appear in site-wide search.',
     ],
   },
   {
-    version: '2.0',
+    kind: 'tool',
     date: '2026-10-26',
-    title: 'A new look, and room for guides and videos',
+    title: 'Every tool in one place',
     changes: [
-      'A brighter, cleaner design across every page, with a new typeface, rounded cards, an orange accent and a refreshed dark mode.',
-      'A new homepage with every tool in one place and tabs to narrow it to Power Apps, Power Automate, Dataverse or Utilities.',
-      'New Tools, About and Contact pages, and a menu that works on phones.',
-      'The blog and videos are ready: guides and walkthroughs will appear here as they are published.',
+      'The homepage and a new Tools page show every tool together, with tabs to narrow them to Power Apps, Power Automate, Dataverse/SharePoint or Utilities.',
     ],
   },
   {
-    version: '1.14',
+    kind: 'tool',
     date: '2026-10-24',
     title: 'One toolbox, four groups, one search',
     changes: [
-      'The site is now organized into Power Apps, Power Automate, Dataverse and Developer Utilities, each with its own page that also lists tools from other groups that help there.',
+      'The tools are now organized into Power Apps, Power Automate, Dataverse/SharePoint and Developer Utilities, each with its own page that also lists tools from other groups that help there.',
       'The homepage shows every tool and reference as an equal card, grouped by product.',
       'New site-wide search: press Ctrl K (⌘K on a Mac) or / on any page to search every tool, formula and expression at once, by name or by task.',
-      'The footer now lists every tool by group.',
     ],
   },
   {
-    version: '1.13',
+    kind: 'tool',
     date: '2026-10-24',
     title: 'Regex Tester for Power Fx',
     changes: [
@@ -102,7 +58,7 @@ export const changelog: Release[] = [
     ],
   },
   {
-    version: '1.12',
+    kind: 'tool',
     date: '2026-10-24',
     title: 'SVG to Power Apps',
     changes: [
@@ -112,7 +68,7 @@ export const changelog: Release[] = [
     ],
   },
   {
-    version: '1.11',
+    kind: 'tool',
     date: '2026-10-24',
     title: 'Trigger Condition Builder',
     changes: [
@@ -122,7 +78,7 @@ export const changelog: Release[] = [
     ],
   },
   {
-    version: '1.10',
+    kind: 'tool',
     date: '2026-10-23',
     title: 'Desktop flows, and every Power Apps formula',
     changes: [
@@ -131,7 +87,7 @@ export const changelog: Release[] = [
     ],
   },
   {
-    version: '1.9',
+    kind: 'tool',
     date: '2026-10-23',
     title: 'OData Filter Builder',
     changes: [
@@ -141,7 +97,7 @@ export const changelog: Release[] = [
     ],
   },
   {
-    version: '1.8',
+    kind: 'tool',
     date: '2026-10-23',
     title: 'Adaptive Card Builder',
     changes: [
@@ -152,7 +108,7 @@ export const changelog: Release[] = [
     ],
   },
   {
-    version: '1.7',
+    kind: 'tool',
     date: '2026-10-23',
     title: 'HTML Table Styler',
     changes: [
@@ -162,7 +118,7 @@ export const changelog: Release[] = [
     ],
   },
   {
-    version: '1.6',
+    kind: 'tool',
     date: '2026-10-23',
     title: 'List Copier',
     changes: [
@@ -172,7 +128,7 @@ export const changelog: Release[] = [
     ],
   },
   {
-    version: '1.5',
+    kind: 'tool',
     date: '2026-10-23',
     title: 'Expression Picker',
     changes: [
@@ -183,28 +139,7 @@ export const changelog: Release[] = [
     ],
   },
   {
-    version: '1.4',
-    date: '2026-10-23',
-    title: 'A proper logo',
-    changes: [
-      'New logo: formula brackets cut by the orange slash from Maker/Toolkit, used everywhere from the header to share images.',
-      'Home-screen icons for iPhone and Android, a favicon that adapts to dark browser tabs, and a web app manifest.',
-      'Brand kit for anyone writing about the site: /brand/logo.svg, /brand/logo-512.png, /brand/lockup-light.png and /brand/lockup-dark.png.',
-    ],
-  },
-  {
-    version: '1.3',
-    date: '2026-10-23',
-    title: 'Motion',
-    changes: [
-      'Titles decode from code symbols, and the homepage types its formulas as you watch.',
-      'Beautifier and schema output unfold line by line; sections slide in as you scroll.',
-      'Smooth page-to-page transitions in supporting browsers.',
-      'All motion turns off automatically if your device is set to reduce motion.',
-    ],
-  },
-  {
-    version: '1.2',
+    kind: 'tool',
     date: '2026-10-23',
     title: 'JSON Schema Helper',
     changes: [
@@ -214,25 +149,22 @@ export const changelog: Release[] = [
     ],
   },
   {
-    version: '1.1',
+    kind: 'tool',
     date: '2026-10-23',
     title: 'Power Automate, a beautifier and nearly 100 more formulas',
     changes: [
       'New: Power Automate Expression Reference covering every workflow expression function, each with its own page.',
       'New: Expression Beautifier for Power Automate and Power Fx, with rainbow brackets and syntax checks.',
       'The Power Apps Formula Reference grows to about 200 formulas, adding trigonometry, signals, AI, testing and operators.',
-      'Every page now has a share image, so links look good on LinkedIn, Teams and WhatsApp.',
-      'New: this What’s new page.',
     ],
   },
   {
-    version: '1.0',
+    kind: 'tool',
     date: '2026-10-23',
-    title: 'Launch',
+    title: 'Power Apps Formula Reference',
     changes: [
-      'Power Apps Formula Reference with search by name or task, A–Z, categories, cards and tree views.',
+      'New: Power Apps Formula Reference with search by name or task, A–Z, categories, cards and tree views.',
       'A page for every formula, with copy-ready syntax and examples.',
-      'Light and dark themes, no cookies, no sign-up.',
     ],
   },
 ];

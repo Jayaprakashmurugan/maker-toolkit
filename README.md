@@ -29,7 +29,7 @@ npm run preview   # serve dist/ to check the production build
 | `src/data/videos.ts` | Your YouTube videos; thumbnails are copied at build time by `src/pages/videos/thumbs/`. |
 | `src/components/ProfileCard.astro`, `PageHead.astro`, `SectionHead.astro`, `Icon.astro` | Your profile card, page and section headings, and the icon set. |
 | `src/scripts/search.ts` + `src/pages/search-index.json.ts` | Site-wide search (Ctrl K or /) over every tool and reference entry; the index is built at build time and loaded on first use. |
-| `src/data/changelog.ts` | Entries for the "What's new" page. |
+| `src/data/changelog.ts` | Entries for the "What's new" page: new tools, tool updates and blog posts only (`kind: 'tool'` or `'blog'`), not design or profile changes. |
 | `src/components/ReferenceIndex.astro` | Shared layout for a reference page (explorer, A–Z index, FAQ). |
 | `src/components/ReferenceItem.astro` | Shared layout for one formula/expression page. |
 | `src/components/ReferenceExplorer.tsx` | The interactive explorer (search, A–Z, categories, cards/tree, detail panel). |

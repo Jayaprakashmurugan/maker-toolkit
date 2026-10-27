@@ -7,18 +7,18 @@ const fmt = (d: string) =>
   new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 ---
 
-<Base title="What’s new" description={`New tools and updates on ${siteConfig.name}.`} image="/og/changelog.png">
+<Base title="What’s new" description={`New tools, tool updates and blog posts on ${siteConfig.name}.`} image="/og/changelog.png">
   <article class="wrap prose">
     <p class="kicker"><b>Changelog</b></p>
     <h1>What’s new</h1>
-    <p class="lede">New tools, more formulas and fixes, newest first.</p>
+    <p class="lede">New tools, tool updates and blog posts, newest first.</p>
 
     <ol class="releases" data-reveal-group>
       {
         changelog.map((r) => (
           <li class="release">
             <p class="release__meta">
-              <span class="tag">v{r.version}</span>
+              <span class={`tag tag--${r.kind}`}>{r.kind === 'blog' ? 'Blog' : 'Tool'}</span>
               <time datetime={r.date}>{fmt(r.date)}</time>
             </p>
             <h2>{r.title}</h2>

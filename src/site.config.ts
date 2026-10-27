@@ -12,7 +12,7 @@ export const siteConfig = {
   authorLocation: 'Chennai, India',
   /** One or two sentences, shown on the homepage and About page. */
   authorBio:
-    'I build Power Apps and Power Automate solutions, and the free tools on this site that make them easier. With a background in mathematics, formulas are where I feel at home.',
+    'I build Power Apps and Power Automate solutions, and the free tools on this site that make them easier. I have a background in statistics and data science.',
   /** Your photo: put the file in public/images/ and set its path, e.g. '/images/jayaprakash.jpg'. Empty shows your initials. */
   authorPhoto: '/images/jayaprakash.jpg',
   authorCerts: [

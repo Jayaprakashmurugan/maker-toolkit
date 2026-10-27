@@ -12,13 +12,11 @@ interface Props {
 
 const { posts, level = 3 } = Astro.props;
 const H = `h${level}` as 'h2' | 'h3';
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 ---
 
 <ol class="plist" data-preview-list data-reveal-group>
   {
-    posts.map((p) => {
-      const d = p.data.date;
+    posts.map((p, i) => {
       return (
         <li class="plist__item">
           <a href={postUrl(p)}>
@@ -29,16 +27,14 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
                 <img src={postCover(p)} alt="" width="1200" height="630" loading="lazy" decoding="async" />
               )}
             </span>
-            <time class="plist__date" datetime={d.toISOString()}>
-              <span>{d.getUTCFullYear()}</span>
-              {MONTHS[d.getUTCMonth()]} {String(d.getUTCDate()).padStart(2, '0')}
-            </time>
+            <span class="plist__num" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
             <span class="plist__body">
               <H class="plist__title">{p.data.title}</H>
               <span class="plist__meta">
                 {p.data.tags.slice(0, 3).join(' · ')}
                 <span>{readingTime(p.body)} min</span>
-                {p.data.source && <span>via {p.data.source.name}</span>}
                 {p.data.draft && <span class="plist__draft">Draft</span>}
               </span>
             </span>

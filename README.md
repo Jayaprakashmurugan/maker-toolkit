@@ -27,7 +27,7 @@ npm run preview   # serve dist/ to check the production build
 | `src/components/ToolGrid.astro` | The equal-weight tool cards used on the homepage and category pages. |
 | `src/content/blog/` + `src/content.config.ts` | Blog posts (Markdown) and the fields each post needs. |
 | `src/data/videos.ts` | Your YouTube videos; thumbnails are copied at build time by `src/pages/videos/thumbs/`. |
-| `src/components/ProfileCard.astro`, `Portrait.astro`, `PageHead.astro`, `SectionHead.astro`, `Icon.astro` | Your profile card, the small photo under posts, page and section headings, and the icon set. |
+| `src/components/ProfileCard.astro`, `PageHead.astro`, `SectionHead.astro`, `Icon.astro` | Your profile card, page and section headings, and the icon set. |
 | `src/scripts/search.ts` + `src/pages/search-index.json.ts` | Site-wide search (Ctrl K or /) over every tool and reference entry; the index is built at build time and loaded on first use. |
 | `src/data/changelog.ts` | Entries for the "What's new" page. |
 | `src/components/ReferenceIndex.astro` | Shared layout for a reference page (explorer, A–Z index, FAQ). |
@@ -74,7 +74,9 @@ Put a post's images in `src/content/blog/images/<post-name>/` and link them with
 Astro resizes them and serves WebP. Label code blocks ` ```powerfx ` for Power Fx (it's highlighted with the
 JavaScript grammar, set in `astro.config.mjs`) and ` ```js ` or ` ```json ` for flow expressions and JSON.
 
-Posts brought over from Medium or LinkedIn keep a `source:` field (`name` and `url`) that shows as "First published on…".
+Posts brought over from Medium or LinkedIn keep a `source:` field (`name` and `url`) for your records; it isn't shown
+on the site. Post dates aren't shown either: `date` only sets the order of posts and the dates in the RSS feed and
+search-engine data.
 
 ## Add a YouTube video
 

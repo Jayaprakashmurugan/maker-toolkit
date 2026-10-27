@@ -4542,7 +4542,7 @@ h4 {
 }
 .plist__item > a {
   display: grid;
-  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.5rem 1.75rem;
   padding: 1.35rem 0.5rem;
@@ -4558,15 +4558,14 @@ h4 {
   padding-left: 1.25rem;
   background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
 }
-.plist__date {
-  display: grid;
+.plist__num {
   color: var(--ink-3);
   font-family: var(--f-mono);
   font-size: 0.8rem;
-  line-height: 1.35;
+  transition: color 0.25s;
 }
-.plist__date span {
-  color: var(--ink-2);
+.plist__item > a:hover .plist__num {
+  color: var(--accent-ink);
 }
 .plist__title {
   font-family: var(--f-display);
@@ -4652,12 +4651,8 @@ h4 {
   .plist__item > a:hover .plist__thumb {
     transform: none;
   }
-  .plist__date {
-    display: block;
+  .plist__num {
     font-size: 0.72rem;
-  }
-  .plist__date span::after {
-    content: ' ';
   }
   .plist__arrow {
     display: none;
@@ -4902,30 +4897,6 @@ h4 {
 .post__body {
   margin-top: 2rem;
 }
-.post__author {
-  display: flex;
-  gap: 1.25rem;
-  align-items: center;
-  margin-top: 3rem;
-  padding: 1.5rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-lg);
-  background: var(--card);
-}
-.post__author p + p {
-  margin-top: 0.35rem;
-  color: var(--ink-2);
-  font-size: 0.95rem;
-}
-.post__author-name {
-  font-weight: 700;
-}
-.post__author-links {
-  display: flex;
-  gap: 1rem;
-  font-family: var(--f-mono);
-  font-size: 0.85rem;
-}
 .post__pager {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -4957,10 +4928,6 @@ h4 {
   text-align: right;
 }
 @media (max-width: 640px) {
-  .post__author {
-    flex-direction: column;
-    align-items: flex-start;
-  }
   .post__pager {
     grid-template-columns: 1fr;
   }
@@ -5314,26 +5281,6 @@ html.motion .profile:not(.is-tilting) {
   50% {
     translate: 0 -6px;
   }
-}
-
-/* Small square avatar, used in the author box under posts. */
-.avatar-sq {
-  flex: none;
-  width: 4.5rem;
-  aspect-ratio: 1;
-  padding: 2px;
-  margin: 0;
-  overflow: hidden;
-  border-radius: 16px;
-  background: var(--grad);
-}
-.avatar-sq img,
-.avatar-sq picture {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 14px;
-  object-fit: cover;
 }
 
 /* ── Home: whoami band ────────────────────────────────────── */

@@ -5,7 +5,7 @@ import { references } from '../../data/references';
 import { slugify } from '../../data/types';
 import { siteConfig } from '../../site.config';
 import { categories, tools, toolsIn } from '../../data/tools';
-import { formatDate, getPosts } from '../../lib/posts';
+import { getPosts, readingTime } from '../../lib/posts';
 
 export const getStaticPaths = (async () => {
   const pages: { path: string; card: OgCard }[] = [
@@ -174,7 +174,7 @@ export const getStaticPaths = (async () => {
     pages.push({
       path: `blog/${post.id}`,
       card: {
-        kicker: `Blog · ${formatDate(post.data.date)}`,
+        kicker: `Blog · ${readingTime(post.body)} min read`,
         title: post.data.title,
         titleFont: 'display',
         summary: post.data.description,

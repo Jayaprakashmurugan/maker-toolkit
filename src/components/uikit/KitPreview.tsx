@@ -62,6 +62,21 @@ function boxStyle(n: Node, place: Place, t: KitTheme): CSSProperties {
   return s;
 }
 
+/** Where a visible control ends inside a flexible-height row (labels with AutoHeight are estimated). */
+function bottomOf(n: Node, t: KitTheme): number {
+  if (n.visible && n.visible.v === false) return 0;
+  const y = typeof n.y === 'number' ? n.y : isFx(n.y) && typeof n.y.v === 'number' ? n.y.v : 0;
+  if (n.kind === 'label' && n.autoHeight) {
+    const pt = sizePx(n.size, t);
+    const width = typeof n.w === 'number' ? n.w : isFx(n.w) && typeof n.w.v === 'number' ? n.w.v : 400;
+    const chars = textOf(n.text).length;
+    const lines = Math.max(1, Math.ceil((chars * pt * 0.72) / Math.max(40, width - 16)));
+    return y + Math.round(lines * pt * 1.333 * 1.35 + 12);
+  }
+  const h = typeof n.h === 'number' ? n.h : isFx(n.h) && typeof n.h.v === 'number' ? n.h.v : 0;
+  return y + h;
+}
+
 function rowFor(g: GalleryNode, i: number): Row {
   const sample = g.sample[i] ?? {};
   return {
@@ -122,7 +137,10 @@ function render(n: Node, place: Place, t: KitTheme, key?: number): ReactNode {
         overflow: 'hidden',
         whiteSpace: n.wrap === false ? 'nowrap' : 'normal',
       } satisfies CSSProperties);
-      if (n.autoHeight) s.height = 'auto';
+      if (n.autoHeight) {
+        s.height = 'auto';
+        s.alignItems = 'flex-start';
+      }
       return (
         <div key={key} style={s} data-k={n.name} title={title}>
           <span style={n.wrap === false ? { overflow: 'hidden', textOverflow: 'ellipsis' } : undefined}>{textOf(n.text)}</span>
@@ -192,24 +210,34 @@ function render(n: Node, place: Place, t: KitTheme, key?: number): ReactNode {
     }
     case 'gallery': {
       const pad = n.templatePad ?? 0;
-      const vertical = n.dir === 'Vertical';
+      const vertical = n.dir !== 'Horizontal';
+      const wrap = n.wrapCount && n.wrapCount > 1 ? n.wrapCount : 0;
       Object.assign(s, {
         display: 'flex',
-        flexDirection: vertical ? 'column' : 'row',
+        flexDirection: vertical && !wrap ? 'column' : 'row',
+        flexWrap: wrap ? 'wrap' : 'nowrap',
+        alignContent: 'flex-start',
         gap: pad,
         padding: pad,
         overflow: 'hidden',
       } satisfies CSSProperties);
       return (
         <div key={key} style={s} data-k={n.name}>
-          {n.sample.map((_, i) => (
-            <div
-              key={i}
-              style={{ position: 'relative', flex: '0 0 auto', [vertical ? 'height' : 'width']: n.templateSize, [vertical ? 'width' : 'height']: '100%' }}
-            >
-              {n.template(rowFor(n, i)).map((c, j) => render(c, { kind: 'template' }, t, j))}
-            </div>
-          ))}
+          {n.sample.map((_, i) => {
+            const nodes = n.template(rowFor(n, i));
+            // Flexible-height rows grow to fit what's visible in them.
+            const height = n.dir === 'VariableHeight' ? Math.max(n.templateSize, ...nodes.map((c) => bottomOf(c, t))) : n.templateSize;
+            const size: CSSProperties = wrap
+              ? { width: `calc((100% - ${pad * (wrap - 1)}px) / ${wrap})`, height }
+              : vertical
+                ? { height, width: '100%' }
+                : { width: n.templateSize, height: '100%' };
+            return (
+              <div key={i} style={{ position: 'relative', flex: '0 0 auto', ...size }}>
+                {nodes.map((c, j) => render(c, { kind: 'template' }, t, j))}
+              </div>
+            );
+          })}
         </div>
       );
     }

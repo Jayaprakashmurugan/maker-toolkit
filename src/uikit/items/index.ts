@@ -5,12 +5,15 @@ import { button, filterChips, searchBox, textField } from './inputs';
 import { appHeader, breadcrumbs, pagination, sidebar, stepper, tabs } from './navigation';
 import { banner, confirmDialog, emptyState, loadingOverlay } from './feedback';
 import { dataTable, kpiCard, listRow, statusPill } from './data';
+import {
+  accordion, barChart, bottomNav, cardGrid, detailsPanel, fab, progressBar, progressRing, segmented, sideDrawer, timeline, toggleSwitch,
+} from './more';
 
 export const KIT_ITEMS: KitItem[] = [
-  appHeader, sidebar, tabs, breadcrumbs, stepper, pagination,
-  button, textField, searchBox, filterChips,
-  confirmDialog, banner, loadingOverlay, emptyState,
-  statusPill, kpiCard, listRow, dataTable,
+  appHeader, sidebar, tabs, breadcrumbs, stepper, pagination, bottomNav,
+  button, textField, searchBox, filterChips, toggleSwitch, segmented, fab,
+  confirmDialog, banner, loadingOverlay, emptyState, progressBar, sideDrawer,
+  statusPill, kpiCard, listRow, dataTable, cardGrid, accordion, timeline, detailsPanel, barChart, progressRing,
 ];
 
 export const kitItem = (slug: string) => KIT_ITEMS.find((i) => i.slug === slug);

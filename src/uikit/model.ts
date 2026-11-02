@@ -145,7 +145,10 @@ export interface Row {
 
 export interface GalleryNode extends BaseNode {
   kind: 'gallery';
-  dir: 'Vertical' | 'Horizontal';
+  /** VariableHeight is a vertical gallery whose rows grow with their content (flexible height). */
+  dir: 'Vertical' | 'Horizontal' | 'VariableHeight';
+  /** Items per row (WrapCount), for card grids. */
+  wrapCount?: number;
   items: string;
   sample: Record<string, unknown>[];
   templateSize: number;

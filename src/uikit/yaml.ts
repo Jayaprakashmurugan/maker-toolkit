@@ -210,6 +210,7 @@ export function toControl(n: Node, place: Place = { kind: 'root' }): YamlControl
       p.ShowScrollbar = String(n.scrollbar ?? false);
       if (!n.border) p.BorderThickness = '0';
       p.LoadingSpinner = 'LoadingSpinner.Data';
+      if (n.wrapCount) p.WrapCount = String(n.wrapCount);
       ctl.children = n.template(sampleRow(n)).map((c) => toControl(c, { kind: 'template' }));
       break;
   }

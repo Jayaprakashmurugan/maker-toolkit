@@ -54,7 +54,7 @@ interface BaseNode {
   minW?: number;
   minH?: number;
   fill?: Color;
-  border?: { color: Color; thickness?: Thickness };
+  border?: { color: Color; thickness?: Thickness; dashed?: boolean };
   radius?: Radius;
   /** Shown when true. The preview uses the formula's value. */
   visible?: Fx;

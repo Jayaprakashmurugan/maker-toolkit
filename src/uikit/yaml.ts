@@ -104,6 +104,7 @@ export function toControl(n: Node, place: Place = { kind: 'root' }): YamlControl
   if (n.border) {
     p.BorderColor = colorFx(n.border.color);
     p.BorderThickness = thicknessFx(n.border.thickness ?? 'Thin');
+    if (n.border.dashed) p.BorderStyle = 'BorderStyle.Dashed';
   }
   // Labels, shapes, classic icons and galleries have no corner radius in canvas apps.
   if (n.radius !== undefined && !['label', 'rect', 'circle', 'icon', 'gallery'].includes(n.kind)) radiusProps(n.radius, p);

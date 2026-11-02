@@ -153,7 +153,7 @@ export const getStaticPaths = (async () => {
     {
       path: 'ui-kit',
       card: {
-        kicker: `UI Kit · ${KIT_ITEMS.length} canvas components`,
+        kicker: `UI Kit · ${KIT_ITEMS.length} components, layouts and screens`,
         title: 'Copy-paste components for canvas apps',
         titleFont: 'display',
         summary: 'One design system (fxConfig), clear names, classic controls and containers. Paste the YAML into Studio.',

@@ -43,7 +43,7 @@ const cats = KIT_CATEGORIES.filter((c) => KIT_ITEMS.some((i) => i.category === c
     </ol>
 
     <section class="home-section" aria-labelledby="kit-all">
-      <SectionHead index={`${KIT_ITEMS.length} components`} title="Components" id="kit-all" />
+      <SectionHead index={`${KIT_ITEMS.length} pieces`} title="Components, layouts and screens" id="kit-all" />
       <div class="kit-filter">
         <div class="kit-filter__tabs" role="tablist" aria-label="Filter by group">
           <button type="button" role="tab" aria-selected="true" data-kit-cat="">All <small>{KIT_ITEMS.length}</small></button>
@@ -55,7 +55,7 @@ const cats = KIT_CATEGORIES.filter((c) => KIT_ITEMS.some((i) => i.category === c
             ))
           }
         </div>
-        <input class="kit-filter__q" type="search" placeholder="Filter components" aria-label="Filter components" data-kit-q />
+        <input class="kit-filter__q" type="search" placeholder="Filter the kit" aria-label="Filter the kit" data-kit-q />
       </div>
       <ul class="kcards" data-kit-grid>
         {KIT_ITEMS.map((item) => <KitCard item={item} />)}

@@ -311,7 +311,7 @@ export const stepper: KitItem = {
         },
       }),
       formulas: `fxSteps =\n[\n${steps.map((s, i) => `    { Step: ${i + 1}, Title: ${str(s)} }`).join(',\n')}\n];`,
-      onVisible: 'Set(gblCurrentStep, 1)   // 2 on the second screen, and so on',
+      onVisible: ['// 1 on the first screen of the form, 2 on the second, and so on', 'Set(gblCurrentStep, 1)'].join('\n'),
       notes: ['Set gblCurrentStep on each screen of the form, or with Next and Back buttons: Set(gblCurrentStep, gblCurrentStep + 1).'],
       uses: [
         { name: 'fxSteps', what: 'Named formula: the steps' },

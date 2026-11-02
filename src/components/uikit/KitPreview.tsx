@@ -13,12 +13,31 @@ const WEIGHT = { Normal: 400, Semibold: 600, Bold: 700, Lighter: 300 } as const;
 
 const textOf = (t: Text | undefined) => (t === undefined ? '' : typeof t === 'string' ? t : t.v === undefined ? '' : String(t.v));
 
+/**
+ * Simple size formulas over the parent (Parent.TemplateWidth - 48, (Parent.Width - Self.Width) / 2 is not one)
+ * become CSS calc(), so the preview follows the real width. Anything else uses the formula's preview value.
+ */
+function calcOf(formula: string): string | undefined {
+  if (!/^[\d\s.+\-*/()]*Parent\.(Template)?(Width|Height)[\d\s.+\-*/()]*$/.test(formula)) return undefined;
+  const tokens = formula.replace(/Parent\.(Template)?(Width|Height)/g, '§').match(/§|\d+(\.\d+)?|[+\-*/()]/g) ?? [];
+  const out = tokens.map((tok, i) => {
+    if (tok === '§') return '100%';
+    if (!/^\d/.test(tok)) return ` ${tok} `;
+    const prev = tokens[i - 1];
+    const next = tokens[i + 1];
+    return prev === '*' || prev === '/' || next === '*' ? tok : `${tok}px`;
+  });
+  return `calc(${out.join('').replace(/\s+/g, ' ').trim()})`;
+}
+
 function dimPx(d: Dim | undefined): number | string | undefined {
   if (d === undefined) return undefined;
   if (d === 'fill') return '100%';
-  if (isFx(d)) return typeof d.v === 'number' ? d.v : undefined;
+  if (isFx(d)) return calcOf(d.fx) ?? (typeof d.v === 'number' ? d.v : undefined);
   return d;
 }
+
+const posPx = (p: Node['x']) => (p === undefined ? 0 : isFx(p) ? (calcOf(p.fx) ?? (typeof p.v === 'number' ? p.v : 0)) : p);
 
 function boxStyle(n: Node, place: Place, t: KitTheme): CSSProperties {
   const s: CSSProperties = { boxSizing: 'border-box', position: 'relative', flexShrink: 0 };
@@ -47,8 +66,8 @@ function boxStyle(n: Node, place: Place, t: KitTheme): CSSProperties {
     s.height = dimPx(n.h);
   } else {
     s.position = 'absolute';
-    s.left = n.x === undefined ? 0 : isFx(n.x) ? (typeof n.x.v === 'number' ? n.x.v : 0) : n.x;
-    s.top = n.y === undefined ? 0 : isFx(n.y) ? (typeof n.y.v === 'number' ? n.y.v : 0) : n.y;
+    s.left = posPx(n.x);
+    s.top = posPx(n.y);
     s.width = dimPx(n.w);
     s.height = dimPx(n.h);
   }
@@ -56,7 +75,7 @@ function boxStyle(n: Node, place: Place, t: KitTheme): CSSProperties {
   if (fill) s.background = fill;
   if (n.border) {
     const w = thicknessPx(n.border.thickness ?? 'Thin', t);
-    if (w > 0) s.border = `${w}px solid ${colorCss(n.border.color)}`;
+    if (w > 0) s.border = `${w}px ${n.border.dashed ? 'dashed' : 'solid'} ${colorCss(n.border.color)}`;
   }
   if (n.radius !== undefined && !['label', 'rect', 'icon', 'gallery'].includes(n.kind)) s.borderRadius = radiusPx(n.radius, t);
   return s;

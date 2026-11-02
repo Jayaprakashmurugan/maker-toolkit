@@ -13,7 +13,9 @@ export const changelog: Release[] = [
     date: '2026-11-03',
     title: 'UI Kit: copy-paste canvas components',
     changes: [
-      'New: a UI Kit with 18 canvas app components, from headers, sidebars and tabs to dialogs, banners, lists and a data table. Set each one up in your browser and paste the YAML into Power Apps Studio.',
+      'New: a UI Kit with 30 canvas app components, from headers, sidebars, tabs and bottom navigation to dialogs, drawers, banners, lists, cards, an accordion, a timeline, charts and a data table. Set each one up in your browser and paste the YAML into Power Apps Studio.',
+      'Five screen layouts (app shell, dashboard, master-detail, form with steps, phone) and four complete screens (requests overview, approval, home dashboard, settings) built from the same components.',
+      'The data table covers the common table patterns as options: stripes, row checkboxes with a bulk bar, edit and delete on each row, and three row heights.',
       'Every component reads its colors and sizes from one named formula, fxConfig, and follows clear naming conventions (vCon, hCon, nCon, lbl, btn, gal, fx, col, gbl, lcl).',
       'A design system page with a theme builder: pick your colors, watch the components repaint, and copy your own fxConfig.',
       'Built only on classic controls and auto-layout containers, and checked against those control versions, so no preview features are needed.',

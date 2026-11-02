@@ -214,16 +214,18 @@ export const toggleSwitch: KitItem = {
   canvas: { w: 380, h: 100 },
   options: [
     { id: 'label', label: 'Label', type: 'text', default: 'Email me when it’s approved' },
+    { id: 'var', label: 'Variable', type: 'text', default: 'lclNotifyOn' },
     { id: 'on', label: 'On in the preview', type: 'toggle', default: true },
   ],
   build(o) {
     const r = reader(o);
-    const on = fx('lclNotifyOn', r.b('on'));
+    const v = /^[A-Za-z_]\w*$/.test(r.s('var')) ? r.s('var') : 'lclNotifyOn';
+    const on = fx(v, r.b('on'));
     return {
       root: hCon('hConToggle', { w: 320, h: 32, gap: 'Small', alignItems: 'Center' }, [
         lbl('lblToggle', { text: r.s('label'), w: 'fill', h: 'fill', size: 'Small', pad: 0, wrap: false }),
         nCon('nConToggleTrack', { w: 44, h: 24, radius: 12, fill: { if: on, then: 'Primary1', else: 'BorderColor' } }, [
-          circle('shpToggleKnob', { x: fx('If(lclNotifyOn, 23, 3)', r.b('on') ? 23 : 3), y: 3, w: 18, h: 18, fill: 'Fill' }),
+          circle('shpToggleKnob', { x: fx(`If(${v}, 23, 3)`, r.b('on') ? 23 : 3), y: 3, w: 18, h: 18, fill: 'Fill' }),
           btn('btnToggle', {
             x: 0,
             y: 0,
@@ -235,12 +237,12 @@ export const toggleSwitch: KitItem = {
             hoverFill: 'Transparent',
             pressedFill: 'Transparent',
             tooltip: r.s('label'),
-            onSelect: 'UpdateContext({ lclNotifyOn: !lclNotifyOn })',
+            onSelect: `UpdateContext({ ${v}: !${v} })`,
           }),
         ]),
       ]),
-      notes: ['Save it with the record, for example Patch(colSettings, …, { NotifyOnApproval: lclNotifyOn }), and load it in OnVisible.'],
-      uses: [{ name: 'lclNotifyOn', what: 'Local variable: true when the switch is on' }],
+      notes: [`Save it with the record, for example Patch(colSettings, …, { NotifyOnApproval: ${v} }), and load it in OnVisible.`],
+      uses: [{ name: v, what: 'Local variable: true when the switch is on' }],
     };
   },
 };

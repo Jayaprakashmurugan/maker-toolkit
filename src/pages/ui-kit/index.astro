@@ -1,0 +1,120 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import ProductChips from '../../components/ProductChips.astro';
+import KitCard from '../../components/uikit/KitCard.astro';
+import KitThemeHead from '../../components/uikit/KitThemeHead.astro';
+import { KIT_ITEMS } from '../../uikit/items';
+import { KIT_CATEGORIES } from '../../uikit/types';
+
+const title = 'UI Kit';
+const description =
+  'Copy-paste canvas app components built on one design system: themed with fxConfig, named with clear prefixes, and made from classic controls and containers, so they work in any app.';
+const cats = KIT_CATEGORIES.filter((c) => KIT_ITEMS.some((i) => i.category === c.id));
+---
+
+<Base title={title} description={description} image="/og/ui-kit.png">
+  <KitThemeHead slot="head" />
+  <div class="wrap wrap--wide">
+    <PageHead path="~/ui-kit" title={title} lede={description}>
+      <div class="works">
+        <span class="works__label">Works with</span>
+        <ProductChips products={['power-apps']} size="md" />
+      </div>
+    </PageHead>
+
+    <ol class="kit-how" data-reveal-group>
+      <li>
+        <span class="kit-how__n">01</span>
+        <b>Paste the design system once</b>
+        <span>Add <a href="/ui-kit/design-system/">fxConfig</a> to App.Formulas. It holds every color, size and radius the components use.</span>
+      </li>
+      <li>
+        <span class="kit-how__n">02</span>
+        <b>Pick a component and set it up</b>
+        <span>Change its text and options. The preview and the YAML update as you type, right in your browser.</span>
+      </li>
+      <li>
+        <span class="kit-how__n">03</span>
+        <b>Paste it into Power Apps Studio</b>
+        <span>Copy the YAML, right-click your screen in the Tree view and choose Paste code. No preview features needed.</span>
+      </li>
+    </ol>
+
+    <section class="home-section" aria-labelledby="kit-all">
+      <SectionHead index={`${KIT_ITEMS.length} components`} title="Components" id="kit-all" />
+      <div class="kit-filter">
+        <div class="kit-filter__tabs" role="tablist" aria-label="Filter by group">
+          <button type="button" role="tab" aria-selected="true" data-kit-cat="">All <small>{KIT_ITEMS.length}</small></button>
+          {
+            cats.map((c) => (
+              <button type="button" role="tab" aria-selected="false" data-kit-cat={c.id}>
+                {c.id} <small>{KIT_ITEMS.filter((i) => i.category === c.id).length}</small>
+              </button>
+            ))
+          }
+        </div>
+        <input class="kit-filter__q" type="search" placeholder="Filter components" aria-label="Filter components" data-kit-q />
+      </div>
+      <ul class="kcards" data-kit-grid>
+        {KIT_ITEMS.map((item) => <KitCard item={item} />)}
+      </ul>
+      <p class="kit-empty" data-kit-empty hidden>No component matches that. Try another word.</p>
+    </section>
+
+    <section class="home-section" aria-labelledby="kit-rules">
+      <SectionHead index="conventions" title="Built the same way, every time" id="kit-rules" />
+      <div class="kit-rules">
+        <div>
+          <h3>One design system</h3>
+          <p>
+            Every color and size reads from <code>fxColorConfigs</code> and <code>fxTextConfigs</code>. Change your brand color in one place and
+            every pasted component follows.
+          </p>
+        </div>
+        <div>
+          <h3>Names you can read</h3>
+          <p>
+            <code>vCon</code>, <code>hCon</code> and <code>nCon</code> for containers, <code>lbl</code>, <code>btn</code>, <code>img</code>,
+            <code>gal</code> for controls, and <code>fx</code>, <code>col</code>, <code>gbl</code>, <code>lcl</code> for formulas and variables.
+          </p>
+        </div>
+        <div>
+          <h3>No preview features</h3>
+          <p>Classic controls and auto-layout containers only, at versions makers already use. Every snippet is checked against them before it’s published.</p>
+        </div>
+      </div>
+      <p class="kit-more"><a class="btn btn--outline" href="/ui-kit/design-system/" data-magnetic>See the design system and naming rules</a></p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import '../../scripts/kitfit';
+
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-kit-cat]')];
+  const q = document.querySelector<HTMLInputElement>('[data-kit-q]')!;
+  const cards = [...document.querySelectorAll<HTMLElement>('.kcard')];
+  const empty = document.querySelector<HTMLElement>('[data-kit-empty]')!;
+  let cat = '';
+
+  function apply() {
+    const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const c of cards) {
+      const ok = (!cat || c.dataset.cat === cat) && words.every((w) => c.dataset.words!.includes(w));
+      c.hidden = !ok;
+      if (ok) shown++;
+    }
+    empty.hidden = shown > 0;
+  }
+  tabs.forEach((t) =>
+    t.addEventListener('click', () => {
+      cat = t.dataset.kitCat ?? '';
+      tabs.forEach((x) => x.setAttribute('aria-selected', String(x === t)));
+      apply();
+    }),
+  );
+  q.addEventListener('input', apply);
+</script>

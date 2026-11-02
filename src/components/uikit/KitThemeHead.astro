@@ -1,0 +1,28 @@
+---
+// Applies the UI Kit theme before the page paints: the default theme as :root variables, then the
+// visitor's saved theme (from their own browser) on top. Used in the <head> of every UI Kit page.
+import { THEMES, defaultTheme, hexSources, themeStyle, themeVars } from '../../uikit/theme';
+import { THEME_KEY } from '../../uikit/themeStore';
+
+const presets = Object.fromEntries(THEMES.map((t) => [t.id, themeVars(t)]));
+const hexMap = hexSources();
+---
+
+<style set:html={`:root{${themeStyle(defaultTheme)}}`}></style>
+<script is:inline define:vars={{ presets, hexMap, key: THEME_KEY }}>
+  try {
+    const st = JSON.parse(localStorage.getItem(key) || 'null');
+    if (st) {
+      const vars = { ...(presets[st.base] || presets.slate) };
+      const ok = (v) => /^#[0-9a-f]{6}$/i.test(v);
+      for (const [k, v] of Object.entries(st.colors || {})) {
+        if (!ok(v)) continue;
+        vars['--k-' + k] = v;
+        for (const [h, src] of Object.entries(hexMap)) if (src === k) vars['--k-hex-' + h] = v;
+      }
+      for (const [i, v] of Object.entries(st.status || {})) if (ok(v)) vars['--k-s' + i] = v;
+      for (const [i, v] of Object.entries(st.statusFont || {})) if (ok(v)) vars['--k-sf' + i] = v;
+      for (const [k, v] of Object.entries(vars)) document.documentElement.style.setProperty(k, v);
+    }
+  } catch (e) {}
+</script>

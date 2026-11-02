@@ -5,6 +5,7 @@ import { references } from '../data/references';
 import { slugify } from '../data/types';
 import { categoryById, tools } from '../data/tools';
 import { getPosts, postUrl } from '../lib/posts';
+import { KIT_ITEMS } from '../uikit/items';
 
 export interface SearchEntry {
   /** Title. */
@@ -55,6 +56,16 @@ export const GET: APIRoute = async () => {
         c: KINDS[r.slug]?.color ?? '#857f73',
       })),
     ),
+    ...KIT_ITEMS.map((i) => ({
+      t: i.name,
+      u: `/ui-kit/${i.slug}/`,
+      k: 'UI Kit',
+      g: i.category,
+      d: i.summary,
+      s: ['ui kit component yaml', ...(i.keywords ?? [])].join(' ').toLowerCase(),
+      c: categoryById('power-apps').color,
+    })),
+    { t: 'Design system (fxConfig)', u: '/ui-kit/design-system/', k: 'UI Kit', g: 'Design system', d: 'Colors, sizes and naming conventions for the UI Kit, with a theme builder.', s: 'fxconfig theme colors naming conventions prefixes design tokens', c: categoryById('power-apps').color },
     ...posts.map((p) => ({
       t: p.data.title,
       u: postUrl(p),

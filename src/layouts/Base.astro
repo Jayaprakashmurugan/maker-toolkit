@@ -4,6 +4,7 @@ import '@fontsource-variable/instrument-sans';
 import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import { siteConfig } from '../site.config';
+import { KIT_ITEMS } from '../uikit/items';
 import Logo from '../components/Logo.astro';
 import Icon, { type IconName } from '../components/Icon.astro';
 import { categories, tools, toolsIn } from '../data/tools';
@@ -29,7 +30,8 @@ const hasPosts = (await getPosts()).some((p) => !p.data.draft);
 const toolPaths = ['/tools/', ...categories.map((c) => `/${c.id}/`), ...tools.map((t) => t.href)];
 const postCount = (await getPosts()).filter((p) => !p.data.draft).length;
 const nav: { href: string; label: string; count?: number; match: string[] }[] = [
-  { href: '/tools/', label: 'Tools', count: tools.length, match: toolPaths },
+  { href: '/tools/', label: 'Tools', count: tools.length, match: toolPaths.filter((p) => p !== '/ui-kit/') },
+  { href: '/ui-kit/', label: 'UI Kit', count: KIT_ITEMS.length, match: [] },
   ...(hasPosts ? [{ href: '/blog/', label: 'Blog', count: postCount, match: [] }] : []),
   ...(videos.length ? [{ href: '/videos/', label: 'Videos', count: videos.length, match: [] }] : []),
   { href: '/about/', label: 'About', match: [] },

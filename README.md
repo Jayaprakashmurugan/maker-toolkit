@@ -137,6 +137,20 @@ function's anchor on Microsoft Learn, so you can leave it out.
 
 Build the page under `src/pages/<slug>/`, then add one entry to `src/data/tools.ts` (pick a `category`, and `also` for other categories it helps with), a share image in `src/pages/og/[...path].png.ts`, and a line in `src/data/changelog.ts`.
 
+## The UI Kit
+
+`/ui-kit/` is a library of copy-paste canvas app components. Each one is described once in `src/uikit/items/*.ts`
+as a tree of nodes (`vCon`, `hCon`, `nCon`, `lbl`, `btn`, `gal`, `img`, `txt`, ...). That one tree becomes both the
+Power Apps YAML (`src/uikit/yaml.ts`) and the live HTML preview (`src/components/uikit/KitPreview.tsx`).
+
+- Colors and sizes are design-system tokens that turn into `fxColorConfigs.*` / `fxTextConfigs.*` formulas. The
+  design system itself is `fxConfig` (`src/uikit/theme.ts`), the same structure our own apps use.
+- Every snippet is checked at build time (`src/uikit/validate.ts`): the YAML must round-trip, follow the canvas
+  YAML schema's shape, use only properties that control version has (`src/uikit/allowed.ts`, taken from real apps
+  built with those versions), and follow the naming conventions. A bad snippet fails the build.
+- Add a component: write a `KitItem` in `src/uikit/items/`, add it to `KIT_ITEMS` in `src/uikit/items/index.ts`,
+  and add a changelog line. Its page, card, share image and search entry are created for you.
+
 ## Visitor stats (optional, free, cookie-free)
 
 In Cloudflare: **Analytics & Logs → Web Analytics → Add a site**, enter the site's hostname, and copy the `token`

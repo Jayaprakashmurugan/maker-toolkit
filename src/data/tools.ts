@@ -99,6 +99,16 @@ export const tools: Tool[] = [
     keywords: 'regular expression validate input email phone pattern',
   },
   {
+    title: 'UI Kit',
+    description: 'Copy-paste canvas components on one design system: headers, sidebars, tabs, dialogs, lists and tables, themed with fxConfig.',
+    href: '/ui-kit/',
+    works: ['power-apps'],
+    kind: 'tool',
+    category: 'power-apps',
+    meta: 'Components · YAML · fxConfig',
+    keywords: 'ui kit components design system yaml paste code container header sidebar tabs dialog table gallery theme fxconfig named formulas',
+  },
+  {
     title: 'SVG to Power Apps',
     description: 'Turn an SVG icon into an Image formula you can paste, with colors you can drive from Power Fx.',
     href: '/svg-to-power-apps/',

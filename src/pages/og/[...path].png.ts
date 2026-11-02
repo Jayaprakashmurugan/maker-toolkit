@@ -6,6 +6,7 @@ import { slugify } from '../../data/types';
 import { siteConfig } from '../../site.config';
 import { categories, tools, toolsIn } from '../../data/tools';
 import { getPosts, readingTime } from '../../lib/posts';
+import { KIT_ITEMS } from '../../uikit/items';
 
 export const getStaticPaths = (async () => {
   const pages: { path: string; card: OgCard }[] = [
@@ -149,6 +150,23 @@ export const getStaticPaths = (async () => {
       path: 'changelog',
       card: { kicker: 'Changelog', title: 'What’s new', titleFont: 'display', summary: 'New tools, tool updates and blog posts, newest first.' },
     },
+    {
+      path: 'ui-kit',
+      card: {
+        kicker: `UI Kit · ${KIT_ITEMS.length} canvas components`,
+        title: 'Copy-paste components for canvas apps',
+        titleFont: 'display',
+        summary: 'One design system (fxConfig), clear names, classic controls and containers. Paste the YAML into Studio.',
+      },
+    },
+    {
+      path: 'ui-kit/design-system',
+      card: { kicker: 'UI Kit · Design system', title: 'fxConfig', titleFont: 'display', summary: 'Colors, sizes and naming conventions for every component, with a theme builder.' },
+    },
+    ...KIT_ITEMS.map((i) => ({
+      path: `ui-kit/${i.slug}`,
+      card: { kicker: `UI Kit · ${i.category}`, title: i.name, titleFont: 'display' as const, summary: i.summary },
+    })),
   ];
 
   for (const ref of references) {

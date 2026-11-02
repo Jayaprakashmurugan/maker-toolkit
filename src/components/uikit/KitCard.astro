@@ -1,0 +1,31 @@
+---
+// A catalog card with a real, scaled-down preview of the item (rendered at build time, no JavaScript).
+import KitPreview from './KitPreview';
+import { defaults, type KitItem } from '../../uikit/types';
+import { defaultTheme } from '../../uikit/theme';
+import { toControl, flatten } from '../../uikit/yaml';
+
+interface Props {
+  item: KitItem;
+}
+
+const { item } = Astro.props;
+const snippet = item.build(defaults(item));
+const count = flatten(toControl(snippet.root)).length;
+---
+
+<li class="kcard" data-cat={item.category} data-words={[item.name, item.summary, ...(item.keywords ?? [])].join(' ').toLowerCase()}>
+  <a href={`/ui-kit/${item.slug}/`}>
+    <span class={`kcard__stage kit-canvas--${item.canvas.bg ?? 'white'}`} aria-hidden="true">
+      <span class="kcard__fit" data-kfit style={`width:${item.canvas.w}px;height:${item.canvas.h}px`}>
+        <KitPreview root={snippet.root} theme={defaultTheme} />
+      </span>
+    </span>
+    <span class="kcard__body">
+      <span class="kcard__cat">{item.category}</span>
+      <span class="kcard__name">{item.name}</span>
+      <span class="kcard__sum">{item.summary}</span>
+      <span class="kcard__meta">{count} controls{snippet.formulas ? ' · named formulas' : ''}</span>
+    </span>
+  </a>
+</li>

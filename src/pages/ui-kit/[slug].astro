@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import ProductChips from '../../components/ProductChips.astro';
+import KitCard from '../../components/uikit/KitCard.astro';
+import KitThemeHead from '../../components/uikit/KitThemeHead.astro';
+import KitItemView from '../../components/uikit/KitItemView';
+import { KIT_ITEMS } from '../../uikit/items';
+import { defaults, type KitItem, type KitValues } from '../../uikit/types';
+import { checkSnippet } from '../../uikit/validate';
+import { toControl } from '../../uikit/yaml';
+
+export function getStaticPaths() {
+  return KIT_ITEMS.map((item) => ({ params: { slug: item.slug }, props: { item } }));
+}
+
+/** The defaults, plus every select choice and every toggle flipped: each must pass the checks. */
+function variants(item: KitItem): KitValues[] {
+  const base = defaults(item);
+  const out: KitValues[] = [base];
+  for (const o of item.options) {
+    if (o.type === 'select') for (const c of o.choices) out.push({ ...base, [o.id]: c.value });
+    if (o.type === 'toggle') out.push({ ...base, [o.id]: !o.default });
+  }
+  return out;
+}
+
+const { item } = Astro.props as { item: KitItem };
+const problems = variants(item).flatMap((v) => checkSnippet(item.slug, toControl(item.build(v).root)));
+if (problems.length) throw new Error(`UI Kit snippet problems:\n${[...new Set(problems)].join('\n')}`);
+
+const related = KIT_ITEMS.filter((i) => i.category === item.category && i.slug !== item.slug).slice(0, 3);
+---
+
+<Base title={`${item.name} · UI Kit`} description={`${item.summary} Copy-paste YAML for Power Apps canvas apps, themed with fxConfig.`} image={`/og/ui-kit/${item.slug}.png`}>
+  <KitThemeHead slot="head" />
+  <div class="wrap wrap--wide">
+    <a class="post__back" href="/ui-kit/">← UI Kit</a>
+    <PageHead path={`~/ui-kit/${item.slug}`} title={item.name} lede={item.summary}>
+      <div class="works">
+        <span class="works__label">{item.category}</span>
+        <ProductChips products={['power-apps']} size="md" />
+      </div>
+    </PageHead>
+
+    <KitItemView client:load slug={item.slug} />
+
+    {
+      related.length > 0 && (
+        <section class="home-section" aria-labelledby="kit-related">
+          <SectionHead index={item.category.toLowerCase()} title={`More ${item.category.toLowerCase()}`} id="kit-related" more={{ href: '/ui-kit/', label: 'All components' }} />
+          <ul class="kcards kcards--3">
+            {related.map((r) => (
+              <KitCard item={r} />
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </div>
+</Base>
+
+<script>
+  import '../../scripts/kitfit';
+</script>

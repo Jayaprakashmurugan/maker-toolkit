@@ -9,6 +9,17 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    kind: 'tool',
+    date: '2026-11-03',
+    title: 'UI Kit: copy-paste canvas components',
+    changes: [
+      'New: a UI Kit with 18 canvas app components, from headers, sidebars and tabs to dialogs, banners, lists and a data table. Set each one up in your browser and paste the YAML into Power Apps Studio.',
+      'Every component reads its colors and sizes from one named formula, fxConfig, and follows clear naming conventions (vCon, hCon, nCon, lbl, btn, gal, fx, col, gbl, lcl).',
+      'A design system page with a theme builder: pick your colors, watch the components repaint, and copy your own fxConfig.',
+      'Built only on classic controls and auto-layout containers, and checked against those control versions, so no preview features are needed.',
+    ],
+  },
+  {
     kind: 'blog',
     date: '2026-11-03',
     title: 'When Patch Fails: Turning Power Apps Errors into Messages Users Understand',

@@ -11,6 +11,14 @@ export const changelog: Release[] = [
   {
     kind: 'blog',
     date: '2026-11-03',
+    title: 'TypeScript for Power Fx People: You Already Know More Than You Think',
+    changes: [
+      'New post: TypeScript explained through Power Fx (records, tables, choice columns, blank and Coalesce), where it already shows up in PCF, Office Scripts and code apps, and a first Office Script to try.',
+    ],
+  },
+  {
+    kind: 'blog',
+    date: '2026-11-03',
     title: 'React Patterns in Power Apps Code Apps: Which Ones Actually Matter?',
     changes: [
       'New post: which React patterns earn their place in a Power Apps code app, with Dataverse examples, and how they map to what you already know from canvas apps.',

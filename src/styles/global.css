@@ -4986,6 +4986,13 @@ h4 {
   border-radius: 6px;
   background: var(--paper-2);
   font-size: 0.86em;
+  /* Long names like ComponentFramework.StandardControl<...> wrap instead of widening the page on phones. */
+  overflow-wrap: anywhere;
+}
+.prose-post pre,
+.prose-post code {
+  /* Show === and => as typed, not joined into symbols, so readers can copy what they see. */
+  font-variant-ligatures: none;
 }
 .prose-post pre {
   overflow-x: auto;

@@ -11,6 +11,22 @@ export const changelog: Release[] = [
   {
     kind: 'blog',
     date: '2026-11-03',
+    title: 'When Patch Fails: Turning Power Apps Errors into Messages Users Understand',
+    changes: [
+      'New post: a save button built step by step with IfError, friendly messages for each ErrorKind, the semicolon trap, and App.OnError for logging.',
+    ],
+  },
+  {
+    kind: 'blog',
+    date: '2026-11-03',
+    title: 'Lookups in Dataverse Flows: GUID, Expand Query or FetchXML?',
+    changes: [
+      'New post: how to choose between the lookup ID, Expand Query and FetchXML in List rows, including customer lookups, child rows and the limits worth knowing.',
+    ],
+  },
+  {
+    kind: 'blog',
+    date: '2026-11-03',
     title: 'TypeScript for Power Fx People: You Already Know More Than You Think',
     changes: [
       'New post: TypeScript explained through Power Fx (records, tables, choice columns, blank and Coalesce), where it already shows up in PCF, Office Scripts and code apps, and a first Office Script to try.',

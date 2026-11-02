@@ -73,7 +73,7 @@ We had:
 - separate receipt collections such as colBeleges
 - logic for deleting files from Dataverse as well as from the local app state
 
-And when users moved between records, we had to carefully differentiate between files that were already saved and files that existed only temporarily inside the app. That's exactly the kind of additional plumbing described in the earlier implementation notes for this post. Pasted text
+And when users moved between records, we had to carefully differentiate between files that were already saved and files that existed only temporarily inside the app.
 
 The result worked.
 

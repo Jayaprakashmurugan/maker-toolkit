@@ -26,7 +26,7 @@ const firstMonth = experience.map((j) => jobSpan(j).start).sort()[0];
 const firstYear = Number(firstMonth.slice(0, 4));
 const thisYear = new Date().getFullYear();
 const work = experience.flatMap((j) =>
-  j.roles.map((r) => ({ ...barSpan(firstMonth, r.start, r.end), color: r.color, label: `${r.title}, ${j.company}: ${monthLabel(r.start)} – ${monthLabel(r.end)}` })),
+  j.roles.map((r) => ({ ...barSpan(firstMonth, r.start, r.end), color: r.color, label: `${r.title}, ${j.company}: ${monthLabel(r.start)} - ${monthLabel(r.end)}` })),
 );
 const years = Array.from({ length: thisYear - firstYear }, (_, i) => firstYear + 1 + i);
 // Every year fits on a short bar; a long one shows every other year.
@@ -191,7 +191,7 @@ const initialsOf = (name: string) =>
                       <li class:list={['xp__role', { 'is-current': !r.end }]} style={`--c:${r.color}`}>
                         <p class="xp__title">{r.title}</p>
                         <p class="xp__when">
-                          {monthLabel(r.start)} – {monthLabel(r.end)} · {duration(r.start, r.end)}
+                          {monthLabel(r.start)} - {monthLabel(r.end)} · {duration(r.start, r.end)}
                           {i < job.roles.length - 1 && <span class="xp__up">↑ promoted</span>}
                         </p>
                         <ul class="xp__skills" aria-label="Skills">

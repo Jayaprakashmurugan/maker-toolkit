@@ -6,13 +6,13 @@ import type { IconName } from '../components/Icon.astro';
 /** "What I do": paragraphs in order. `focus` is pulled out and highlighted after the paragraph it follows. */
 export const about: { text: string; focus?: string }[] = [
   {
-    text: 'I build enterprise applications on the Microsoft Power Platform: Canvas Apps, Model-Driven Apps, Code Apps, Power Automate flows, and Dataverse data models. My work covers the full stack – from schema design and security roles through UI, integration, and deployment pipelines.',
+    text: 'I build enterprise applications on the Microsoft Power Platform: Canvas Apps, Model-Driven Apps, Code Apps, Power Automate flows, and Dataverse data models. My work covers the full stack - from schema design and security roles through UI, integration, and deployment pipelines.',
   },
   {
     text: 'I care about how solutions are built, not just that they work. That means proper ALM with Azure DevOps and PAC CLI, solution-aware components, and performance-conscious Power Fx and flow design. I also work with SharePoint and XrmToolBox for integration, customization, and data operations.',
   },
   {
-    text: 'Alongside delivery, I train and enable teams – walking developers through architecture decisions, code, and ALM practices so they can own and extend what we’ve built.',
+    text: 'Alongside delivery, I train and enable teams - walking developers through architecture decisions, code, and ALM practices so they can own and extend what we’ve built.',
     focus: 'My current focus is Code Apps, Copilot Studio, and agent development on Dataverse.',
   },
   {

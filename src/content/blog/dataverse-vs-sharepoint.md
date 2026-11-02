@@ -1,5 +1,5 @@
 ---
-title: "Data Duel: Dataverse vs. SharePoint – Choosing Your Power Platform Champion!"
+title: "Data Duel: Dataverse vs. SharePoint - Choosing Your Power Platform Champion!"
 description: "Lights, Camera, Action! Step right up, folks! It's time for a showdown in the world of Microsoft's Power Platform. In this corner, we have Dataverse, the Iron…"
 date: 2024-04-02
 tags: [Dataverse, SharePoint]

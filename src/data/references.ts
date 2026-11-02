@@ -92,7 +92,7 @@ export const desktopReference: Reference = {
     },
     {
       q: 'Why does every formula start with "="?',
-      a: 'In Power Fx–enabled desktop flows, an input that starts with = is a formula. Anything else is treated as plain text, so numbers and true/false also need the =.',
+      a: 'In Power Fx-enabled desktop flows, an input that starts with = is a formula. Anything else is treated as plain text, so numbers and true/false also need the =.',
     },
     {
       q: 'How do I put a formula inside text?',
@@ -104,7 +104,7 @@ export const desktopReference: Reference = {
     },
     {
       q: 'Why does my variable say it doesn’t exist?',
-      a: 'Variable names are case-sensitive in Power Fx–enabled flows (NewVar and newVar are different), and a variable must be set before a formula uses it.',
+      a: 'Variable names are case-sensitive in Power Fx-enabled flows (NewVar and newVar are different), and a variable must be set before a formula uses it.',
     },
   ],
 };

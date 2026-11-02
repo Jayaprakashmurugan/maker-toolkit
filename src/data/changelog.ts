@@ -9,6 +9,14 @@ export interface Release {
 
 export const changelog: Release[] = [
   {
+    kind: 'blog',
+    date: '2026-11-03',
+    title: 'Which Change Wins? Reading Solution Layers in Power Platform',
+    changes: [
+      'New post: why a managed import can go in without your change showing up, how to read the solution layers stack, and a checklist to run before you blame the deployment.',
+    ],
+  },
+  {
     kind: 'tool',
     date: '2026-10-26',
     title: 'See what each tool works with',
@@ -163,7 +171,7 @@ export const changelog: Release[] = [
     date: '2026-10-23',
     title: 'Power Apps Formula Reference',
     changes: [
-      'New: Power Apps Formula Reference with search by name or task, A–Z, categories, cards and tree views.',
+      'New: Power Apps Formula Reference with search by name or task, A-Z, categories, cards and tree views.',
       'A page for every formula, with copy-ready syntax and examples.',
     ],
   },

@@ -1,6 +1,6 @@
 ---
 title: "Dataverse Tip: Showing Counts in Model-Driven Apps (It’s Easier Than It Looks)"
-description: "I recently ran into this again while working on a Model-Driven app project, and I thought it’s worth sharing — because it’s one of those Dataverse things we…"
+description: "I recently ran into this again while working on a Model-Driven app project, and I thought it’s worth sharing - because it’s one of those Dataverse things we…"
 date: 2026-01-30
 tags: [Dataverse, Model-driven apps]
 source:
@@ -14,7 +14,7 @@ Not a hack.
 
 And definitely not rocket science 🚀😄
 
-I recently ran into this again while working on a **Model-Driven app** project, and I thought it’s worth sharing — because it’s one of those Dataverse things we *all* forget until it bites us again.
+I recently ran into this again while working on a **Model-Driven app** project, and I thought it’s worth sharing - because it’s one of those Dataverse things we *all* forget until it bites us again.
 
 ---
 
@@ -117,7 +117,7 @@ Rollup columns:
 - Recalculate automatically in the background (usually hourly ⏳)
 - Are read-only (by design)
 
-💬 **Quick tip:** If you don’t see a *“Recalculate Rollup”* button — don’t worry. As long as the rollup exists, Dataverse will handle recalculation for you.
+💬 **Quick tip:** If you don’t see a *“Recalculate Rollup”* button - don’t worry. As long as the rollup exists, Dataverse will handle recalculation for you.
 
 ---
 
@@ -127,14 +127,14 @@ Whenever I work with Model-Driven apps, I keep this in mind:
 
 🧩 **Formula Columns = Row-level logic** 🧮 **Rollup Columns = Aggregation logic**
 
-Once you remember this, Dataverse becomes much more predictable — and a lot less frustrating 😄
+Once you remember this, Dataverse becomes much more predictable - and a lot less frustrating 😄
 
 ---
 
 ### 🏁 Final Thought
 
-This isn’t a new feature. It’s not complicated. It’s just one of those **Dataverse basics** that’s easy to overlook — especially if you spend most of your time in Canvas apps (guilty 🙋♂️).
+This isn’t a new feature. It’s not complicated. It’s just one of those **Dataverse basics** that’s easy to overlook - especially if you spend most of your time in Canvas apps (guilty 🙋♂️).
 
-I hit this again in my recent project, so I figured I’d share it — in case it saves someone else a few minutes (or hours).
+I hit this again in my recent project, so I figured I’d share it - in case it saves someone else a few minutes (or hours).
 
 If this sounds familiar, you’re definitely not alone 👍

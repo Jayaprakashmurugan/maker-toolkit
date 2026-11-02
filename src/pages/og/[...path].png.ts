@@ -160,6 +160,15 @@ export const getStaticPaths = (async () => {
       },
     },
     {
+      path: 'naming-checker',
+      card: {
+        kicker: 'Tool · Power Apps · Naming conventions',
+        title: 'Naming Checker',
+        titleFont: 'display',
+        summary: 'Paste canvas YAML. Get every control and variable renamed to the conventions, formulas included.',
+      },
+    },
+    {
       path: 'ui-kit/design-system',
       card: { kicker: 'UI Kit · Design system', title: 'fxConfig', titleFont: 'display', summary: 'Colors, sizes and naming conventions for every component, with a theme builder.' },
     },

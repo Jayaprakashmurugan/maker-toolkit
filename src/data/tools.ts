@@ -109,6 +109,17 @@ export const tools: Tool[] = [
     keywords: 'ui kit components design system yaml paste code container header sidebar tabs dialog table gallery theme fxconfig named formulas',
   },
   {
+    title: 'Naming Checker',
+    description: 'Paste canvas YAML and fix every control and variable name to the conventions, formulas included.',
+    href: '/naming-checker/',
+    works: ['power-apps'],
+    kind: 'tool',
+    category: 'power-apps',
+    also: ['developer-utilities'],
+    meta: 'Naming conventions · YAML',
+    keywords: 'naming convention prefix rename controls variables lbl btn gal vcon hcon yaml copy code pa.yaml best practice',
+  },
+  {
     title: 'SVG to Power Apps',
     description: 'Turn an SVG icon into an Image formula you can paste, with colors you can drive from Power Fx.',
     href: '/svg-to-power-apps/',

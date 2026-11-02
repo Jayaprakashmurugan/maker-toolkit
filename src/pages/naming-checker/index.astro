@@ -1,0 +1,68 @@
+---
+import Base from '../../layouts/Base.astro';
+import WorksWith from '../../components/WorksWith.astro';
+import NamingChecker from '../../components/NamingChecker';
+
+const title = 'Naming Checker';
+const description =
+  'Paste a canvas app’s YAML and see every control and variable that breaks the naming conventions, with a better name for each. Copy the YAML back with the names fixed, formulas included.';
+
+const faqs = [
+  {
+    q: 'Which names does it expect?',
+    a: 'Controls start with a short prefix for their type, then a capital letter: vCon, hCon and nCon for vertical, horizontal and manual containers, lbl for labels, btn for buttons, txt for text inputs, gal for galleries, img for images, ico for icons, shp for shapes, and so on. Variables use gbl (Set), lcl (UpdateContext) and col (ClearCollect). The full list is on the UI Kit’s design system page.',
+  },
+  {
+    q: 'Where do I get the YAML?',
+    a: 'In Power Apps Studio, right-click a control or a screen in the Tree view and choose View code, then Copy code. You can also paste a whole .pa.yaml file from a solution or source control.',
+  },
+  {
+    q: 'How does it pick a new name?',
+    a: 'It keeps the meaningful part of the old name and swaps the prefix. For default names like Label3 or Button1 it uses the control’s own text (a button saying “Save request” becomes btnSaveRequest), and a gallery is named after its Items. You can edit any suggestion before you copy.',
+  },
+  {
+    q: 'Does it change my formulas?',
+    a: 'Yes, that’s the point: every place a renamed control or variable is used, like TextInput1.Text or Set(varUser, …), is updated too. Text inside quotes is left alone, so a label that says “Button1” keeps saying it.',
+  },
+  {
+    q: 'How do I put the renamed controls back into my app?',
+    a: 'Paste the renamed YAML into the screen with Paste code (or Ctrl+V), then delete the old controls. If you work with .pa.yaml files in source control, replace the file’s content instead.',
+  },
+  {
+    q: 'Is my app uploaded anywhere?',
+    a: 'No. The YAML is read and rewritten in your browser, and nothing is sent or stored.',
+  },
+];
+---
+
+<Base title={title} description={description} image="/og/naming-checker.png">
+  <div class="wrap wrap--wide">
+    <header class="page-head">
+      <p class="kicker"><b>Tool</b> · Power Apps · Naming conventions</p>
+      <h1>{title}</h1>
+      <p class="page-head__lede">{description}</p>
+      <WorksWith href="/naming-checker/" />
+    </header>
+
+    <NamingChecker client:load />
+  </div>
+
+  <section class="wrap section" aria-labelledby="nc-faq">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="kicker">Questions</p>
+        <h2 id="nc-faq">FAQ</h2>
+      </div>
+    </div>
+    <div class="faq" data-reveal-group>
+      {
+        faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div>{f.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

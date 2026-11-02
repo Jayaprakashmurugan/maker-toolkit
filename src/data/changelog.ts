@@ -19,6 +19,7 @@ export const changelog: Release[] = [
       'Every component reads its colors and sizes from one named formula, fxConfig, and follows clear naming conventions (vCon, hCon, nCon, lbl, btn, gal, fx, col, gbl, lcl).',
       'A design system page with a theme builder: pick your colors, watch the components repaint, and copy your own fxConfig.',
       'Built only on classic controls and auto-layout containers, and checked against those control versions, so no preview features are needed.',
+      'New: Naming Checker. Paste your own app’s YAML, see every control and variable that breaks the conventions, and copy it back renamed, formulas included.',
     ],
   },
   {

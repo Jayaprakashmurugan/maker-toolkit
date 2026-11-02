@@ -73,6 +73,26 @@ export const ALLOWED_PROPS: Record<string, string[]> = {
     'TemplateMaximumWidth', 'TemplatePadding', 'TemplateSize', 'Transition', 'Visible', 'Width', 'WrapCount', 'X',
     'Y', 'ZIndex',
   ],
+  'Attachments@2.3.0': [
+    'AccessibleLabel', 'AddAttachmentColor', 'AddAttachmentText', 'AddedItemColor', 'AddedItemFill', 'BorderColor',
+    'BorderStyle', 'BorderThickness', 'Color', 'Default', 'DisabledBorderColor', 'DisabledColor', 'DisabledFill',
+    'DisplayMode', 'DropTargetBackgroundColor', 'DropTargetBorderColor', 'DropTargetBorderStyle', 'DropTargetBorderThickness',
+    'DropTargetTextColor', 'Fill', 'FocusedBorderColor', 'FocusedBorderThickness', 'Font', 'FontWeight', 'Height',
+    'HoverBorderColor', 'HoverColor', 'HoverFill', 'ItemColor', 'ItemDisabledColor', 'ItemDisabledFill', 'ItemErrorColor',
+    'ItemErrorFill', 'ItemFill', 'ItemHoverColor', 'ItemHoverFill', 'ItemPressedColor', 'ItemPressedFill', 'ItemSpacing',
+    'Items', 'MaxAttachmentSize', 'MaxAttachments', 'MaxAttachmentsColor', 'MaxAttachmentsText', 'NoAttachmentsColor',
+    'NoAttachmentsText', 'OnAddFile', 'PaddingBottom', 'PaddingLeft', 'PaddingRight', 'PaddingTop', 'PressedBorderColor',
+    'PressedColor', 'PressedFill', 'RemovedItemColor', 'RemovedItemFill', 'Reset', 'Size', 'Tooltip', 'Visible', 'Width',
+    'X', 'Y', 'ZIndex',
+  ],
+  // OnChange is Add picture's documented event for a new photo; the rest come from an app that uses it.
+  'AddMedia@2.2.1': [
+    'Align', 'BorderColor', 'BorderStyle', 'BorderThickness', 'ChangePictureText', 'Color', 'DisabledBorderColor',
+    'DisabledColor', 'DisabledFill', 'DisplayMode', 'Fill', 'FocusedBorderColor', 'FocusedBorderThickness', 'Font',
+    'FontWeight', 'Height', 'HoverBorderColor', 'HoverColor', 'HoverFill', 'Italic', 'OnChange', 'OnSelect',
+    'PressedBorderColor', 'PressedColor', 'PressedFill', 'Size', 'Strikethrough', 'Text', 'Underline', 'VerticalAlign',
+    'Visible', 'Width', 'X', 'Y', 'ZIndex',
+  ],
 };
 
 /** Set on any control that sits inside an auto-layout container. */

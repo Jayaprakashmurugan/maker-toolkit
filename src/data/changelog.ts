@@ -11,6 +11,16 @@ export const changelog: Release[] = [
   {
     kind: 'tool',
     date: '2026-11-03',
+    title: 'UI Kit: calendars, uploads, charts and more',
+    changes: [
+      'New in the UI Kit: a month calendar and a date picker, a file drop zone and a photo upload (camera on phones), a line chart and a pie chart drawn as SVG from your rows, and an activity heatmap.',
+      'Also new: a top menu with dropdowns, a notification badge, an email compose dialog that sends through Outlook, and a branded splash screen that loads your data step by step.',
+      'The kit now has 50 pieces: 39 components, 5 layouts and 6 screens.',
+    ],
+  },
+  {
+    kind: 'tool',
+    date: '2026-11-03',
     title: 'UI Kit: copy-paste canvas components',
     changes: [
       'New: a UI Kit with 30 canvas app components, from headers, sidebars, tabs and bottom navigation to dialogs, drawers, banners, lists, cards, an accordion, a timeline, charts and a data table. Set each one up in your browser and paste the YAML into Power Apps Studio.',

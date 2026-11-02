@@ -18,6 +18,9 @@ export const PREFIXES: { control: string; variant?: string; direction?: 'Vertica
   { control: 'Image@2.2.3', prefix: 'img', what: 'Image' },
   { control: 'Classic/TextInput@2.3.2', prefix: 'txt', what: 'Text input' },
   { control: 'Gallery@2.15.0', prefix: 'gal', what: 'Gallery' },
+  { control: 'Attachments@2.3.0', prefix: 'att', what: 'Attachments' },
+  // Add picture shows as a button, so it's named like one (btnAddPhoto).
+  { control: 'AddMedia@2.2.1', prefix: 'btn', what: 'Add picture' },
 ];
 
 const KNOWN_KEYS = new Set(['Control', 'Variant', 'Properties', 'Children']);

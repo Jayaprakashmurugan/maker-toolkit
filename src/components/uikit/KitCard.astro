@@ -17,7 +17,7 @@ const count = flatten(toControl(snippet.root)).length;
 <li class="kcard" data-cat={item.category} data-words={[item.name, item.summary, ...(item.keywords ?? [])].join(' ').toLowerCase()}>
   <a href={`/ui-kit/${item.slug}/`}>
     <span class={`kcard__stage kit-canvas--${item.canvas.bg ?? 'white'}`} aria-hidden="true">
-      <span class="kcard__fit" data-kfit style={`width:${item.canvas.w}px;height:${item.canvas.h}px`}>
+      <span class="kcard__fit" data-kfit data-kzoom={item.canvas.zoom ?? 1} style={`width:${item.canvas.w}px;height:${item.canvas.h}px`}>
         <KitPreview root={snippet.root} theme={defaultTheme} />
       </span>
     </span>

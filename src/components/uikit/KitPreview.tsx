@@ -205,7 +205,7 @@ function render(n: Node, place: Place, t: KitTheme, key?: number): ReactNode {
         .svg((k) => `__HEX_${k}__`, 'preview')
         .replace(/(stroke|fill)='__HEX_(\w+)__'/g, "style='$1:var(--k-hex-$2)'")
         .replace('<svg ', "<svg width='100%' height='100%' ");
-      return <div key={key} style={{ ...s, padding: padCss(n.pad, t), display: 'flex' }} data-k={n.name} dangerouslySetInnerHTML={{ __html: svg }} />;
+      return <div key={key} style={{ ...s, padding: padCss(n.pad, t), display: 'flex', overflow: 'hidden' }} data-k={n.name} dangerouslySetInnerHTML={{ __html: svg }} />;
     }
     case 'input': {
       const value = textOf(n.value);
@@ -227,6 +227,24 @@ function render(n: Node, place: Place, t: KitTheme, key?: number): ReactNode {
         </div>
       );
     }
+    case 'attachments':
+      return <div key={key} style={s} data-k={n.name} title="Drop files here" />;
+    case 'addMedia':
+      Object.assign(s, {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: font,
+        fontSize: `${sizePx(n.size ?? 'Small', t)}pt`,
+        fontWeight: 600,
+        color: colorCss(n.color ?? 'Primary1'),
+        cursor: 'pointer',
+      } satisfies CSSProperties);
+      return (
+        <div key={key} style={s} data-k={n.name}>
+          {textOf(n.text)}
+        </div>
+      );
     case 'gallery': {
       const pad = n.templatePad ?? 0;
       const vertical = n.dir !== 'Horizontal';

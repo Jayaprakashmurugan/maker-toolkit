@@ -111,12 +111,12 @@ export default function KitItemView({ slug }: { slug: string }) {
   useLayoutEffect(() => {
     const el = stage.current;
     if (!el) return;
-    const fit = () => setScale(Math.min(1, (el.clientWidth - 32) / item.canvas.w));
+    const fit = () => setScale(Math.min(item.canvas.zoom ?? 1, (el.clientWidth - 32) / item.canvas.w));
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [item.canvas.w]);
+  }, [item.canvas.w, item.canvas.zoom]);
 
   const theme = stored ? resolveTheme(stored) : defaultTheme;
   const snippet = useMemo(() => item.build(values), [item, values]);

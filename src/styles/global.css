@@ -6681,6 +6681,10 @@ html.motion [data-tilt-ready][data-reveal].is-visible {
 .kit-glyph--txt {
   border-color: var(--pp-data);
 }
+.kit-glyph--att {
+  border-color: var(--pp-data);
+  border-style: dashed;
+}
 .kit-canvas {
   display: grid;
   place-items: center;

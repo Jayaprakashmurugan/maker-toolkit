@@ -2,7 +2,8 @@
 function fit() {
   document.querySelectorAll<HTMLElement>('[data-kfit]').forEach((el) => {
     const stage = el.parentElement!;
-    const s = Math.min(1, (stage.clientWidth - 24) / el.offsetWidth, (stage.clientHeight - 24) / el.offsetHeight);
+    const zoom = Number(el.dataset.kzoom) || 1;
+    const s = Math.min(zoom, (stage.clientWidth - 24) / el.offsetWidth, (stage.clientHeight - 24) / el.offsetHeight);
     el.style.transform = `translate(-50%, -50%) scale(${s})`;
   });
 }

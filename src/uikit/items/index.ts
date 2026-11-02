@@ -10,14 +10,17 @@ import {
 } from './more';
 import { layoutAppShell, layoutDashboard, layoutForm, layoutMasterDetail, layoutMobile } from './layouts';
 import { screenApproval, screenHome, screenRequests, screenSettings } from './screens';
+import {
+  calendar, datePicker, emailDialog, fileUpload, heatmap, lineChart, notificationBadge, photoUpload, pieChart, screenSplash, topMenu,
+} from './extra';
 
 export const KIT_ITEMS: KitItem[] = [
-  appHeader, sidebar, tabs, breadcrumbs, stepper, pagination, bottomNav,
-  button, textField, searchBox, filterChips, toggleSwitch, segmented, fab,
-  confirmDialog, banner, loadingOverlay, emptyState, progressBar, sideDrawer,
-  statusPill, kpiCard, listRow, dataTable, cardGrid, accordion, timeline, detailsPanel, barChart, progressRing,
+  appHeader, sidebar, topMenu, tabs, breadcrumbs, stepper, pagination, bottomNav,
+  button, textField, searchBox, filterChips, toggleSwitch, segmented, calendar, datePicker, fileUpload, photoUpload, fab,
+  confirmDialog, emailDialog, banner, notificationBadge, loadingOverlay, emptyState, progressBar, sideDrawer,
+  statusPill, kpiCard, listRow, dataTable, cardGrid, accordion, timeline, detailsPanel, barChart, lineChart, pieChart, progressRing, heatmap,
   layoutAppShell, layoutDashboard, layoutMasterDetail, layoutForm, layoutMobile,
-  screenRequests, screenApproval, screenHome, screenSettings,
+  screenRequests, screenApproval, screenHome, screenSettings, screenSplash,
 ];
 
 export const kitItem = (slug: string) => KIT_ITEMS.find((i) => i.slug === slug);

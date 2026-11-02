@@ -30,8 +30,8 @@ export interface KitItem {
   keywords?: string[];
   options: KitOption[];
   build: (o: KitValues) => Snippet;
-  /** The preview canvas: its size and background. */
-  canvas: { w: number; h: number; bg?: 'page' | 'white' | 'dark' };
+  /** The preview canvas: its size, background, and how far a small item may be zoomed in (default 1). */
+  canvas: { w: number; h: number; bg?: 'page' | 'white' | 'dark'; zoom?: number };
 }
 
 export const defaults = (item: KitItem): KitValues => Object.fromEntries(item.options.map((o) => [o.id, o.default]));

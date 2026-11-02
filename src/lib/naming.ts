@@ -35,7 +35,7 @@ const CONTROL_RULES: [RegExp, Rule][] = [
   [/^DataTable$|^ModernTable$/, { prefix: 'tbl', what: 'Data table' }],
   [/^Spinner$|^ModernSpinner$/, { prefix: 'spn', what: 'Spinner' }],
   [/^(Classic\/)?Video$|^Audio$/, { prefix: 'med', what: 'Media' }],
-  [/^AddMedia$/, { prefix: 'add', what: 'Add picture' }],
+  [/^AddMedia$/, { prefix: 'btn', what: 'Add picture' }],
   [/^CanvasComponent$|^Component$/, { prefix: 'cmp', what: 'Component' }],
   [/^CodeComponent$/, { prefix: 'pcf', what: 'Code component' }],
 ];

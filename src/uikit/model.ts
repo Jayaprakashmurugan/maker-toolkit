@@ -159,7 +159,26 @@ export interface GalleryNode extends BaseNode {
   template: (row: Row) => Node[];
 }
 
+/** A clear Attachments control laid over a drop zone: files dropped or browsed run OnAddFile. */
+export interface AttachmentsNode extends BaseNode {
+  kind: 'attachments';
+  maxFiles?: number;
+  maxSizeMB?: number;
+  onAdd: string;
+}
+
+/** The Add picture control (camera or photo library on phones), shown as a button. */
+export interface AddMediaNode extends BaseNode {
+  kind: 'addMedia';
+  text: Text;
+  size?: Size;
+  color?: Color;
+  onChange: string;
+}
+
 export type Node =
+  | AttachmentsNode
+  | AddMediaNode
   | ContainerNode
   | LabelNode
   | ButtonNode
@@ -182,6 +201,8 @@ export const ico = (name: string, o: Opt<IconNode>): IconNode => ({ kind: 'icon'
 export const img = (name: string, o: Opt<ImageNode>): ImageNode => ({ kind: 'image', name, ...o });
 export const txt = (name: string, o: Opt<InputNode>): InputNode => ({ kind: 'input', name, ...o });
 export const gal = (name: string, o: Opt<GalleryNode>): GalleryNode => ({ kind: 'gallery', name, ...o });
+export const att = (name: string, o: Opt<AttachmentsNode>): AttachmentsNode => ({ kind: 'attachments', name, ...o });
+export const addMedia = (name: string, o: Opt<AddMediaNode>): AddMediaNode => ({ kind: 'addMedia', name, ...o });
 
 /** A Power Fx text literal. */
 export const str = (s: string) => `"${s.replace(/"/g, '""')}"`;

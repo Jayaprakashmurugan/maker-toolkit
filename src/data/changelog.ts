@@ -11,6 +11,14 @@ export const changelog: Release[] = [
   {
     kind: 'blog',
     date: '2026-11-03',
+    title: 'React Patterns in Power Apps Code Apps: Which Ones Actually Matter?',
+    changes: [
+      'New post: which React patterns earn their place in a Power Apps code app, with Dataverse examples, and how they map to what you already know from canvas apps.',
+    ],
+  },
+  {
+    kind: 'blog',
+    date: '2026-11-03',
     title: 'Which Change Wins? Reading Solution Layers in Power Platform',
     changes: [
       'New post: why a managed import can go in without your change showing up, how to read the solution layers stack, and a checklist to run before you blame the deployment.',

@@ -1,4 +1,4 @@
-// Colors canvas YAML: control names, keys, and the Power Fx after each "=".
+// Colors canvas YAML (controls and component definitions): names, keys, and the Power Fx after each "=".
 
 import { fxHtml } from '../../lib/fxHtml';
 
@@ -14,9 +14,12 @@ export function yamlHtml(yaml: string): string {
       inBlock = -1;
       let m = line.match(/^(\s*)- ([A-Za-z_]\w*):$/);
       if (m) return `${m[1]}<span class="tk-punc">-</span> <span class="ky-name">${m[2]}</span><span class="tk-punc">:</span>`;
-      m = line.match(/^(\s*)(Control|Variant|Properties|Children):(.*)$/);
+      m = line.match(/^(\s*)(Control|ComponentName|Variant|Properties|Children|ComponentDefinitions|DefinitionType|CustomProperties|PropertyKind|DataType|ReturnType|Description|RaiseOnReset):(.*)$/);
       if (m) return `${m[1]}<span class="ky-struct">${m[2]}</span><span class="tk-punc">:</span><span class="ky-type">${esc(m[3])}</span>`;
-      m = line.match(/^(\s*)([A-Za-z]\w*): (\|-|=.*)$/);
+      // A component or custom property name on its own line.
+      m = line.match(/^(\s*)([A-Za-z_]\w*):$/);
+      if (m) return `${m[1]}<span class="ky-name">${m[2]}</span><span class="tk-punc">:</span>`;
+      m = line.match(/^(\s*)([A-Za-z_]\w*): (\|-|=.*)$/);
       if (m) {
         if (m[3] === '|-') {
           inBlock = indent;

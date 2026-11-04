@@ -225,24 +225,29 @@ export const dataTable: KitItem = {
     ].join('\n');
     return {
       root: vCon('vConTable', { w: 700, h: 340, fill: 'Fill', border: { color: 'BorderColor', thickness: 'Thin' }, radius: 'Medium', alignItems: 'Stretch' }, [
-        hCon(
-          'hConTableBulk',
-          { w: 'fill', h: 44, fill: 'Primary2', pad: { x: 'Regular' }, gap: 'Small', alignItems: 'Center', visible: fx('!IsEmpty(colSelectedRows)', selectable && checked.size > 0) },
-          [
-            lbl('lblTableBulkCount', { text: fx('CountRows(colSelectedRows) & " selected"', `${checked.size} selected`), w: 'fill', h: 'fill', size: 'Small', weight: 'Semibold', pad: 0 }),
-            btn('btnTableBulkClear', { text: 'Clear', w: 80, h: 30, fill: 'Transparent', color: 'Primary1', hoverFill: 'HoverFill', radius: 'Medium', size: 'Small', onSelect: 'Clear(colSelectedRows)' }),
-            btn('btnTableBulkDelete', {
-              text: 'Delete selected',
-              w: 140,
-              h: 30,
-              fill: 'ErrorColor',
-              hoverFill: { fade: 'ErrorColor', by: -15 },
-              radius: 'Medium',
-              size: 'Small',
-              onSelect: ['// Remove(colRequests, colSelectedRows);', 'Clear(colSelectedRows)'].join('\n'),
-            }),
-          ],
-        ),
+        // Only with checkboxes: without them nothing creates colSelectedRows.
+        ...(selectable
+          ? [
+              hCon(
+                'hConTableBulk',
+                { w: 'fill', h: 44, fill: 'Primary2', pad: { x: 'Regular' }, gap: 'Small', alignItems: 'Center', visible: fx('!IsEmpty(colSelectedRows)', checked.size > 0) },
+                [
+                  lbl('lblTableBulkCount', { text: fx('CountRows(colSelectedRows) & " selected"', `${checked.size} selected`), w: 'fill', h: 'fill', size: 'Small', weight: 'Semibold', pad: 0 }),
+                  btn('btnTableBulkClear', { text: 'Clear', w: 80, h: 30, fill: 'Transparent', color: 'Primary1', hoverFill: 'HoverFill', radius: 'Medium', size: 'Small', onSelect: 'Clear(colSelectedRows)' }),
+                  btn('btnTableBulkDelete', {
+                    text: 'Delete selected',
+                    w: 140,
+                    h: 30,
+                    fill: 'ErrorColor',
+                    hoverFill: { fade: 'ErrorColor', by: -15 },
+                    radius: 'Medium',
+                    size: 'Small',
+                    onSelect: ['// Remove(colRequests, colSelectedRows);', 'Clear(colSelectedRows)'].join('\n'),
+                  }),
+                ],
+              ),
+            ]
+          : []),
         hCon('hConTableHead', { w: 'fill', h: 40, fill: 'Secondary3', pad: { x: 'Regular' }, gap: 'Regular', alignItems: 'Center' }, [
           ...(selectable ? [checkbox('nConHeadCheck', allOn, toggleAll)] : []),
           ...COLS.map(header),

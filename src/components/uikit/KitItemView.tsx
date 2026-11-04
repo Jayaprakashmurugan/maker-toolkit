@@ -1,8 +1,10 @@
-// One UI Kit item: tree view, live preview, options, and the code to paste. Everything runs in the browser.
+// One UI Kit item: tree view, live preview, options, and the code to paste, as controls or as a canvas component.
+// Everything runs in the browser.
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { kitItem } from '../../uikit/items';
 import { defaults, type KitOption, type KitValues } from '../../uikit/types';
+import { componentize, hasComponent } from '../../uikit/component';
 import { THEMES, defaultTheme } from '../../uikit/theme';
 import { THEME_EVENT, loadStored, resolveTheme, saveStored, type StoredTheme } from '../../uikit/themeStore';
 import { PREFIXES } from '../../uikit/validate';
@@ -71,6 +73,20 @@ function Field({ opt, value, onChange }: { opt: KitOption; value: KitValues[stri
   }
 }
 
+type Mode = 'controls' | 'component';
+type Tab = 'yaml' | 'formulas' | 'onvisible' | 'definition' | 'instance' | 'screen';
+const MODE_KEY = 'mt-uikit-mode';
+
+/** Saves the component file locally; nothing is uploaded. */
+function download(name: string, text: string) {
+  const url = URL.createObjectURL(new Blob([text], { type: 'text/yaml' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 function CopyButton({ text, label = 'Copy' }: { text: string; label?: string }) {
   const [done, setDone] = useState(false);
   return (
@@ -97,9 +113,29 @@ export default function KitItemView({ slug }: { slug: string }) {
   const [values, setValues] = useState<KitValues>(() => defaults(item));
   const [stored, setStored] = useState<StoredTheme | null>(null);
   const [hover, setHover] = useState<string | null>(null);
-  const [tab, setTab] = useState<'yaml' | 'formulas' | 'onvisible'>('yaml');
+  const canComponent = hasComponent(item);
+  const [mode, setModeState] = useState<Mode>('controls');
+  const [tab, setTab] = useState<Tab>('yaml');
   const [scale, setScale] = useState(1);
   const stage = useRef<HTMLDivElement>(null);
+
+  const setMode = (m: Mode) => {
+    setModeState(m);
+    setTab(m === 'component' ? 'definition' : 'yaml');
+    try {
+      localStorage.setItem(MODE_KEY, m);
+    } catch {
+      /* storage blocked: the choice just isn't remembered */
+    }
+  };
+
+  useEffect(() => {
+    try {
+      if (canComponent && localStorage.getItem(MODE_KEY) === 'component') setMode('component');
+    } catch {
+      /* storage blocked */
+    }
+  }, [canComponent]);
 
   useEffect(() => {
     setStored(loadStored());
@@ -118,8 +154,9 @@ export default function KitItemView({ slug }: { slug: string }) {
     return () => ro.disconnect();
   }, [item.canvas.w, item.canvas.zoom]);
 
-  const theme = stored ? resolveTheme(stored) : defaultTheme;
+  const theme = useMemo(() => (stored ? resolveTheme(stored) : defaultTheme), [stored]);
   const snippet = useMemo(() => item.build(values), [item, values]);
+  const comp = useMemo(() => (canComponent ? componentize(item, values, theme) : null), [canComponent, item, values, theme]);
   const control = useMemo(() => toControl(snippet.root), [snippet]);
   const yaml = useMemo(() => toYaml([control]), [control]);
   const tree = useMemo(() => flatten(control), [control]);
@@ -127,9 +164,25 @@ export default function KitItemView({ slug }: { slug: string }) {
   useEffect(() => {
     if (!snippet.formulas && tab === 'formulas') setTab('yaml');
     if (!snippet.onVisible && tab === 'onvisible') setTab('yaml');
-  }, [snippet, tab]);
+    if (!comp?.screen && tab === 'screen') setTab('definition');
+  }, [snippet, comp, tab]);
 
-  const code = tab === 'formulas' ? snippet.formulas! : tab === 'onvisible' ? snippet.onVisible! : yaml;
+  const codes: Record<Tab, string | undefined> = {
+    yaml,
+    formulas: snippet.formulas,
+    onvisible: snippet.onVisible,
+    definition: comp?.definition,
+    instance: comp?.instance,
+    screen: comp?.screen,
+  };
+  const code = codes[tab] ?? yaml;
+  const isFormula = tab === 'formulas' || tab === 'onvisible' || tab === 'screen';
+  const copyLabel = tab === 'yaml' ? 'Copy YAML' : tab === 'definition' ? 'Copy component' : tab === 'instance' ? 'Copy instance' : 'Copy formula';
+  const tabButton = (id: Tab, label: ReactNode) => (
+    <button type="button" role="tab" aria-selected={tab === id} onClick={() => setTab(id)}>
+      {label}
+    </button>
+  );
 
   return (
     <div className="kit">
@@ -199,76 +252,166 @@ export default function KitItemView({ slug }: { slug: string }) {
         </aside>
       </div>
 
+      {comp && (
+        <div className="kit-mode" role="radiogroup" aria-label="Paste as">
+          <span className="kit-mode__label">Paste as</span>
+          <button type="button" role="radio" aria-checked={mode === 'controls'} onClick={() => setMode('controls')}>
+            <b>Controls</b>
+            <small>Paste straight onto a screen.</small>
+          </button>
+          <button type="button" role="radio" aria-checked={mode === 'component'} onClick={() => setMode('component')}>
+            <b>Component</b>
+            <small>
+              A reusable <code>{comp.name}</code> with inputs, outputs and events.
+            </small>
+          </button>
+        </div>
+      )}
+
       <section className="kit-codebox" aria-label="Code">
         <div className="kit-tabs" role="tablist">
-          <button type="button" role="tab" aria-selected={tab === 'yaml'} onClick={() => setTab('yaml')}>
-            Controls <small>YAML</small>
-          </button>
-          {snippet.formulas && (
-            <button type="button" role="tab" aria-selected={tab === 'formulas'} onClick={() => setTab('formulas')}>
-              App.Formulas
-            </button>
-          )}
-          {snippet.onVisible && (
-            <button type="button" role="tab" aria-selected={tab === 'onvisible'} onClick={() => setTab('onvisible')}>
-              OnVisible
-            </button>
-          )}
-          <span className="kit-tabs__fill" />
-          <CopyButton text={code} label={tab === 'yaml' ? 'Copy YAML' : 'Copy formula'} />
-        </div>
-        <YamlCode code={code} lang={tab === 'yaml' ? 'yaml' : 'fx'} />
-      </section>
-
-      <div className="kit-help">
-        <section>
-          <h2 className="kit-h">Paste it into your app</h2>
-          <ol className="kit-steps">
-            <li>
-              Once per app, paste <a href="/ui-kit/design-system/">fxConfig</a> into <b>App.Formulas</b>.
-            </li>
-            {snippet.formulas && (
-              <li>
-                Add the <b>App.Formulas</b> tab above to App.Formulas too.
-              </li>
-            )}
-            {snippet.onVisible && (
-              <li>
-                Add the <b>OnVisible</b> tab to the screen’s OnVisible.
-              </li>
-            )}
-            <li>
-              Copy the YAML. In Power Apps Studio, right-click the screen in the Tree view and choose <b>Paste code</b>, or select the screen and press Ctrl+V.
-            </li>
-          </ol>
-        </section>
-        <section>
-          {snippet.uses && snippet.uses.length > 0 && (
+          {mode === 'component' && comp ? (
             <>
-              <h2 className="kit-h">Names it uses</h2>
-              <table className="kit-uses">
-                <tbody>
-                  {snippet.uses.map((u) => (
-                    <tr key={u.name}>
-                      <td>
-                        <code>{u.name}</code>
-                      </td>
-                      <td>{u.what}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {tabButton(
+                'definition',
+                <>
+                  Component <small>{comp.name}.pa.yaml</small>
+                </>,
+              )}
+              {tabButton('instance', 'On a screen')}
+              {comp.screen && tabButton('screen', 'OnVisible')}
+            </>
+          ) : (
+            <>
+              {tabButton(
+                'yaml',
+                <>
+                  Controls <small>YAML</small>
+                </>,
+              )}
+              {snippet.formulas && tabButton('formulas', 'App.Formulas')}
+              {snippet.onVisible && tabButton('onvisible', 'OnVisible')}
             </>
           )}
-          {snippet.notes && (
-            <ul className="kit-notes">
-              {snippet.notes.map((n) => (
-                <li key={n}>{n}</li>
-              ))}
-            </ul>
+          <span className="kit-tabs__fill" />
+          {tab === 'definition' && comp && (
+            <button type="button" className="kit-save" onClick={() => download(`${comp.name}.pa.yaml`, comp.definition)}>
+              Save file
+            </button>
           )}
-        </section>
-      </div>
+          <CopyButton text={code} label={copyLabel} />
+        </div>
+        <YamlCode code={code} lang={isFormula ? 'fx' : 'yaml'} />
+      </section>
+
+      {mode === 'component' && comp ? (
+        <div className="kit-help">
+          <section>
+            <h2 className="kit-h">Add it to your app as a component</h2>
+            <ol className="kit-steps">
+              <li>
+                Once per app, paste <a href="/ui-kit/design-system/">fxConfig</a> into <b>App.Formulas</b>. Each instance hands it over with{' '}
+                <code>ConfigProperties: =fxConfig</code>.
+              </li>
+              <li>
+                Save the <b>Component</b> tab as <code>Src/Components/{comp.name}.pa.yaml</code> in your app’s source files (the format Power Apps Git integration keeps
+                canvas apps in), then open the app in Studio.
+              </li>
+              <li>
+                Put it on a screen: insert <b>{comp.name}</b> from the Insert pane, or copy the <b>On a screen</b> tab and use <b>Paste code</b> on the screen. It comes
+                with its inputs filled in and the actions in its events.
+              </li>
+              {comp.screen && (
+                <li>
+                  Add the <b>OnVisible</b> tab to the screen’s OnVisible.
+                </li>
+              )}
+            </ol>
+            <p className="kit-fine">
+              Microsoft documents Paste code for controls; a component definition goes in through its source file. If you just want it on a screen now, use{' '}
+              <b>Controls</b>.
+            </p>
+          </section>
+          <section>
+            <h2 className="kit-h">Its properties</h2>
+            <table className="kit-uses kit-props-table">
+              <tbody>
+                {comp.props.map((p) => (
+                  <tr key={p.name}>
+                    <td>
+                      <code>{p.name}</code>
+                    </td>
+                    <td>
+                      <span className={`kit-kind kit-kind--${p.kind.toLowerCase()}`}>
+                        {p.kind}
+                        {p.type ? ` · ${p.type}` : ''}
+                      </span>{' '}
+                      {p.description}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {comp.notes.length > 0 && (
+              <ul className="kit-notes">
+                {comp.notes.map((n) => (
+                  <li key={n}>{n}</li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
+      ) : (
+        <div className="kit-help">
+          <section>
+            <h2 className="kit-h">Paste it into your app</h2>
+            <ol className="kit-steps">
+              <li>
+                Once per app, paste <a href="/ui-kit/design-system/">fxConfig</a> into <b>App.Formulas</b>.
+              </li>
+              {snippet.formulas && (
+                <li>
+                  Add the <b>App.Formulas</b> tab above to App.Formulas too.
+                </li>
+              )}
+              {snippet.onVisible && (
+                <li>
+                  Add the <b>OnVisible</b> tab to the screen’s OnVisible.
+                </li>
+              )}
+              <li>
+                Copy the YAML. In Power Apps Studio, right-click the screen in the Tree view and choose <b>Paste code</b>, or select the screen and press Ctrl+V.
+              </li>
+            </ol>
+          </section>
+          <section>
+            {snippet.uses && snippet.uses.length > 0 && (
+              <>
+                <h2 className="kit-h">Names it uses</h2>
+                <table className="kit-uses">
+                  <tbody>
+                    {snippet.uses.map((u) => (
+                      <tr key={u.name}>
+                        <td>
+                          <code>{u.name}</code>
+                        </td>
+                        <td>{u.what}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            )}
+            {snippet.notes && (
+              <ul className="kit-notes">
+                {snippet.notes.map((n) => (
+                  <li key={n}>{n}</li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
+      )}
     </div>
   );
 }

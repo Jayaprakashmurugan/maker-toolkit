@@ -8,6 +8,8 @@ import { colorFx, padSides, radiusFx, sizeFx, spaceFx, thicknessFx } from './res
 export interface YamlControl {
   name: string;
   control: string;
+  /** For a component instance (Control: CanvasComponent), the component's name. */
+  component?: string;
   variant?: string;
   props: Record<string, string>;
   children?: YamlControl[];
@@ -264,15 +266,16 @@ export function toControl(n: Node, place: Place = { kind: 'root' }): YamlControl
 
 const needsBlock = (v: string) => /\n|: | #|:$|^\s|\s$|\t/.test(v);
 
-function writeValue(key: string, formula: string, indent: string): string[] {
+export function writeValue(key: string, formula: string, indent: string): string[] {
   const v = `=${formula}`;
   if (!needsBlock(v)) return [`${indent}${key}: ${v}`];
   return [`${indent}${key}: |-`, ...v.split('\n').map((line) => (line ? `${indent}  ${line}` : ''))];
 }
 
-function writeControl(c: YamlControl, indent: string): string[] {
+export function writeControl(c: YamlControl, indent: string): string[] {
   const inner = indent + '    ';
   const out = [`${indent}- ${c.name}:`, `${inner}Control: ${c.control}`];
+  if (c.component) out.push(`${inner}ComponentName: ${c.component}`);
   if (c.variant) out.push(`${inner}Variant: ${c.variant}`);
   const keys = Object.keys(c.props).sort((a, b) => a.localeCompare(b));
   if (keys.length) {

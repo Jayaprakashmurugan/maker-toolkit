@@ -150,6 +150,13 @@ Power Apps YAML (`src/uikit/yaml.ts`) and the live HTML preview (`src/components
   built with those versions), and follow the naming conventions. A bad snippet fails the build.
 - Add a component: write a `KitItem` in `src/uikit/items/`, add it to `KIT_ITEMS` in `src/uikit/items/index.ts`,
   and add a changelog line. Its page, card, share image and search entry are created for you.
+- Components (not layouts or screens) can also be taken as a canvas component: `src/uikit/component.ts` turns the
+  same snippet into `ComponentDefinitions` YAML (the `Src/Components/*.pa.yaml` format) plus an instance for the
+  screen. fxConfig comes in through a `ConfigProperties` input, text options and named formulas become inputs,
+  `UpdateContext` becomes `Set`, and OnVisible becomes `OnReset`. What it can't work out (events, outputs, screen
+  variables it reads) is in `src/uikit/componentSpecs.ts`, one entry per component. `checkComponent` in
+  `validate.ts` checks the result against the schema's ComponentDefinition shape and fails the build if the
+  component reads anything only the screen has.
 
 ## Visitor stats (optional, free, cookie-free)
 

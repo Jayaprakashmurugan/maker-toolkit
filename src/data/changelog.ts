@@ -10,12 +10,24 @@ export interface Release {
 export const changelog: Release[] = [
   {
     kind: 'tool',
+    date: '2026-11-05',
+    title: 'UI Kit: every component as a canvas component too',
+    changes: [
+      'Each of the 40 components now comes two ways: as controls to paste onto a screen, as before, or as a reusable canvas component (cmpButton, cmpDataTable, cmpCalendar, …) in the ComponentDefinitions YAML that Power Apps keeps in Src/Components.',
+      'The design system goes in through a ConfigProperties input (ConfigProperties: =fxConfig), texts and data become input properties, and what you read back (Selected, SearchText, SelectedDate, Files…) are output properties.',
+      'Buttons raise events (OnSelect, OnConfirm, OnCancel, OnChange…), so the action stays on the screen where your variables and connectors live.',
+      'Each one also comes with its instance for the screen, already filled in, and any OnVisible it needs. Save the component as a .pa.yaml file straight from the page.',
+      'Every component is checked at build time against the canvas YAML schema, and for anything it would read that only the screen has.',
+    ],
+  },
+  {
+    kind: 'tool',
     date: '2026-11-03',
     title: 'UI Kit: calendars, uploads, charts and more',
     changes: [
       'New in the UI Kit: a month calendar and a date picker, a file drop zone and a photo upload (camera on phones), a line chart and a pie chart drawn as SVG from your rows, and an activity heatmap.',
       'Also new: a top menu with dropdowns, a notification badge, an email compose dialog that sends through Outlook, and a branded splash screen that loads your data step by step.',
-      'The kit now has 50 pieces: 39 components, 5 layouts and 6 screens.',
+      'The kit now has 50 pieces: 40 components, 5 layouts and 5 screens.',
     ],
   },
   {

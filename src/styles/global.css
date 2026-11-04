@@ -7191,6 +7191,116 @@ html.motion [data-tilt-ready][data-reveal].is-visible {
     border-right: 0;
     border-bottom: 1px solid var(--rule);
   }
+  .kit-tabs {
+    flex-wrap: wrap;
+  }
+  .kit-tabs button[role='tab'] small {
+    display: none;
+  }
+  .kit-mode__label {
+    flex-basis: 100%;
+  }
+}
+
+/* UI Kit: paste as controls or as a canvas component. */
+.kit-mode {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.kit-mode__label {
+  align-self: center;
+  margin-right: 0.3rem;
+  color: var(--ink-3);
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.kit-mode button {
+  display: grid;
+  flex: 1 1 15rem;
+  gap: 0.15rem;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid var(--rule-2);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--ink-2);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.kit-mode button:hover {
+  border-color: var(--accent);
+}
+.kit-mode button[aria-checked='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.kit-mode b {
+  color: var(--ink);
+  font-family: var(--f-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.kit-mode small {
+  color: var(--ink-3);
+  font-size: 0.8rem;
+}
+.kit-mode code,
+.kit-steps code,
+.kit-fine code {
+  color: var(--accent-ink);
+  font-size: 0.8em;
+  overflow-wrap: anywhere;
+}
+.kit-save {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--rule-2);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.kit-save:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+.kit-fine {
+  margin: 0.9rem 0 0;
+  color: var(--ink-3);
+  font-size: 0.82rem;
+}
+.kit-props-table td:first-child {
+  width: 9.5rem;
+}
+.kit-kind {
+  display: inline-block;
+  margin-right: 0.25rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 6px;
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+.kit-kind--input {
+  background: color-mix(in srgb, var(--pp-automate) 14%, transparent);
+  color: var(--pp-automate);
+}
+.kit-kind--output {
+  background: color-mix(in srgb, var(--pp-data) 14%, transparent);
+  color: var(--pp-data);
+}
+.kit-kind--event {
+  background: color-mix(in srgb, var(--pp-apps) 14%, transparent);
+  color: var(--pp-apps);
 }
 
 /* ── Naming Checker ───────────────────────────────────────── */

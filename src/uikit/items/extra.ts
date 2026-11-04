@@ -658,7 +658,7 @@ export const emailDialog: KitItem = {
 };
 
 /** Deterministic sample counts for 5 weeks. */
-const HEAT = Array.from({ length: 35 }, (_, i) => ({ Count: [0, 2, 5, 3, 7, 1, 0][i % 7] + ((i * 7) % 5) - (i % 3 === 0 ? 1 : 0) }));
+const HEAT = Array.from({ length: 35 }, (_, i) => ({ Count: Math.max(0, [0, 2, 5, 3, 7, 1, 0][i % 7] + ((i * 7) % 5) - (i % 3 === 0 ? 1 : 0)) }));
 
 export const heatmap: KitItem = {
   slug: 'activity-heatmap',

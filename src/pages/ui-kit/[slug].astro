@@ -8,14 +8,15 @@ import KitThemeHead from '../../components/uikit/KitThemeHead.astro';
 import KitItemView from '../../components/uikit/KitItemView';
 import { KIT_ITEMS } from '../../uikit/items';
 import { defaults, type KitItem, type KitValues } from '../../uikit/types';
-import { checkSnippet } from '../../uikit/validate';
+import { componentize } from '../../uikit/component';
+import { checkComponent, checkSnippet } from '../../uikit/validate';
 import { toControl } from '../../uikit/yaml';
 
 export function getStaticPaths() {
   return KIT_ITEMS.map((item) => ({ params: { slug: item.slug }, props: { item } }));
 }
 
-/** The defaults, plus every select choice and every toggle flipped: each must pass the checks. */
+/** The defaults, plus every select choice and every toggle flipped: each must pass the checks, as controls and as a component. */
 function variants(item: KitItem): KitValues[] {
   const base = defaults(item);
   const out: KitValues[] = [base];
@@ -27,7 +28,10 @@ function variants(item: KitItem): KitValues[] {
 }
 
 const { item } = Astro.props as { item: KitItem };
-const problems = variants(item).flatMap((v) => checkSnippet(item.slug, toControl(item.build(v).root)));
+const problems = variants(item).flatMap((v) => {
+  const comp = componentize(item, v);
+  return [...checkSnippet(item.slug, toControl(item.build(v).root)), ...(comp ? checkComponent(item.slug, comp) : [])];
+});
 if (problems.length) throw new Error(`UI Kit snippet problems:\n${[...new Set(problems)].join('\n')}`);
 
 const related = KIT_ITEMS.filter((i) => i.category === item.category && i.slug !== item.slug).slice(0, 3);

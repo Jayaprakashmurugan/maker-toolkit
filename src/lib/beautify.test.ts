@@ -51,6 +51,39 @@ describe('line comments', () => {
   });
 });
 
+describe('Power Fx operators spelled as words', () => {
+  it('keep a space before a bracket', () => {
+    expect(format('x in [1,2]', 'powerfx')).toBe('x in [1, 2]');
+    expect(format('Status exactin ["A","B"]', 'powerfx')).toBe('Status exactin ["A", "B"]');
+    expect(format('a And (b Or c)', 'powerfx')).toBe('a And (b Or c)');
+    expect(format('a Or(b And c)', 'powerfx')).toBe('a Or (b And c)');
+    expect(format('Not (a Or b)', 'powerfx')).toBe('Not (a Or b)');
+  });
+
+  it('keep a unary operator after them attached to its operand', () => {
+    expect(format('a And -b', 'powerfx')).toBe('a And -b');
+    expect(format('a Or !b', 'powerfx')).toBe('a Or !b');
+    expect(format('x in -1', 'powerfx')).toBe('x in -1');
+  });
+
+  it('leave function calls alone, including the And, Or and Not functions', () => {
+    expect(format('If(a,b,c)', 'powerfx')).toBe('If(a, b, c)');
+    expect(format('And(a,Or(b,c)) Or Not(d)', 'powerfx')).toBe('And(a, Or(b, c)) Or Not(d)');
+    expect(format('If(x, And(a, b), c)', 'powerfx')).toBe('If(x, And(a, b), c)');
+    expect(format('and(equals(1,1),not(false),or(true,false))', 'wdl')).toBe(
+      'and(equals(1, 1), not(false), or(true, false))',
+    );
+    expect(format('if(x,And(a,b),Not(c))', 'wdl')).toBe('if(x, And(a, b), Not(c))');
+  });
+
+  it('are not counted as function calls', () => {
+    const calls = (src: string) => beautify(src, { lang: 'powerfx', mode: 'smart', indent: 2 }).functions;
+    expect(calls('a And (b Or c)')).toBe(0);
+    expect(calls('x in [1, 2]')).toBe(0);
+    expect(calls('And(a, b) Or (c)')).toBe(1);
+  });
+});
+
 // ── Only whitespace changes ──────────────────────────────────
 // A scanner of its own, so a tokenizer bug can't hide itself: it splits source into the code between literals, with
 // all whitespace removed, and the literals (strings, quoted names), byte for byte. Comments keep their words only,

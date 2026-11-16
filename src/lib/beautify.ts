@@ -29,6 +29,8 @@ export interface Tok {
   v: string;
   pos: number;
   unary?: boolean;
+  /** A Power Fx word used as an operator, like And in `a And (b Or c)`. */
+  opWord?: boolean;
 }
 
 interface Group {
@@ -44,6 +46,18 @@ type Part = Tok | Group;
 const WIDTH = 72;
 const PAIRS: Record<string, string> = { '(': ')', '[': ']', '{': '}' };
 const isGroup = (p: Part): p is Group => (p as Group).kind === 'g';
+
+/**
+ * Whether a Power Fx word is an operator here (`x in [1, 2]`, `a And (b Or c)`) rather than a name or a call. And, Or
+ * and Not are functions too: And and Or are operators only after an operand, and Not is one unless it's written like
+ * a call, `Not(x)`.
+ */
+function isOpWord(word: string, prev: Tok | undefined, next: string | undefined): boolean {
+  if (word === 'And' || word === 'Or')
+    return !!prev && ['word', 'num', 'str', 'close'].includes(prev.t) && !prev.opWord;
+  if (word === 'Not') return next !== '(';
+  return word === 'in' || word === 'exactin' || word === 'As';
+}
 
 /** Guess the language from quote style and function-name casing. */
 export function detectLang(src: string): Lang {
@@ -173,7 +187,8 @@ export function tokenize(
     }
     const word = /^[A-Za-z_$][\w$]*/.exec(rest);
     if (word) {
-      toks.push({ t: 'word', v: word[0], pos: i });
+      const opWord = lang === 'powerfx' && isOpWord(word[0], toks[toks.length - 1], src[i + word[0].length]);
+      toks.push({ t: 'word', v: word[0], pos: i, opWord });
       i += word[0].length;
       continue;
     }
@@ -200,7 +215,8 @@ export function tokenize(
     const v = op ? op[0] : c;
     const prev = toks[toks.length - 1];
     const unary =
-      (v === '-' || v === '+' || v === '!') && (!prev || ['op', 'open', 'comma', 'semi', 'colon'].includes(prev.t));
+      (v === '-' || v === '+' || v === '!') &&
+      (!prev || !!prev.opWord || ['op', 'open', 'comma', 'semi', 'colon'].includes(prev.t));
     toks.push({ t: 'op', v, pos: i, unary });
     i += v.length;
   }
@@ -264,7 +280,7 @@ function space(prev: Part | null, next: Part): string {
   const a = lastTok(prev);
   const b = firstTok(next);
   if (b.t === 'cmt' || a.t === 'cmt') return ' ';
-  if (b.t === 'open') return ['word', 'close', 'q', 'at', 'dot', 'str'].includes(a.t) ? '' : ' ';
+  if (b.t === 'open') return ['word', 'close', 'q', 'at', 'dot', 'str'].includes(a.t) && !a.opWord ? '' : ' ';
   if (a.t === 'at' || a.t === 'dot' || b.t === 'dot' || a.t === 'q' || b.t === 'q') return '';
   if (b.t === 'colon') return '';
   if (a.t === 'colon') return ' ';
@@ -377,7 +393,7 @@ export function beautify(src: string, opts: { lang: Lang; mode: Mode; indent: nu
   toks.forEach((t, k) => {
     if (t.t === 'open') depth = Math.max(depth, ++cur);
     if (t.t === 'close') cur = Math.max(0, cur - 1);
-    if (t.t === 'word' && toks[k + 1]?.v === '(') functions++;
+    if (t.t === 'word' && !t.opWord && toks[k + 1]?.v === '(') functions++;
   });
 
   const output = lines

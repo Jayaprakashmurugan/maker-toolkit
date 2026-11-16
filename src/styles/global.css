@@ -3945,6 +3945,8 @@ h4 {
 .bento {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
+  /* The stats keep their natural height; the formula bar takes the rest of the intro's height. */
+  grid-template-rows: 1fr auto;
   gap: 1rem;
 }
 .tile {
@@ -3968,8 +3970,9 @@ h4 {
 .tile:hover::before {
   opacity: 1;
 }
+/* Intro on the left over two rows; the formula bar and the stats stack on the right. */
 .tile--intro {
-  grid-column: span 8;
+  grid-column: span 7;
   grid-row: span 2;
   display: flex;
   flex-direction: column;
@@ -3978,26 +3981,8 @@ h4 {
   padding: clamp(1.5rem, 4vw, 2.75rem);
   background: radial-gradient(120% 90% at 100% 0%, var(--accent-soft), transparent 55%), var(--card);
 }
-/* The profile card stands on its own here: no tile box behind it. */
-.tile--me {
-  grid-column: span 4;
-  grid-row: span 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 0.35rem;
-  padding-inline: 0;
-  overflow: visible;
-  border: 0;
-  background: none;
-}
-.tile--me::before {
-  display: none;
-}
 .tile--formula {
-  grid-column: span 7;
+  grid-column: span 5;
   padding: 0;
   background: var(--code-bg);
 }
@@ -4095,17 +4080,6 @@ h4 {
   border-color: var(--accent);
   color: var(--ink);
 }
-.tile--me__name {
-  margin-top: 0.6rem;
-  font-family: var(--f-display);
-  font-weight: 600;
-  font-size: 1.05rem;
-  letter-spacing: -0.03em;
-}
-.tile--me__role {
-  color: var(--ink-3);
-  font-size: 0.9rem;
-}
 .certchips {
   display: flex;
   flex-wrap: wrap;
@@ -4122,16 +4096,6 @@ h4 {
   color: var(--ink-2);
   font-family: var(--f-mono);
   font-size: 0.72rem;
-}
-.tile__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin-top: 0.75rem;
-  color: var(--accent-ink);
-  font-family: var(--f-mono);
-  font-size: 0.82rem;
-  text-decoration: none;
 }
 .console__bar {
   display: flex;
@@ -4234,8 +4198,10 @@ h4 {
   .tile--stats {
     grid-column: 1 / -1;
   }
-  .tile--me {
-    grid-column: 1 / -1;
+  .bento {
+    grid-template-rows: none;
+  }
+  .tile--intro {
     grid-row: auto;
   }
 }
@@ -5315,58 +5281,6 @@ html.motion .profile:not(.is-tilting) {
   50% {
     translate: 0 -6px;
   }
-}
-
-/* ── Home: whoami band ────────────────────────────────────── */
-
-.band {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  padding: clamp(1.75rem, 5vw, 3.5rem);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-lg);
-  background: radial-gradient(80% 120% at 0% 100%, var(--accent-soft), transparent 60%), var(--card);
-}
-.band::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), var(--accent-soft), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.35s;
-}
-.band:hover::before {
-  opacity: 1;
-}
-.band__idx {
-  font-family: var(--f-mono);
-  font-size: 0.85rem;
-  color: var(--accent-ink);
-}
-.band__text {
-  max-width: 44ch;
-  margin-top: 0.9rem;
-  font-family: var(--f-display);
-  font-weight: 400;
-  font-size: clamp(1.15rem, 2.3vw, 1.6rem);
-  line-height: 1.45;
-  letter-spacing: -0.035em;
-  color: var(--ink-2);
-}
-.band__text b {
-  color: var(--ink);
-}
-.band__text b {
-  color: var(--accent-ink);
-  font-weight: 700;
-}
-.band__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1.75rem;
 }
 
 /* ── About ────────────────────────────────────────────────── */

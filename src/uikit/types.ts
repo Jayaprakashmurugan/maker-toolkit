@@ -41,5 +41,6 @@ export const reader = (o: KitValues) => ({
   s: (id: string) => String(o[id] ?? ''),
   n: (id: string) => Number(o[id] ?? 0),
   b: (id: string) => Boolean(o[id]),
-  lines: (id: string) => (Array.isArray(o[id]) ? (o[id] as string[]) : String(o[id] ?? '').split('\n')).map((l) => l.trim()).filter(Boolean),
+  lines: (id: string) =>
+    (Array.isArray(o[id]) ? (o[id] as string[]) : String(o[id] ?? '').split('\n')).map((l) => l.trim()).filter(Boolean),
 });

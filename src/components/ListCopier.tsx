@@ -1,5 +1,14 @@
 import { useMemo, useState } from 'react';
-import { consoleScript, parseList, pnpScript, powerAutomateSteps, restUrls, sampleXml, type CopyPlan, type ParsedList } from '../lib/spList';
+import {
+  consoleScript,
+  parseList,
+  pnpScript,
+  powerAutomateSteps,
+  restUrls,
+  sampleXml,
+  type CopyPlan,
+  type ParsedList,
+} from '../lib/spList';
 import { CopyButton } from './FormulaDetail';
 
 type Method = 'console' | 'flow' | 'pnp';
@@ -93,17 +102,27 @@ export default function ListCopier() {
           </button>
         </div>
         <p className="sh-intro">
-          Enter the site and list name. Open both links in a browser where you’re signed in to that site, and paste what each page
-          shows (Ctrl+A, Ctrl+C) into the boxes below.
+          Enter the site and list name. Open both links in a browser where you’re signed in to that site, and paste what
+          each page shows (Ctrl+A, Ctrl+C) into the boxes below.
         </p>
         <div className="lc-inputs">
           <label className="bf-control sh-action lc-wide">
             <span className="bf-control__label">Source site URL</span>
-            <input value={sourceSite} onChange={(e) => setSourceSite(e.target.value)} placeholder="https://contoso.sharepoint.com/sites/finance" spellCheck={false} />
+            <input
+              value={sourceSite}
+              onChange={(e) => setSourceSite(e.target.value)}
+              placeholder="https://contoso.sharepoint.com/sites/finance"
+              spellCheck={false}
+            />
           </label>
           <label className="bf-control sh-action">
             <span className="bf-control__label">List name</span>
-            <input value={listName} onChange={(e) => setListName(e.target.value)} placeholder="Purchase Requests" spellCheck={false} />
+            <input
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
+              placeholder="Purchase Requests"
+              spellCheck={false}
+            />
           </label>
         </div>
         <Url label="List" url={urls.list} />
@@ -113,13 +132,25 @@ export default function ListCopier() {
             <span className="bf-pane__head">
               <span className="lc-pane-title">List response</span>
             </span>
-            <textarea className="bf-input" value={listXml} onChange={(e) => setListXml(e.target.value)} placeholder="Paste the List page here (XML)" spellCheck={false} />
+            <textarea
+              className="bf-input"
+              value={listXml}
+              onChange={(e) => setListXml(e.target.value)}
+              placeholder="Paste the List page here (XML)"
+              spellCheck={false}
+            />
           </label>
           <label className="bf-pane">
             <span className="bf-pane__head">
               <span className="lc-pane-title">Columns response</span>
             </span>
-            <textarea className="bf-input" value={fieldsXml} onChange={(e) => setFieldsXml(e.target.value)} placeholder="Paste the Columns page here (XML)" spellCheck={false} />
+            <textarea
+              className="bf-input"
+              value={fieldsXml}
+              onChange={(e) => setFieldsXml(e.target.value)}
+              placeholder="Paste the Columns page here (XML)"
+              spellCheck={false}
+            />
           </label>
         </div>
         {parsed && !parsed.ok && <p className="lc-warn">{parsed.message}</p>}
@@ -156,7 +187,9 @@ export default function ListCopier() {
               </label>
             </div>
             {data.list.BaseTemplate !== 100 && data.list.BaseTemplate !== 101 && (
-              <p className="lc-warn">This list uses a special template ({data.list.BaseTemplate}). It will be created as a standard list.</p>
+              <p className="lc-warn">
+                This list uses a special template ({data.list.BaseTemplate}). It will be created as a standard list.
+              </p>
             )}
 
             <div className="sh-table-wrap">
@@ -193,17 +226,19 @@ export default function ListCopier() {
                 </tbody>
               </table>
             </div>
-            {data.fields.length === 0 && <p className="sh-intro">This list has no custom columns, so only the list itself will be created.</p>}
+            {data.fields.length === 0 && (
+              <p className="sh-intro">This list has no custom columns, so only the list itself will be created.</p>
+            )}
 
             <div className="lc-options">
               <label>
-                <input type="checkbox" checked={addToView} onChange={(e) => setAddToView(e.target.checked)} /> Show the new columns in the
-                default view
+                <input type="checkbox" checked={addToView} onChange={(e) => setAddToView(e.target.checked)} /> Show the
+                new columns in the default view
               </label>
               {data.titleRename && (
                 <label>
-                  <input type="checkbox" checked={renameTitle} onChange={(e) => setRenameTitle(e.target.checked)} /> Rename the Title column to “
-                  {data.titleRename}”, like the source
+                  <input type="checkbox" checked={renameTitle} onChange={(e) => setRenameTitle(e.target.checked)} />{' '}
+                  Rename the Title column to “{data.titleRename}”, like the source
                 </label>
               )}
             </div>
@@ -218,9 +253,16 @@ export default function ListCopier() {
             </div>
             <label className="bf-control sh-action lc-wide lc-target">
               <span className="bf-control__label">Target site URL</span>
-              <input value={targetSite} onChange={(e) => setTargetSite(e.target.value)} placeholder="https://fabrikam.sharepoint.com/sites/projects" spellCheck={false} />
+              <input
+                value={targetSite}
+                onChange={(e) => setTargetSite(e.target.value)}
+                placeholder="https://fabrikam.sharepoint.com/sites/projects"
+                spellCheck={false}
+              />
             </label>
-            <p className="sh-intro">It can be in the same tenant or a different one. You need permission to create lists there.</p>
+            <p className="sh-intro">
+              It can be in the same tenant or a different one. You need permission to create lists there.
+            </p>
           </section>
 
           {/* ── 4. Run ────────────────────────────────────── */}
@@ -252,13 +294,14 @@ export default function ListCopier() {
                     Press <kbd>F12</kbd> (or right-click → Inspect) and open the <b>Console</b> tab.
                   </li>
                   <li>
-                    Paste the script and press <kbd>Enter</kbd>. If the browser blocks pasting, type <code>allow pasting</code> first.
+                    Paste the script and press <kbd>Enter</kbd>. If the browser blocks pasting, type{' '}
+                    <code>allow pasting</code> first.
                   </li>
                 </ol>
                 <Code code={consoleScript(plan)} label="browser console script" />
                 <p className="bf-checks__note">
-                  The script only talks to the SharePoint site you have open, using your own sign-in. Read it before you run it: it
-                  creates one list and its columns, and nothing else.
+                  The script only talks to the SharePoint site you have open, using your own sign-in. Read it before you
+                  run it: it creates one list and its columns, and nothing else.
                 </p>
               </div>
             )}
@@ -267,8 +310,8 @@ export default function ListCopier() {
               <div className="lc-method" key="flow">
                 <ol className="lc-howto">
                   <li>
-                    Add <b>Send an HTTP request to SharePoint</b>. Site address: your target site. Method: <b>POST</b>. Use this Uri,
-                    headers and body:
+                    Add <b>Send an HTTP request to SharePoint</b>. Site address: your target site. Method: <b>POST</b>.
+                    Use this Uri, headers and body:
                   </li>
                 </ol>
                 <div className="lc-flow">
@@ -284,8 +327,8 @@ export default function ListCopier() {
                 <Code code={flow.fieldsCompose} label="column definitions" />
                 <ol className="lc-howto" start={3}>
                   <li>
-                    Add <b>Apply to each</b> over <code>outputs('Fields')</code>. Inside it, add another <b>Send an HTTP request to SharePoint</b>{' '}
-                    (POST, same headers) with:
+                    Add <b>Apply to each</b> over <code>outputs('Fields')</code>. Inside it, add another{' '}
+                    <b>Send an HTTP request to SharePoint</b> (POST, same headers) with:
                   </li>
                 </ol>
                 <div className="lc-flow">
@@ -295,9 +338,7 @@ export default function ListCopier() {
                 {flow.renameTitle && (
                   <>
                     <ol className="lc-howto" start={4}>
-                      <li>
-                        After the loop, rename the Title column with one more request (POST):
-                      </li>
+                      <li>After the loop, rename the Title column with one more request (POST):</li>
                     </ol>
                     <div className="lc-flow">
                       <Code code={flow.renameTitle.uri} label="Uri" />
@@ -306,7 +347,9 @@ export default function ListCopier() {
                     </div>
                   </>
                 )}
-                <p className="bf-checks__note">The connector signs in for you, so no app registration or request digest is needed.</p>
+                <p className="bf-checks__note">
+                  The connector signs in for you, so no app registration or request digest is needed.
+                </p>
               </div>
             )}
 
@@ -314,7 +357,8 @@ export default function ListCopier() {
               <div className="lc-method" key="pnp">
                 <ol className="lc-howto">
                   <li>
-                    Install <code>PnP.PowerShell</code> and register your own Entra ID app for it (PnP no longer provides a shared one).
+                    Install <code>PnP.PowerShell</code> and register your own Entra ID app for it (PnP no longer
+                    provides a shared one).
                   </li>
                   <li>
                     Replace <code>YOUR-CLIENT-ID</code> with your app’s Client ID, then run the script.

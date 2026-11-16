@@ -108,8 +108,7 @@ export default function ReferenceExplorer({
     if (!name) requestAnimationFrame(() => lastCardRef.current?.focus());
   }, []);
 
-  const openFromList = (name: string) =>
-    select(name, { focusPanel: window.matchMedia('(max-width: 999px)').matches });
+  const openFromList = (name: string) => select(name, { focusPanel: window.matchMedia('(max-width: 999px)').matches });
 
   // Deep link: /formula-reference/?f=Patch
   useEffect(() => {
@@ -369,7 +368,10 @@ export default function ReferenceExplorer({
         </div>
 
         {/* ── Detail panel ──────────────────────────────── */}
-        <aside className={`panel${selected ? ' is-open' : ''}`} aria-label={`${singular[0].toUpperCase()}${singular.slice(1)} details`}>
+        <aside
+          className={`panel${selected ? ' is-open' : ''}`}
+          aria-label={`${singular[0].toUpperCase()}${singular.slice(1)} details`}
+        >
           {selected ? (
             <div className="panel__inner" key={selected.name} style={catStyle(colorOf.get(selected.category))}>
               <div className="panel__top">
@@ -417,10 +419,20 @@ export default function ReferenceExplorer({
               </div>
 
               <div className="panel__nav">
-                <button type="button" className="btn btn--ghost" disabled={!prev} onClick={() => prev && select(prev.name)}>
+                <button
+                  type="button"
+                  className="btn btn--ghost"
+                  disabled={!prev}
+                  onClick={() => prev && select(prev.name)}
+                >
                   <span aria-hidden="true">←</span> {prev ? prev.name : 'Previous'}
                 </button>
-                <button type="button" className="btn btn--ghost" disabled={!next} onClick={() => next && select(next.name)}>
+                <button
+                  type="button"
+                  className="btn btn--ghost"
+                  disabled={!next}
+                  onClick={() => next && select(next.name)}
+                >
                   {next ? next.name : 'Next'} <span aria-hidden="true">→</span>
                 </button>
               </div>

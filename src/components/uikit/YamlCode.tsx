@@ -10,12 +10,17 @@ export function yamlHtml(yaml: string): string {
     .split('\n')
     .map((line) => {
       const indent = line.length - line.trimStart().length;
-      if (inBlock >= 0 && (line.trim() === '' || indent > inBlock)) return esc(line.slice(0, indent)) + fxHtml(line.slice(indent));
+      if (inBlock >= 0 && (line.trim() === '' || indent > inBlock))
+        return esc(line.slice(0, indent)) + fxHtml(line.slice(indent));
       inBlock = -1;
       let m = line.match(/^(\s*)- ([A-Za-z_]\w*):$/);
-      if (m) return `${m[1]}<span class="tk-punc">-</span> <span class="ky-name">${m[2]}</span><span class="tk-punc">:</span>`;
-      m = line.match(/^(\s*)(Control|ComponentName|Variant|Properties|Children|ComponentDefinitions|DefinitionType|CustomProperties|PropertyKind|DataType|ReturnType|Description|RaiseOnReset):(.*)$/);
-      if (m) return `${m[1]}<span class="ky-struct">${m[2]}</span><span class="tk-punc">:</span><span class="ky-type">${esc(m[3])}</span>`;
+      if (m)
+        return `${m[1]}<span class="tk-punc">-</span> <span class="ky-name">${m[2]}</span><span class="tk-punc">:</span>`;
+      m = line.match(
+        /^(\s*)(Control|ComponentName|Variant|Properties|Children|ComponentDefinitions|DefinitionType|CustomProperties|PropertyKind|DataType|ReturnType|Description|RaiseOnReset):(.*)$/,
+      );
+      if (m)
+        return `${m[1]}<span class="ky-struct">${m[2]}</span><span class="tk-punc">:</span><span class="ky-type">${esc(m[3])}</span>`;
       // A component or custom property name on its own line.
       m = line.match(/^(\s*)([A-Za-z_]\w*):$/);
       if (m) return `${m[1]}<span class="ky-name">${m[2]}</span><span class="tk-punc">:</span>`;

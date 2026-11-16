@@ -189,7 +189,9 @@ export function renderOg(card: OgCard & { host: string }): Buffer {
     if (card.summary) {
       const top = 300 + (titleLines.length - 1) * size * 1.12 + 62;
       wrap(card.summary, 60, titleLines.length > 2 ? 1 : titleLines.length > 1 ? 2 : 3).forEach((l, i) =>
-        parts.push(`<text x="${X}" y="${top + i * 44}" font-family="${BODY}" font-size="32" fill="${C.ink2}">${esc(l)}</text>`),
+        parts.push(
+          `<text x="${X}" y="${top + i * 44}" font-family="${BODY}" font-size="32" fill="${C.ink2}">${esc(l)}</text>`,
+        ),
       );
     }
   }

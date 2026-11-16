@@ -34,7 +34,12 @@ function load(): Promise<void> {
         const tl = e.t.toLowerCase();
         // "IfError" → "if error" so a search for "error" finds it too.
         const split = e.t.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase();
-        return { ...e, s: `${e.d.toLowerCase()} ${e.s}`, tl, words: [...new Set([...tl.split(/[^a-z0-9]+/), ...split.split(/[^a-z0-9]+/)])].filter(Boolean) };
+        return {
+          ...e,
+          s: `${e.d.toLowerCase()} ${e.s}`,
+          tl,
+          words: [...new Set([...tl.split(/[^a-z0-9]+/), ...split.split(/[^a-z0-9]+/)])].filter(Boolean),
+        };
       });
     })
     .catch(() => {
@@ -131,7 +136,8 @@ function render() {
       title.append(...marked(e.t, q));
       const desc = document.createElement('span');
       desc.className = 'sitesearch__desc';
-      desc.textContent = e.k === 'Tool' || e.k === 'Reference' || e.k === 'Page' || e.k === 'Blog' ? e.d : `${e.g} · ${e.d}`;
+      desc.textContent =
+        e.k === 'Tool' || e.k === 'Reference' || e.k === 'Page' || e.k === 'Blog' ? e.d : `${e.g} · ${e.d}`;
       a.append(kind, title, desc);
       li.append(a);
       li.addEventListener('mousemove', () => active !== i && setActive(i, false));
@@ -192,7 +198,9 @@ if (dialog && input && list) {
     b.addEventListener('click', () => open());
     b.addEventListener('pointerenter', load, { once: true });
   });
-  document.querySelectorAll<HTMLElement>('[data-search-query]').forEach((b) => b.addEventListener('click', () => open(b.dataset.searchQuery)));
+  document
+    .querySelectorAll<HTMLElement>('[data-search-query]')
+    .forEach((b) => b.addEventListener('click', () => open(b.dataset.searchQuery)));
 
   // The homepage search box: typing in it continues in the dialog.
   const hero = document.querySelector<HTMLInputElement>('[data-search-input]');

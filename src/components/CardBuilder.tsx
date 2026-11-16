@@ -1,5 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { TEMPLATES, cardJson, responseExpressions, type CardButton, type CardInput, type CardModel, type Fact, type InputKind, type Tone } from '../lib/adaptiveCard';
+import {
+  TEMPLATES,
+  cardJson,
+  responseExpressions,
+  type CardButton,
+  type CardInput,
+  type CardModel,
+  type Fact,
+  type InputKind,
+  type Tone,
+} from '../lib/adaptiveCard';
 import { CodeLine, CopyButton } from './FormulaDetail';
 
 const TONES: [Tone, string][] = [
@@ -23,7 +33,10 @@ const fg = (base: string) => ({
 });
 const hostConfig = (dark: boolean) => {
   const text = dark ? '#ffffff' : '#242424';
-  const bg = (light: string, darkBg: string) => ({ backgroundColor: dark ? darkBg : light, foregroundColors: fg(text) });
+  const bg = (light: string, darkBg: string) => ({
+    backgroundColor: dark ? darkBg : light,
+    foregroundColors: fg(text),
+  });
   return {
     fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
     supportsInteractivity: true,
@@ -39,7 +52,13 @@ const hostConfig = (dark: boolean) => {
       warning: bg('#fbf6d9', '#3a3317'),
       attention: bg('#fcf4f6', '#3e1f25'),
     },
-    actions: { maxActions: 6, buttonSpacing: 8, actionsOrientation: 'horizontal', actionAlignment: 'left', spacing: 'default' },
+    actions: {
+      maxActions: 6,
+      buttonSpacing: 8,
+      actionsOrientation: 'horizontal',
+      actionAlignment: 'left',
+      spacing: 'default',
+    },
     factSet: { title: { weight: 'bolder', wrap: true, maxWidth: 160 }, value: { wrap: true }, spacing: 8 },
   };
 };
@@ -53,7 +72,10 @@ function markdown(text: string): string {
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/(^|[^*])\*(?!\s)(.+?)\*/g, '$1<em>$2</em>')
       .replace(/(^|\s)_(.+?)_(?=\s|$)/g, '$1<em>$2</em>')
-      .replace(/\[([^\]]+)\]\(((?:https?:|mailto:)[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+      .replace(
+        /\[([^\]]+)\]\(((?:https?:|mailto:)[^)\s]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>',
+      );
   const lines = escaped.split(/\r?\n/);
   let html = '';
   let list: 'ul' | 'ol' | null = null;
@@ -121,7 +143,13 @@ function Preview({ json, dark }: { json: unknown; dark: boolean }) {
 }
 
 const field = (v: string, on: (v: string) => void, placeholder = '', cls = '') => (
-  <input className={`cb-input ${cls}`} value={v} placeholder={placeholder} onChange={(e) => on(e.target.value)} spellCheck={false} />
+  <input
+    className={`cb-input ${cls}`}
+    value={v}
+    placeholder={placeholder}
+    onChange={(e) => on(e.target.value)}
+    spellCheck={false}
+  />
 );
 
 export default function CardBuilder() {
@@ -133,9 +161,12 @@ export default function CardBuilder() {
   const [waitAction, setWaitAction] = useState('Post adaptive card and wait for a response');
 
   const up = (patch: Partial<CardModel>) => setM((x) => ({ ...x, ...patch }));
-  const setFact = (i: number, patch: Partial<Fact>) => up({ facts: m.facts.map((f, k) => (k === i ? { ...f, ...patch } : f)) });
-  const setInput = (i: number, patch: Partial<CardInput>) => up({ inputs: m.inputs.map((f, k) => (k === i ? { ...f, ...patch } : f)) });
-  const setButton = (i: number, patch: Partial<CardButton>) => up({ buttons: m.buttons.map((f, k) => (k === i ? { ...f, ...patch } : f)) });
+  const setFact = (i: number, patch: Partial<Fact>) =>
+    up({ facts: m.facts.map((f, k) => (k === i ? { ...f, ...patch } : f)) });
+  const setInput = (i: number, patch: Partial<CardInput>) =>
+    up({ inputs: m.inputs.map((f, k) => (k === i ? { ...f, ...patch } : f)) });
+  const setButton = (i: number, patch: Partial<CardButton>) =>
+    up({ buttons: m.buttons.map((f, k) => (k === i ? { ...f, ...patch } : f)) });
 
   const built = useMemo(() => cardJson(m), [m]);
   const builtText = useMemo(() => JSON.stringify(built, null, 2), [built]);
@@ -192,14 +223,25 @@ export default function CardBuilder() {
             </div>
             <div className="cb-tones" role="group" aria-label="Header color">
               {TONES.map(([t, label]) => (
-                <button key={t} type="button" className={`chip cb-tone cb-tone--${t}`} aria-pressed={m.tone === t} onClick={() => up({ tone: t })}>
+                <button
+                  key={t}
+                  type="button"
+                  className={`chip cb-tone cb-tone--${t}`}
+                  aria-pressed={m.tone === t}
+                  onClick={() => up({ tone: t })}
+                >
                   {label}
                 </button>
               ))}
             </div>
             <div className="cb-grid2">
               {field(m.status, (v) => up({ status: v }), 'Status line (optional)')}
-              <select className="cb-input" value={m.statusColor} onChange={(e) => up({ statusColor: e.target.value as CardModel['statusColor'] })} aria-label="Status color">
+              <select
+                className="cb-input"
+                value={m.statusColor}
+                onChange={(e) => up({ statusColor: e.target.value as CardModel['statusColor'] })}
+                aria-label="Status color"
+              >
                 <option value="default">Status color: normal</option>
                 <option value="good">Green</option>
                 <option value="warning">Amber</option>
@@ -207,26 +249,45 @@ export default function CardBuilder() {
                 <option value="accent">Accent</option>
               </select>
             </div>
-            <textarea className="cb-input cb-text" value={m.message} placeholder="Message (optional)" onChange={(e) => up({ message: e.target.value })} />
+            <textarea
+              className="cb-input cb-text"
+              value={m.message}
+              placeholder="Message (optional)"
+              onChange={(e) => up({ message: e.target.value })}
+            />
 
             <h2 className="detail__label">Facts</h2>
             {m.facts.map((f, i) => (
               <div className="cb-row" key={i}>
                 {field(f.label, (v) => setFact(i, { label: v }), 'Label')}
                 {field(f.value, (v) => setFact(i, { value: v }), "Value, e.g. @{triggerBody()?['name']}")}
-                <button type="button" className="icon-btn cb-x" aria-label="Remove fact" onClick={() => up({ facts: m.facts.filter((_, k) => k !== i) })}>
+                <button
+                  type="button"
+                  className="icon-btn cb-x"
+                  aria-label="Remove fact"
+                  onClick={() => up({ facts: m.facts.filter((_, k) => k !== i) })}
+                >
                   ×
                 </button>
               </div>
             ))}
-            <button type="button" className="link-btn" onClick={() => up({ facts: [...m.facts, { label: '', value: '' }] })}>
+            <button
+              type="button"
+              className="link-btn"
+              onClick={() => up({ facts: [...m.facts, { label: '', value: '' }] })}
+            >
               + Add fact
             </button>
 
             <h2 className="detail__label">Inputs</h2>
             {m.inputs.map((inp, i) => (
               <div className="cb-row cb-row--input" key={i}>
-                <select className="cb-input" value={inp.kind} onChange={(e) => setInput(i, { kind: e.target.value as InputKind })} aria-label="Input type">
+                <select
+                  className="cb-input"
+                  value={inp.kind}
+                  onChange={(e) => setInput(i, { kind: e.target.value as InputKind })}
+                  aria-label="Input type"
+                >
                   <option value="text">Text</option>
                   <option value="multiline">Long text</option>
                   <option value="choice">Choice</option>
@@ -235,13 +296,24 @@ export default function CardBuilder() {
                 </select>
                 {field(inp.label, (v) => setInput(i, { label: v }), 'Label')}
                 {field(inp.id, (v) => setInput(i, { id: v }), 'id')}
-                <button type="button" className="icon-btn cb-x" aria-label="Remove input" onClick={() => up({ inputs: m.inputs.filter((_, k) => k !== i) })}>
+                <button
+                  type="button"
+                  className="icon-btn cb-x"
+                  aria-label="Remove input"
+                  onClick={() => up({ inputs: m.inputs.filter((_, k) => k !== i) })}
+                >
                   ×
                 </button>
-                {inp.kind === 'choice' && field(inp.options, (v) => setInput(i, { options: v }), 'Options, separated by commas', 'cb-span')}
+                {inp.kind === 'choice' &&
+                  field(inp.options, (v) => setInput(i, { options: v }), 'Options, separated by commas', 'cb-span')}
                 {inp.kind !== 'toggle' && (
                   <label className="ts-check cb-span">
-                    <input type="checkbox" checked={inp.required} onChange={(e) => setInput(i, { required: e.target.checked })} /> Required
+                    <input
+                      type="checkbox"
+                      checked={inp.required}
+                      onChange={(e) => setInput(i, { required: e.target.checked })}
+                    />{' '}
+                    Required
                   </label>
                 )}
               </div>
@@ -249,7 +321,14 @@ export default function CardBuilder() {
             <button
               type="button"
               className="link-btn"
-              onClick={() => up({ inputs: [...m.inputs, { kind: 'text', id: `field${m.inputs.length + 1}`, label: '', options: '', required: false }] })}
+              onClick={() =>
+                up({
+                  inputs: [
+                    ...m.inputs,
+                    { kind: 'text', id: `field${m.inputs.length + 1}`, label: '', options: '', required: false },
+                  ],
+                })
+              }
             >
               + Add input
             </button>
@@ -257,19 +336,35 @@ export default function CardBuilder() {
             <h2 className="detail__label">Buttons</h2>
             {m.buttons.map((b, i) => (
               <div className="cb-row cb-row--input" key={i}>
-                <select className="cb-input" value={b.kind} onChange={(e) => setButton(i, { kind: e.target.value as CardButton['kind'] })} aria-label="Button type">
+                <select
+                  className="cb-input"
+                  value={b.kind}
+                  onChange={(e) => setButton(i, { kind: e.target.value as CardButton['kind'] })}
+                  aria-label="Button type"
+                >
                   <option value="submit">Reply</option>
                   <option value="url">Open link</option>
                 </select>
                 {field(b.title, (v) => setButton(i, { title: v }), 'Button text')}
                 {field(b.value, (v) => setButton(i, { value: v }), b.kind === 'url' ? 'https://…' : 'id, e.g. approve')}
-                <button type="button" className="icon-btn cb-x" aria-label="Remove button" onClick={() => up({ buttons: m.buttons.filter((_, k) => k !== i) })}>
+                <button
+                  type="button"
+                  className="icon-btn cb-x"
+                  aria-label="Remove button"
+                  onClick={() => up({ buttons: m.buttons.filter((_, k) => k !== i) })}
+                >
                   ×
                 </button>
               </div>
             ))}
             {m.buttons.length < 6 && (
-              <button type="button" className="link-btn" onClick={() => up({ buttons: [...m.buttons, { kind: 'submit', title: '', value: `option${m.buttons.length + 1}` }] })}>
+              <button
+                type="button"
+                className="link-btn"
+                onClick={() =>
+                  up({ buttons: [...m.buttons, { kind: 'submit', title: '', value: `option${m.buttons.length + 1}` }] })
+                }
+              >
                 + Add button
               </button>
             )}
@@ -302,7 +397,11 @@ export default function CardBuilder() {
               </button>
             </div>
           </div>
-          {previewJson ? <Preview json={previewJson} dark={dark} /> : <p className="bf-output__empty cb-empty">Paste card JSON to see it here.</p>}
+          {previewJson ? (
+            <Preview json={previewJson} dark={dark} />
+          ) : (
+            <p className="bf-output__empty cb-empty">Paste card JSON to see it here.</p>
+          )}
         </section>
       </div>
 
@@ -314,12 +413,13 @@ export default function CardBuilder() {
           </div>
           <ol className="lc-howto">
             <li>
-              Add the Teams action <b>{waits ? 'Post adaptive card and wait for a response' : 'Post card in a chat or channel'}</b>
+              Add the Teams action{' '}
+              <b>{waits ? 'Post adaptive card and wait for a response' : 'Post card in a chat or channel'}</b>
               {waits ? ' (people reply with the buttons or inputs).' : '.'}
             </li>
             <li>
-              Choose who it goes to, then paste this JSON into the <b>Message</b> / <b>Adaptive Card</b> box. Swap sample text for dynamic
-              content where you need it.
+              Choose who it goes to, then paste this JSON into the <b>Message</b> / <b>Adaptive Card</b> box. Swap
+              sample text for dynamic content where you need it.
             </li>
           </ol>
           <div className="code lc-code">

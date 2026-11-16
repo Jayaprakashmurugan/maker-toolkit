@@ -80,7 +80,8 @@ export const getStaticPaths = (async () => {
         kicker: 'Tool · Power Automate · Triggers',
         title: 'Trigger Condition Builder',
         titleFont: 'display',
-        summary: 'Make a flow start only when it should. Conditions for SharePoint, Dataverse and Outlook, ready to paste.',
+        summary:
+          'Make a flow start only when it should. Conditions for SharePoint, Dataverse and Outlook, ready to paste.',
       },
     },
     {
@@ -98,7 +99,8 @@ export const getStaticPaths = (async () => {
         kicker: 'Tool · Power Apps · Power Fx',
         title: 'Regex Tester for Power Fx',
         titleFont: 'display',
-        summary: 'Test patterns for IsMatch, Match and MatchAll, check them against Power Fx’s rules, copy the formula.',
+        summary:
+          'Test patterns for IsMatch, Match and MatchAll, check them against Power Fx’s rules, copy the formula.',
       },
     },
     {
@@ -116,7 +118,8 @@ export const getStaticPaths = (async () => {
         kicker: 'Tool · Power Automate · Parse JSON',
         title: 'JSON Schema Helper',
         titleFont: 'display',
-        summary: 'Paste sample JSON. Get a Parse JSON schema that won’t fail on nulls, plus an expression for every field.',
+        summary:
+          'Paste sample JSON. Get a Parse JSON schema that won’t fail on nulls, plus an expression for every field.',
       },
     },
     {
@@ -135,20 +138,38 @@ export const getStaticPaths = (async () => {
         kicker: `${tools.length} free tools and references`,
         title: 'Tools for Power Platform makers',
         titleFont: 'display',
-        summary: 'Power Apps, Power Automate and Dataverse/SharePoint. Nothing to install, nothing leaves your browser.',
+        summary:
+          'Power Apps, Power Automate and Dataverse/SharePoint. Nothing to install, nothing leaves your browser.',
       },
     },
     {
       path: 'blog',
-      card: { kicker: 'Blog', title: 'Guides for makers', titleFont: 'display', summary: 'Practical posts on Power Apps, Power Automate and Dataverse/SharePoint.', byline: { name: siteConfig.author, photo: siteConfig.authorPhoto } },
+      card: {
+        kicker: 'Blog',
+        title: 'Guides for makers',
+        titleFont: 'display',
+        summary: 'Practical posts on Power Apps, Power Automate and Dataverse/SharePoint.',
+        byline: { name: siteConfig.author, photo: siteConfig.authorPhoto },
+      },
     },
     {
       path: 'videos',
-      card: { kicker: 'Videos', title: 'Walkthroughs and tips', titleFont: 'display', summary: 'Short videos on Power Apps, Power Automate and the tools on this site.', byline: { name: siteConfig.author, photo: siteConfig.authorPhoto } },
+      card: {
+        kicker: 'Videos',
+        title: 'Walkthroughs and tips',
+        titleFont: 'display',
+        summary: 'Short videos on Power Apps, Power Automate and the tools on this site.',
+        byline: { name: siteConfig.author, photo: siteConfig.authorPhoto },
+      },
     },
     {
       path: 'changelog',
-      card: { kicker: 'Changelog', title: 'What’s new', titleFont: 'display', summary: 'New tools, tool updates and blog posts, newest first.' },
+      card: {
+        kicker: 'Changelog',
+        title: 'What’s new',
+        titleFont: 'display',
+        summary: 'New tools, tool updates and blog posts, newest first.',
+      },
     },
     {
       path: 'ui-kit',
@@ -156,7 +177,8 @@ export const getStaticPaths = (async () => {
         kicker: `UI Kit · ${KIT_ITEMS.length} components, layouts and screens`,
         title: 'Copy-paste components for canvas apps',
         titleFont: 'display',
-        summary: 'One design system (fxConfig), clear names, classic controls and containers. Paste the YAML into Studio.',
+        summary:
+          'One design system (fxConfig), clear names, classic controls and containers. Paste the YAML into Studio.',
       },
     },
     {
@@ -170,7 +192,12 @@ export const getStaticPaths = (async () => {
     },
     {
       path: 'ui-kit/design-system',
-      card: { kicker: 'UI Kit · Design system', title: 'fxConfig', titleFont: 'display', summary: 'Colors, sizes and naming conventions for every component, with a theme builder.' },
+      card: {
+        kicker: 'UI Kit · Design system',
+        title: 'fxConfig',
+        titleFont: 'display',
+        summary: 'Colors, sizes and naming conventions for every component, with a theme builder.',
+      },
     },
     ...KIT_ITEMS.map((i) => ({
       path: `ui-kit/${i.slug}`,

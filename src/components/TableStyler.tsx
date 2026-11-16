@@ -1,17 +1,36 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { PRESETS, SAMPLE_JSON, styleTable, tableFromRows, type Borders, type Method, type TableStyle } from '../lib/htmlTable';
+import {
+  PRESETS,
+  SAMPLE_JSON,
+  styleTable,
+  tableFromRows,
+  type Borders,
+  type Method,
+  type TableStyle,
+} from '../lib/htmlTable';
 import { CodeLine } from './FormulaDetail';
 
-const FONTS = ['Segoe UI, Arial, sans-serif', 'Arial, sans-serif', 'Calibri, Arial, sans-serif', 'Verdana, Arial, sans-serif', 'Georgia, serif', 'Tahoma, Arial, sans-serif'];
+const FONTS = [
+  'Segoe UI, Arial, sans-serif',
+  'Arial, sans-serif',
+  'Calibri, Arial, sans-serif',
+  'Verdana, Arial, sans-serif',
+  'Georgia, serif',
+  'Tahoma, Arial, sans-serif',
+];
 
 function parseData(text: string): { html: string } | { error: string } {
   const t = text.trim();
   if (!t) return { html: tableFromRows(JSON.parse(SAMPLE_JSON)) };
-  if (t.startsWith('<')) return t.toLowerCase().includes('<table') ? { html: t } : { error: 'Paste the HTML that starts with <table>, or a JSON array.' };
+  if (t.startsWith('<'))
+    return t.toLowerCase().includes('<table')
+      ? { html: t }
+      : { error: 'Paste the HTML that starts with <table>, or a JSON array.' };
   try {
     const v = JSON.parse(t);
     const rows = Array.isArray(v) ? v : Array.isArray(v?.body) ? v.body : null;
-    if (!rows || !rows.length || typeof rows[0] !== 'object') return { error: 'Paste a JSON array of objects, like the input you give Create HTML table.' };
+    if (!rows || !rows.length || typeof rows[0] !== 'object')
+      return { error: 'Paste a JSON array of objects, like the input you give Create HTML table.' };
     return { html: tableFromRows(rows) };
   } catch {
     return { error: 'That isn’t valid JSON. Paste a JSON array or the table HTML.' };
@@ -27,7 +46,17 @@ function Color({ label, value, onChange }: { label: string; value: string; onCha
   );
 }
 
-function Seg<T extends string | number | boolean>({ label, value, options, onChange }: { label: string; value: T; options: [T, string][]; onChange: (v: T) => void }) {
+function Seg<T extends string | number | boolean>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: [T, string][];
+  onChange: (v: T) => void;
+}) {
   return (
     <div className="bf-control">
       <span className="bf-control__label">{label}</span>
@@ -162,7 +191,12 @@ export default function TableStyler() {
                   </option>
                 ))}
               </select>
-              <select className="ts-select" value={style.fontSize} onChange={(e) => set('fontSize', Number(e.target.value))} aria-label="Font size">
+              <select
+                className="ts-select"
+                value={style.fontSize}
+                onChange={(e) => set('fontSize', Number(e.target.value))}
+                aria-label="Font size"
+              >
                 {[12, 13, 14, 15, 16].map((n) => (
                   <option key={n} value={n}>
                     {n}px
@@ -172,12 +206,15 @@ export default function TableStyler() {
             </label>
             <div className="ts-zebra">
               <label>
-                <input type="checkbox" checked={style.zebra} onChange={(e) => set('zebra', e.target.checked)} /> Zebra stripes
+                <input type="checkbox" checked={style.zebra} onChange={(e) => set('zebra', e.target.checked)} /> Zebra
+                stripes
               </label>
               {style.zebra && <Color label="Stripe" value={style.zebraBg} onChange={(v) => set('zebraBg', v)} />}
             </div>
           </div>
-          {zebraOff && <p className="lc-warn">Zebra stripes need the Style block method. Switch below, or they won’t appear.</p>}
+          {zebraOff && (
+            <p className="lc-warn">Zebra stripes need the Style block method. Switch below, or they won’t appear.</p>
+          )}
 
           <details className="ts-data">
             <summary>Preview with your own data</summary>
@@ -228,7 +265,8 @@ export default function TableStyler() {
               <input value={actionName} onChange={(e) => setActionName(e.target.value)} spellCheck={false} />
             </label>
             <label className="ts-check">
-              <input type="checkbox" checked={decode} onChange={(e) => setDecode(e.target.checked)} /> Allow HTML inside cells (links, bold)
+              <input type="checkbox" checked={decode} onChange={(e) => setDecode(e.target.checked)} /> Allow HTML inside
+              cells (links, bold)
             </label>
           </div>
 
@@ -237,7 +275,10 @@ export default function TableStyler() {
               After <b>Create HTML table</b>, add a <b>Compose</b>.
             </li>
             {method === 'inline' ? (
-              <li>Paste this into the Compose inputs. It already includes the @{'{ }'} wrapper, so it becomes an expression:</li>
+              <li>
+                Paste this into the Compose inputs. It already includes the @{'{ }'} wrapper, so it becomes an
+                expression:
+              </li>
             ) : (
               <li>Paste this into the Compose inputs exactly as it is:</li>
             )}

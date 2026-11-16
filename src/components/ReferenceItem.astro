@@ -35,7 +35,6 @@ const jsonLd = {
   image={`/og/${ref.slug}/${slug}.png`}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-
   <div class="wrap" style={`--cat:${color}`}>
     <header class="formula-head">
       <nav class="crumbs" aria-label="Breadcrumb">
@@ -43,7 +42,10 @@ const jsonLd = {
         <a href={basePath}>{ref.title}</a> <span aria-hidden="true">/</span>
         <span aria-current="page">{item.name}</span>
       </nav>
-      <span class="tag"><span class="chip__dot" aria-hidden="true"></span>{item.category}</span>
+      <span class="tag">
+        <span class="chip__dot" aria-hidden="true"></span>
+        {item.category}
+      </span>
       <h1 data-scramble>{item.name}</h1>
       <p>{item.summary}</p>
     </header>
@@ -53,68 +55,65 @@ const jsonLd = {
         <FormulaDetail item={item} docsBase={ref.docsBase} lang={ref.language} level={2} />
 
         <nav class="pager" aria-label={`Previous and next ${ref.singular}`}>
-          {
-            prev ? (
-              <a href={`${basePath}${slugify(prev.name)}/`}>
-                <small>← Previous</small>
-                <strong>{prev.name}</strong>
-              </a>
-            ) : (
-              <span />
-            )
-          }
-          {
-            next && (
-              <a href={`${basePath}${slugify(next.name)}/`}>
-                <small>Next →</small>
-                <strong>{next.name}</strong>
-              </a>
-            )
-          }
+          {prev ? (
+            <a href={`${basePath}${slugify(prev.name)}/`}>
+              <small>← Previous</small>
+              <strong>{prev.name}</strong>
+            </a>
+          ) : (
+            <span />
+          )}
+          {next && (
+            <a href={`${basePath}${slugify(next.name)}/`}>
+              <small>Next →</small>
+              <strong>{next.name}</strong>
+            </a>
+          )}
         </nav>
       </article>
 
       <aside class="formula-aside">
         <div class="aside-card aside-card--cta">
           <h2>Explorer</h2>
-          <p>Browse all {ref.items.length} {ref.noun} with search, A-Z and categories.</p>
-          <a class="btn" href={`${basePath}?f=${encodeURIComponent(item.name)}`}>Open in explorer →</a>
+          <p>
+            Browse all {ref.items.length} {ref.noun} with search, A-Z and categories.
+          </p>
+          <a class="btn" href={`${basePath}?f=${encodeURIComponent(item.name)}`}>
+            Open in explorer →
+          </a>
         </div>
-        {
-          jsonRelated && (
-            <div class="aside-card">
-              <h2>Working with JSON?</h2>
-              <p class="aside-card__text">Click a value in sample JSON to get its expression, or build a Parse JSON schema.</p>
-              <p class="aside-card__text">
-                <a href="/json-expression-picker/">Expression Picker →</a><br />
-                <a href="/json-schema-helper/">JSON Schema Helper →</a>
-              </p>
+        {jsonRelated && (
+          <div class="aside-card">
+            <h2>Working with JSON?</h2>
+            <p class="aside-card__text">
+              Click a value in sample JSON to get its expression, or build a Parse JSON schema.
+            </p>
+            <p class="aside-card__text">
+              <a href="/json-expression-picker/">Expression Picker →</a>
+              <br />
+              <a href="/json-schema-helper/">JSON Schema Helper →</a>
+            </p>
+          </div>
+        )}
+        {ref.language === 'wdl' && (
+          <div class="aside-card">
+            <h2>Long expression?</h2>
+            <p class="aside-card__text">Paste it into the beautifier to indent it and check the brackets.</p>
+            <a href="/expression-beautifier/">Expression Beautifier →</a>
+          </div>
+        )}
+        {related.length > 0 && (
+          <div class="aside-card">
+            <h2>More in {item.category}</h2>
+            <div class="related">
+              {related.map((r) => (
+                <a class="related__item" href={`${basePath}${slugify(r.name)}/`}>
+                  {r.name}
+                </a>
+              ))}
             </div>
-          )
-        }
-        {
-          ref.language === 'wdl' && (
-            <div class="aside-card">
-              <h2>Long expression?</h2>
-              <p class="aside-card__text">Paste it into the beautifier to indent it and check the brackets.</p>
-              <a href="/expression-beautifier/">Expression Beautifier →</a>
-            </div>
-          )
-        }
-        {
-          related.length > 0 && (
-            <div class="aside-card">
-              <h2>More in {item.category}</h2>
-              <div class="related">
-                {related.map((r) => (
-                  <a class="related__item" href={`${basePath}${slugify(r.name)}/`}>
-                    {r.name}
-                  </a>
-                ))}
-              </div>
-            </div>
-          )
-        }
+          </div>
+        )}
       </aside>
     </div>
   </div>

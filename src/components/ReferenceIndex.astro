@@ -24,14 +24,22 @@ const byLetter = Object.entries(
 <Base title={ref.title} description={ref.description} image={`/og/${ref.slug}.png`}>
   <div class="wrap wrap--wide">
     <header class="page-head">
-      <p class="kicker"><b>Reference</b> · {ref.kicker}</p>
+      <p class="kicker">
+        <b>Reference</b> · {ref.kicker}
+      </p>
       <h1>{ref.title}</h1>
       <p class="page-head__lede">{ref.description}</p>
       <WorksWith href={`/${ref.slug}/`} />
       <p class="page-head__meta">
-        <span><b>{ref.items.length}</b> {ref.noun}</span>
-        <span><b>{ref.categories.length}</b> categories</span>
-        <span>Press <kbd>/</kbd> to search</span>
+        <span>
+          <b>{ref.items.length}</b> {ref.noun}
+        </span>
+        <span>
+          <b>{ref.categories.length}</b> categories
+        </span>
+        <span>
+          Press <kbd>/</kbd> to search
+        </span>
       </p>
     </header>
 
@@ -67,13 +75,11 @@ const byLetter = Object.entries(
       <li>
         <h3>Copy it in</h3>
         <p>
-          {
-            ref.language === 'wdl'
-              ? 'Copy the syntax or an example, paste it into the Expression tab in your flow, and rename the actions.'
-              : ref.slug === 'desktop-flow-reference'
-                ? 'Copy an example into an action input in your desktop flow (keep the = at the start), and swap in your own variables.'
-                : 'Copy the syntax or an example, paste it into the Power Apps formula bar, and rename the controls.'
-          }
+          {ref.language === 'wdl'
+            ? 'Copy the syntax or an example, paste it into the Expression tab in your flow, and rename the actions.'
+            : ref.slug === 'desktop-flow-reference'
+              ? 'Copy an example into an action input in your desktop flow (keep the = at the start), and swap in your own variables.'
+              : 'Copy the syntax or an example, paste it into the Power Apps formula bar, and rename the controls.'}
         </p>
       </li>
     </ol>
@@ -88,20 +94,18 @@ const byLetter = Object.entries(
       <p>Each one also has its own page that you can bookmark or share.</p>
     </div>
     <div class="az-index" data-reveal-group>
-      {
-        byLetter.map(([letter, group]) => (
-          <section aria-label={letter}>
-            <h3>{letter}</h3>
-            <ul>
-              {group.map((item) => (
-                <li>
-                  <a href={`${basePath}${slugify(item.name)}/`}>{item.name}</a> <span>· {item.summary}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
-      }
+      {byLetter.map(([letter, group]) => (
+        <section aria-label={letter}>
+          <h3>{letter}</h3>
+          <ul>
+            {group.map((item) => (
+              <li>
+                <a href={`${basePath}${slugify(item.name)}/`}>{item.name}</a> <span>· {item.summary}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
     </div>
   </section>
 
@@ -113,14 +117,12 @@ const byLetter = Object.entries(
       </div>
     </div>
     <div class="faq" data-reveal-group>
-      {
-        ref.faqs.map((f) => (
-          <details>
-            <summary>{f.q}</summary>
-            <div>{f.a}</div>
-          </details>
-        ))
-      }
+      {ref.faqs.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <div>{f.a}</div>
+        </details>
+      ))}
     </div>
     <p class="note-box" style="margin-top:2rem">
       Descriptions on this site are written independently and simplified for makers. Always check the linked Microsoft

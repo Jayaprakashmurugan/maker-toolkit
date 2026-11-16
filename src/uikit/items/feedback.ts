@@ -14,7 +14,12 @@ export const confirmDialog: KitItem = {
   canvas: { w: 640, h: 380, bg: 'page' },
   options: [
     { id: 'title', label: 'Title', type: 'text', default: 'Delete this request?' },
-    { id: 'message', label: 'Message', type: 'text', default: 'The request and its attachments will be removed. This can’t be undone.' },
+    {
+      id: 'message',
+      label: 'Message',
+      type: 'text',
+      default: 'The request and its attachments will be removed. This can’t be undone.',
+    },
     { id: 'confirm', label: 'Confirm button', type: 'text', default: 'Delete' },
     { id: 'danger', label: 'Destructive action', type: 'toggle', default: true },
   ],
@@ -22,51 +27,76 @@ export const confirmDialog: KitItem = {
     const r = reader(o);
     const danger = r.b('danger');
     return {
-      root: nCon('nConConfirmOverlay', { w: fx('App.Width', 640), h: fx('App.Height', 380), fill: { rgba: [20, 28, 38, 0.45] }, visible: fx('lclShowConfirm', true) }, [
-        vCon(
-          'vConConfirmDialog',
-          {
-            w: 380,
-            h: 200,
-            x: fx('(Parent.Width - Self.Width) / 2', 130),
-            y: fx('(Parent.Height - Self.Height) / 2', 90),
-            fill: 'Fill',
-            radius: 'Medium',
-            pad: 'Large',
-            gap: 'Small',
-            alignItems: 'Stretch',
-            shadow: 'Semilight',
-          },
-          [
-            lbl('lblConfirmTitle', { text: r.s('title'), w: 'fill', h: 30, size: 'Subtitle', weight: 'Semibold', pad: 0 }),
-            lbl('lblConfirmMessage', { text: r.s('message'), w: 'fill', h: 'fill', size: 'Small', color: 'Primary3', vAlign: 'Top', pad: 0 }),
-            hCon('hConConfirmActions', { w: 'fill', h: 36, gap: 'Small', justify: 'End', alignItems: 'Center' }, [
-              btn('btnConfirmCancel', {
-                text: 'Cancel',
-                w: 100,
-                h: 34,
-                fill: 'Fill',
-                color: 'TextColor',
-                border: { color: 'BorderColor', thickness: 'Thin' },
-                hoverFill: 'HoverFill',
-                radius: 'Medium',
-                size: 'Small',
-                onSelect: 'UpdateContext({ lclShowConfirm: false })',
+      root: nCon(
+        'nConConfirmOverlay',
+        {
+          w: fx('App.Width', 640),
+          h: fx('App.Height', 380),
+          fill: { rgba: [20, 28, 38, 0.45] },
+          visible: fx('lclShowConfirm', true),
+        },
+        [
+          vCon(
+            'vConConfirmDialog',
+            {
+              w: 380,
+              h: 200,
+              x: fx('(Parent.Width - Self.Width) / 2', 130),
+              y: fx('(Parent.Height - Self.Height) / 2', 90),
+              fill: 'Fill',
+              radius: 'Medium',
+              pad: 'Large',
+              gap: 'Small',
+              alignItems: 'Stretch',
+              shadow: 'Semilight',
+            },
+            [
+              lbl('lblConfirmTitle', {
+                text: r.s('title'),
+                w: 'fill',
+                h: 30,
+                size: 'Subtitle',
+                weight: 'Semibold',
+                pad: 0,
               }),
-              btn('btnConfirmOk', {
-                text: r.s('confirm'),
-                w: 110,
-                h: 34,
-                fill: danger ? 'ErrorColor' : 'Primary1',
-                hoverFill: { fade: danger ? 'ErrorColor' : 'Primary1', by: -15 },
-                radius: 'Medium',
+              lbl('lblConfirmMessage', {
+                text: r.s('message'),
+                w: 'fill',
+                h: 'fill',
                 size: 'Small',
-                onSelect: '// do the action, e.g. Remove(colRequests, gblSelectedItem);\nUpdateContext({ lclShowConfirm: false })',
+                color: 'Primary3',
+                vAlign: 'Top',
+                pad: 0,
               }),
-            ]),
-          ],
-        ),
-      ]),
+              hCon('hConConfirmActions', { w: 'fill', h: 36, gap: 'Small', justify: 'End', alignItems: 'Center' }, [
+                btn('btnConfirmCancel', {
+                  text: 'Cancel',
+                  w: 100,
+                  h: 34,
+                  fill: 'Fill',
+                  color: 'TextColor',
+                  border: { color: 'BorderColor', thickness: 'Thin' },
+                  hoverFill: 'HoverFill',
+                  radius: 'Medium',
+                  size: 'Small',
+                  onSelect: 'UpdateContext({ lclShowConfirm: false })',
+                }),
+                btn('btnConfirmOk', {
+                  text: r.s('confirm'),
+                  w: 110,
+                  h: 34,
+                  fill: danger ? 'ErrorColor' : 'Primary1',
+                  hoverFill: { fade: danger ? 'ErrorColor' : 'Primary1', by: -15 },
+                  radius: 'Medium',
+                  size: 'Small',
+                  onSelect:
+                    '// do the action, e.g. Remove(colRequests, gblSelectedItem);\nUpdateContext({ lclShowConfirm: false })',
+                }),
+              ]),
+            ],
+          ),
+        ],
+      ),
       onVisible: 'UpdateContext({ lclShowConfirm: false })',
       notes: [
         'Open it from any button with UpdateContext({ lclShowConfirm: true }).',
@@ -125,10 +155,33 @@ export const banner: KitItem = {
         [
           icon('imgBannerIcon', tone.icon, tone.hex, { w: 22, h: 22 }),
           vCon('vConBannerText', { w: 'fill', h: 'fill', justify: 'Center', alignItems: 'Stretch' }, [
-            lbl('lblBannerTitle', { text: tone.title, w: 'fill', h: 20, size: 'Small', weight: 'Semibold', color: { statusFont: tone.slot }, pad: 0, wrap: false }),
-            lbl('lblBannerMessage', { text: r.s('message'), w: 'fill', h: 18, size: 'Tiny', color: 'TextColor', pad: 0, wrap: false }),
+            lbl('lblBannerTitle', {
+              text: tone.title,
+              w: 'fill',
+              h: 20,
+              size: 'Small',
+              weight: 'Semibold',
+              color: { statusFont: tone.slot },
+              pad: 0,
+              wrap: false,
+            }),
+            lbl('lblBannerMessage', {
+              text: r.s('message'),
+              w: 'fill',
+              h: 18,
+              size: 'Tiny',
+              color: 'TextColor',
+              pad: 0,
+              wrap: false,
+            }),
           ]),
-          icon('imgBannerClose', 'close', 'TextColor', { w: 28, h: 28, pad: 6, tooltip: 'Close', onSelect: 'UpdateContext({ lclShowBanner: false })' }),
+          icon('imgBannerClose', 'close', 'TextColor', {
+            w: 28,
+            h: 28,
+            pad: 6,
+            tooltip: 'Close',
+            onSelect: 'UpdateContext({ lclShowBanner: false })',
+          }),
         ],
       ),
       notes: [
@@ -151,27 +204,49 @@ export const loadingOverlay: KitItem = {
   build(o) {
     const r = reader(o);
     return {
-      root: nCon('nConLoading', { w: fx('App.Width', 640), h: fx('App.Height', 360), fill: { rgba: [255, 255, 255, 0.72] }, visible: fx('gblLoading', true) }, [
-        vCon(
-          'vConLoadingCard',
-          {
-            w: 220,
-            h: 130,
-            x: fx('(Parent.Width - Self.Width) / 2', 210),
-            y: fx('(Parent.Height - Self.Height) / 2', 115),
-            fill: 'Fill',
-            radius: 'Medium',
-            shadow: 'Semilight',
-            gap: 'Small',
-            alignItems: 'Center',
-            justify: 'Center',
-          },
-          [
-            img('imgLoadingSpinner', { w: 44, h: 44, label: 'Loading', svg: (hex) => spinnerSvg(hex('Primary1'), hex('GrayMediumLight')) }),
-            lbl('lblLoadingText', { text: r.s('text'), w: 'fill', h: 24, size: 'Small', textAlign: 'Center', color: 'Primary3', pad: 0 }),
-          ],
-        ),
-      ]),
+      root: nCon(
+        'nConLoading',
+        {
+          w: fx('App.Width', 640),
+          h: fx('App.Height', 360),
+          fill: { rgba: [255, 255, 255, 0.72] },
+          visible: fx('gblLoading', true),
+        },
+        [
+          vCon(
+            'vConLoadingCard',
+            {
+              w: 220,
+              h: 130,
+              x: fx('(Parent.Width - Self.Width) / 2', 210),
+              y: fx('(Parent.Height - Self.Height) / 2', 115),
+              fill: 'Fill',
+              radius: 'Medium',
+              shadow: 'Semilight',
+              gap: 'Small',
+              alignItems: 'Center',
+              justify: 'Center',
+            },
+            [
+              img('imgLoadingSpinner', {
+                w: 44,
+                h: 44,
+                label: 'Loading',
+                svg: (hex) => spinnerSvg(hex('Primary1'), hex('GrayMediumLight')),
+              }),
+              lbl('lblLoadingText', {
+                text: r.s('text'),
+                w: 'fill',
+                h: 24,
+                size: 'Small',
+                textAlign: 'Center',
+                color: 'Primary3',
+                pad: 0,
+              }),
+            ],
+          ),
+        ],
+      ),
       notes: [
         'Wrap the slow part: Set(gblLoading, true); ClearCollect(colRequests, Requests); Set(gblLoading, false).',
         'The spinner is an animated SVG, so it turns without a timer.',
@@ -190,19 +265,64 @@ export const emptyState: KitItem = {
   canvas: { w: 420, h: 320 },
   options: [
     { id: 'title', label: 'Title', type: 'text', default: 'No requests yet' },
-    { id: 'text', label: 'Message', type: 'text', default: 'Requests you create show up here. Start with your first one.' },
+    {
+      id: 'text',
+      label: 'Message',
+      type: 'text',
+      default: 'Requests you create show up here. Start with your first one.',
+    },
     { id: 'action', label: 'Button', type: 'text', default: 'Create a request' },
   ],
   build(o) {
     const r = reader(o);
     return {
-      root: vCon('vConEmpty', { w: 360, h: 280, gap: 'Small', alignItems: 'Center', justify: 'Center', visible: fx('IsEmpty(colRequests)', true) }, [
-        icon('imgEmptyIcon', 'inbox', 'Primary1', { w: 64, h: 64, pad: 16, fill: 'Primary2', radius: 32 }),
-        lbl('lblEmptyTitle', { text: r.s('title'), w: 'fill', h: 28, size: 'Subtitle', weight: 'Semibold', textAlign: 'Center', pad: 0 }),
-        lbl('lblEmptyText', { text: r.s('text'), w: 280, h: 44, size: 'Small', color: 'Primary3', textAlign: 'Center', vAlign: 'Top', pad: 0, align: 'Center' }),
-        btn('btnEmptyAction', { text: r.s('action'), w: 170, h: 36, fill: 'Primary1', hoverFill: { fade: 'Primary1', by: -15 }, radius: 'Medium', size: 'Small', onSelect: '// Navigate(scrNewRequest)' }),
-      ]),
-      notes: ['Place it where the gallery is. It shows only when colRequests is empty, so set the gallery’s Visible to !IsEmpty(colRequests).'],
+      root: vCon(
+        'vConEmpty',
+        {
+          w: 360,
+          h: 280,
+          gap: 'Small',
+          alignItems: 'Center',
+          justify: 'Center',
+          visible: fx('IsEmpty(colRequests)', true),
+        },
+        [
+          icon('imgEmptyIcon', 'inbox', 'Primary1', { w: 64, h: 64, pad: 16, fill: 'Primary2', radius: 32 }),
+          lbl('lblEmptyTitle', {
+            text: r.s('title'),
+            w: 'fill',
+            h: 28,
+            size: 'Subtitle',
+            weight: 'Semibold',
+            textAlign: 'Center',
+            pad: 0,
+          }),
+          lbl('lblEmptyText', {
+            text: r.s('text'),
+            w: 280,
+            h: 44,
+            size: 'Small',
+            color: 'Primary3',
+            textAlign: 'Center',
+            vAlign: 'Top',
+            pad: 0,
+            align: 'Center',
+          }),
+          btn('btnEmptyAction', {
+            text: r.s('action'),
+            w: 170,
+            h: 36,
+            fill: 'Primary1',
+            hoverFill: { fade: 'Primary1', by: -15 },
+            radius: 'Medium',
+            size: 'Small',
+            onSelect: '// Navigate(scrNewRequest)',
+          }),
+        ],
+      ),
+      notes: [
+        'Place it where the gallery is. It shows only when colRequests is empty, so set the gallery’s Visible to !IsEmpty(colRequests).',
+      ],
     };
   },
 };

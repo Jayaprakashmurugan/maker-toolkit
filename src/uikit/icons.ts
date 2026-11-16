@@ -14,7 +14,8 @@ const shapes: Record<string, string> = {
   arrowLeft: "<path d='M19 12H5M11 6l-6 6 6 6'/>",
   home: "<path d='M4 11l8-6.5 8 6.5v9h-5.5v-5.5h-5V20H4z'/>",
   user: "<circle cx='12' cy='8' r='3.8'/><path d='M4.5 20c1.4-3.6 4.2-5.5 7.5-5.5s6.1 1.9 7.5 5.5'/>",
-  users: "<circle cx='9' cy='8.5' r='3.2'/><path d='M3 19.5c1-3 3.2-4.6 6-4.6s5 1.6 6 4.6'/><path d='M15.5 5.6a3.2 3.2 0 0 1 0 5.8M17 14.9c2 .5 3.3 2 4 4.6'/>",
+  users:
+    "<circle cx='9' cy='8.5' r='3.2'/><path d='M3 19.5c1-3 3.2-4.6 6-4.6s5 1.6 6 4.6'/><path d='M15.5 5.6a3.2 3.2 0 0 1 0 5.8M17 14.9c2 .5 3.3 2 4 4.6'/>",
   bell: "<path d='M6.5 16.5v-5a5.5 5.5 0 0 1 11 0v5l1.8 1.8H4.7z'/><path d='M10 21h4'/>",
   calendar: "<rect x='4' y='5.5' width='16' height='14.5' rx='2.2'/><path d='M4 10h16M8.5 3.5v4M15.5 3.5v4'/>",
   filter: "<path d='M4.5 5.5h15l-5.8 6.8v5.4l-3.4 1.8v-7.2z'/>",

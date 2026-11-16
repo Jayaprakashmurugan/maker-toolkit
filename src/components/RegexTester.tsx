@@ -1,5 +1,15 @@
 import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { MATCH_ENUM, MATCH_ENUM_CLASSIC, PRESETS, compile, formula, matchEnum, type Anchor, type Host, type RegexOptions } from '../lib/powerFxRegex';
+import {
+  MATCH_ENUM,
+  MATCH_ENUM_CLASSIC,
+  PRESETS,
+  compile,
+  formula,
+  matchEnum,
+  type Anchor,
+  type Host,
+  type RegexOptions,
+} from '../lib/powerFxRegex';
 import { CodeLine } from './FormulaDetail';
 
 interface Hit {
@@ -68,7 +78,13 @@ function Parts({ hit, opts }: { hit: Hit; opts: RegexOptions }) {
 export default function RegexTester() {
   const [host, setHost] = useState<Host>('classic');
   const [anchor, setAnchor] = useState<Anchor>(PRESETS[0].anchor);
-  const [flags, setFlags] = useState({ ignoreCase: false, multiline: false, dotAll: false, freeSpacing: false, numbered: false });
+  const [flags, setFlags] = useState({
+    ignoreCase: false,
+    multiline: false,
+    dotAll: false,
+    freeSpacing: false,
+    numbered: false,
+  });
   const [pattern, setPattern] = useState(MATCH_ENUM_CLASSIC.Email);
   const [text, setText] = useState(PRESETS[0].sample);
   const [perLine, setPerLine] = useState(true);
@@ -80,7 +96,12 @@ export default function RegexTester() {
   const done = useRef(0);
 
   const opts: RegexOptions = useMemo(
-    () => ({ host, anchor, ...flags, ...(host === 'classic' ? { dotAll: false, freeSpacing: false, numbered: true } : {}) }),
+    () => ({
+      host,
+      anchor,
+      ...flags,
+      ...(host === 'classic' ? { dotAll: false, freeSpacing: false, numbered: true } : {}),
+    }),
     [host, anchor, flags],
   );
   const compiled = useMemo(() => (pattern ? compile(pattern, opts) : null), [pattern, opts]);
@@ -101,7 +122,13 @@ export default function RegexTester() {
       return w;
     };
     worker.current ??= start();
-    worker.current.postMessage({ id, source: compiled.source, flags: compiled.flags, texts, all: !perLine || anchor === 'Contains' });
+    worker.current.postMessage({
+      id,
+      source: compiled.source,
+      flags: compiled.flags,
+      texts,
+      all: !perLine || anchor === 'Contains',
+    });
     const t = setTimeout(() => {
       if (job.current !== id || done.current === id) return;
       worker.current?.terminate();
@@ -187,10 +214,12 @@ export default function RegexTester() {
               <input type="checkbox" checked={opts.dotAll} disabled={!v1} onChange={() => toggle('dotAll')} /> DotAll
             </label>
             <label className="ts-check" title={v1 ? '' : 'Needs Power Fx 1.0'}>
-              <input type="checkbox" checked={opts.freeSpacing} disabled={!v1} onChange={() => toggle('freeSpacing')} /> FreeSpacing
+              <input type="checkbox" checked={opts.freeSpacing} disabled={!v1} onChange={() => toggle('freeSpacing')} />{' '}
+              FreeSpacing
             </label>
             <label className="ts-check" title={v1 ? '' : 'Always on in Power Apps'}>
-              <input type="checkbox" checked={opts.numbered} disabled={!v1} onChange={() => toggle('numbered')} /> NumberedSubMatches
+              <input type="checkbox" checked={opts.numbered} disabled={!v1} onChange={() => toggle('numbered')} />{' '}
+              NumberedSubMatches
             </label>
           </div>
         </div>
@@ -222,7 +251,9 @@ export default function RegexTester() {
               ))}
             </ol>
           )}
-          {compiled?.ok && v1 && <p className="rx-ok">Follows the Power Fx 1.0 rules, so it won’t give an authoring error.</p>}
+          {compiled?.ok && v1 && (
+            <p className="rx-ok">Follows the Power Fx 1.0 rules, so it won’t give an authoring error.</p>
+          )}
         </div>
       </section>
 
@@ -243,7 +274,11 @@ export default function RegexTester() {
             className="bf-input"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder={perLine ? 'One value per line, like entries in a text input.' : 'A block of text to search, as with MatchAll.'}
+            placeholder={
+              perLine
+                ? 'One value per line, like entries in a text input.'
+                : 'A block of text to search, as with MatchAll.'
+            }
             spellCheck={false}
             aria-label="Test text"
           />
@@ -268,7 +303,10 @@ export default function RegexTester() {
           </div>
           <div className="rx-results" aria-live="polite">
             {results && 'timeout' in results ? (
-              <p className="lc-warn">This pattern took too long and was stopped. Nested repeats such as (a+)+ can take forever on some text; simplify the pattern.</p>
+              <p className="lc-warn">
+                This pattern took too long and was stopped. Nested repeats such as (a+)+ can take forever on some text;
+                simplify the pattern.
+              </p>
             ) : !compiled ? (
               <p className="bf-output__empty">Type a pattern to test it.</p>
             ) : !compiled.ok ? (
@@ -281,7 +319,13 @@ export default function RegexTester() {
                       {l.first ? '✓' : '✗'}
                     </span>
                     <span className="rx-line">
-                      <code>{texts[k] ? marked(texts[k], anchor === 'Contains' ? l.all : l.first ? [l.first] : []) : <i>empty</i>}</code>
+                      <code>
+                        {texts[k] ? (
+                          marked(texts[k], anchor === 'Contains' ? l.all : l.first ? [l.first] : [])
+                        ) : (
+                          <i>empty</i>
+                        )}
+                      </code>
                       {l.first && (
                         <span className="rx-meta">
                           StartMatch {l.first.index + 1}
@@ -302,7 +346,8 @@ export default function RegexTester() {
                   <ol className="rx-hits">
                     {ready[0].all.map((h, k) => (
                       <li key={k}>
-                        <code>{h.full ? `"${h.full}"` : <i>empty</i>}</code> <span className="rx-meta">StartMatch {h.index + 1}</span>
+                        <code>{h.full ? `"${h.full}"` : <i>empty</i>}</code>{' '}
+                        <span className="rx-meta">StartMatch {h.index + 1}</span>
                         <Parts hit={h} opts={opts} />
                       </li>
                     ))}
@@ -320,14 +365,23 @@ export default function RegexTester() {
             <h2 id="rx-f">Formulas</h2>
             <label className="rx-ref">
               Text to check
-              <input className="cb-input" value={ref} onChange={(e) => setRef(e.target.value)} spellCheck={false} aria-label="Text to check, as a Power Fx expression" />
+              <input
+                className="cb-input"
+                value={ref}
+                onChange={(e) => setRef(e.target.value)}
+                spellCheck={false}
+                aria-label="Text to check, as a Power Fx expression"
+              />
             </label>
           </div>
           <dl className="rx-formulas">
             {(
               [
                 ['IsMatch', 'Validate: true or false, for example in a button’s DisplayMode or a label’s Visible.'],
-                ['Match', `Extract the first match, then read .FullMatch${names.length ? ` or a named part, such as .${names[0]}` : opts.numbered ? ' or .SubMatches' : ''}.`],
+                [
+                  'Match',
+                  `Extract the first match, then read .FullMatch${names.length ? ` or a named part, such as .${names[0]}` : opts.numbered ? ' or .SubMatches' : ''}.`,
+                ],
                 ['MatchAll', 'Extract every match as a table, for example as a gallery’s Items.'],
               ] as const
             ).map(([fn, what]) => (
@@ -340,11 +394,19 @@ export default function RegexTester() {
             ))}
           </dl>
           <ul className="notes od-tips">
-            <li>The pattern and options must be fixed text in the formula. Power Fx doesn’t accept them from a variable.</li>
+            <li>
+              The pattern and options must be fixed text in the formula. Power Fx doesn’t accept them from a variable.
+            </li>
             {host === 'classic' ? (
-              <li>“Power Apps” follows today’s canvas apps. Choose Power Fx 1.0 to check the stricter rules used by Copilot Studio, Dataverse formulas and other hosts.</li>
+              <li>
+                “Power Apps” follows today’s canvas apps. Choose Power Fx 1.0 to check the stricter rules used by
+                Copilot Studio, Dataverse formulas and other hosts.
+              </li>
             ) : (
-              <li>Outside Power Apps, IsMatch searches anywhere by default, so the formula always states MatchOptions.{anchor}.</li>
+              <li>
+                Outside Power Apps, IsMatch searches anywhere by default, so the formula always states MatchOptions.
+                {anchor}.
+              </li>
             )}
           </ul>
         </section>

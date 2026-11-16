@@ -24,7 +24,10 @@ const CONTROL_RULES: [RegExp, Rule][] = [
   [/^(Classic\/)?Rating$/, { prefix: 'rtg', what: 'Rating' }],
   [/^(Classic\/)?Icon$/, { prefix: 'ico', what: 'Icon' }],
   [/^Image$|^ModernImage$/, { prefix: 'img', what: 'Image' }],
-  [/^(Rectangle|Circle|Triangle|Pentagon|Hexagon|Octagon|Star|Arrow\w*|Chevron\w*|Line\w*|Parallelogram|Trapezoid|Diamond)$/, { prefix: 'shp', what: 'Shape' }],
+  [
+    /^(Rectangle|Circle|Triangle|Pentagon|Hexagon|Octagon|Star|Arrow\w*|Chevron\w*|Line\w*|Parallelogram|Trapezoid|Diamond)$/,
+    { prefix: 'shp', what: 'Shape' },
+  ],
   [/^Gallery$/, { prefix: 'gal', what: 'Gallery' }],
   [/^Form$/, { prefix: 'frm', what: 'Form' }],
   [/^TypedDataCard$|^DataCard$/, { prefix: 'crd', what: 'Data card' }],
@@ -77,7 +80,9 @@ function ruleFor(control: string, variant: string | undefined, props: Record<str
   if (type === 'GroupContainer') {
     if (variant === 'AutoLayout' || String(props.LayoutMode ?? '').includes('Auto')) {
       const dir = String(props.LayoutDirection ?? '');
-      return dir.includes('Vertical') ? { prefix: 'vCon', what: 'Vertical container' } : { prefix: 'hCon', what: 'Horizontal container' };
+      return dir.includes('Vertical')
+        ? { prefix: 'vCon', what: 'Vertical container' }
+        : { prefix: 'hCon', what: 'Horizontal container' };
     }
     return { prefix: 'nCon', what: 'Container' };
   }
@@ -96,7 +101,8 @@ const pascal = (s: string) =>
     .slice(0, 28);
 
 /** Words Studio puts in default names, which say nothing once the prefix is there. */
-const GENERIC = /^(Label|Button|Text\s?Input|TextBox|Dropdown|DropDown|ComboBox|Combobox|DatePicker|Checkbox|CheckBox|Toggle|Radio|Slider|Rating|Icon|Image|Rectangle|Circle|Gallery|Form|DataCard(Value|Key)?|Card|HtmlText|HtmlViewer|Html|Timer|Container|GroupContainer|Group|Attachments?|Spinner|Shape|Component|Screen|Vertical|Horizontal)/i;
+const GENERIC =
+  /^(Label|Button|Text\s?Input|TextBox|Dropdown|DropDown|ComboBox|Combobox|DatePicker|Checkbox|CheckBox|Toggle|Radio|Slider|Rating|Icon|Image|Rectangle|Circle|Gallery|Form|DataCard(Value|Key)?|Card|HtmlText|HtmlViewer|Html|Timer|Container|GroupContainer|Group|Attachments?|Spinner|Shape|Component|Screen|Vertical|Horizontal)/i;
 
 function suggest(name: string, rule: Rule, props: Record<string, unknown>): string {
   let rest: string;
@@ -113,7 +119,10 @@ function suggest(name: string, rule: Rule, props: Record<string, unknown>): stri
     rest = name.slice(rule.prefix.length);
   } else {
     // Drop a different control prefix the name may already have ("lblSave" on a button).
-    rest = name.replace(/^(lbl|btn|txt|drp|cmb|dte|chk|tgl|rdo|ico|img|shp|gal|frm|crd|tmr|con|vcon|hcon|ncon|ctn|grp|cnt)(?=[A-Z0-9_])/i, '');
+    rest = name.replace(
+      /^(lbl|btn|txt|drp|cmb|dte|chk|tgl|rdo|ico|img|shp|gal|frm|crd|tmr|con|vcon|hcon|ncon|ctn|grp|cnt)(?=[A-Z0-9_])/i,
+      '',
+    );
   }
   const body = pascal(rest.replace(/^[_\s]+/, ''));
   return rule.prefix + (body || '1');
@@ -130,8 +139,14 @@ function collect(doc: unknown) {
       if (!item || typeof item !== 'object') continue;
       for (const [name, ctl] of Object.entries(item as Record<string, unknown>)) {
         if (!ctl || typeof ctl !== 'object') continue;
-        const c = ctl as { Control?: string; Variant?: string; Properties?: Record<string, unknown>; Children?: unknown };
-        if (typeof c.Control === 'string') out.push({ name, control: c.Control, variant: c.Variant, props: c.Properties ?? {} });
+        const c = ctl as {
+          Control?: string;
+          Variant?: string;
+          Properties?: Record<string, unknown>;
+          Children?: unknown;
+        };
+        if (typeof c.Control === 'string')
+          out.push({ name, control: c.Control, variant: c.Variant, props: c.Properties ?? {} });
         walkList(c.Children);
       }
     }
@@ -139,7 +154,8 @@ function collect(doc: unknown) {
   if (Array.isArray(doc)) walkList(doc);
   else if (doc && typeof doc === 'object') {
     const d = doc as Record<string, Record<string, { Children?: unknown }>>;
-    for (const group of ['Screens', 'ComponentDefinitions'] as const) for (const screen of Object.values(d[group] ?? {})) walkList(screen?.Children);
+    for (const group of ['Screens', 'ComponentDefinitions'] as const)
+      for (const screen of Object.values(d[group] ?? {})) walkList(screen?.Children);
   }
   return out;
 }
@@ -187,17 +203,35 @@ export function analyze(text: string): Report {
     for (let i = 2; taken.has(s); i++) s = suggest(c.name, rule, c.props) + i;
     taken.add(s);
     const wrongCase = !GENERIC.test(c.name) && c.name.toLowerCase().startsWith(rule.prefix.toLowerCase());
-    controls.push({ name: c.name, type, rule, ok: false, suggestion: s, why: wrongCase ? `Starts with ${rule.prefix}, but needs a capital letter after it` : `${rule.what} names start with ${rule.prefix}` });
+    controls.push({
+      name: c.name,
+      type,
+      rule,
+      ok: false,
+      suggestion: s,
+      why: wrongCase
+        ? `Starts with ${rule.prefix}, but needs a capital letter after it`
+        : `${rule.what} names start with ${rule.prefix}`,
+    });
   }
 
-  const code = formulas(doc).map((f) => outsideStrings(f, (x) => x)).join('\n');
+  const code = formulas(doc)
+    .map((f) => outsideStrings(f, (x) => x))
+    .join('\n');
   const found = new Map<string, VariableReport>();
   const add = (name: string, kind: VariableReport['kind'], prefix: VariableReport['prefix']) => {
     if (found.has(name)) return;
-    found.set(name, { name, kind, prefix, ok: prefixOk(name, prefix), suggestion: prefixOk(name, prefix) ? name : variableSuggestion(name, prefix) });
+    found.set(name, {
+      name,
+      kind,
+      prefix,
+      ok: prefixOk(name, prefix),
+      suggestion: prefixOk(name, prefix) ? name : variableSuggestion(name, prefix),
+    });
   };
   for (const m of code.matchAll(/\bSet\(\s*([A-Za-z_]\w*)\s*,/g)) add(m[1], 'global', 'gbl');
-  for (const m of code.matchAll(/\bUpdateContext\(\s*\{([^{}]*)\}/g)) for (const k of m[1].matchAll(/(?:^|,)\s*([A-Za-z_]\w*)\s*:/g)) add(k[1], 'local', 'lcl');
+  for (const m of code.matchAll(/\bUpdateContext\(\s*\{([^{}]*)\}/g))
+    for (const k of m[1].matchAll(/(?:^|,)\s*([A-Za-z_]\w*)\s*:/g)) add(k[1], 'local', 'lcl');
   for (const m of code.matchAll(/\bClearCollect\(\s*([A-Za-z_]\w*)\s*,/g)) add(m[1], 'collection', 'col');
   return { controls, variables: [...found.values()] };
 }
@@ -212,7 +246,13 @@ export function applyRenames(text: string, renames: Map<string, string>): string
   const pairs = [...renames].filter(([a, b]) => a !== b && b);
   if (!pairs.length) return text;
   const byName = new Map(pairs);
-  const re = new RegExp(`(?<![\\w.'])(${pairs.map(([a]) => escape(a)).sort((a, b) => b.length - a.length).join('|')})(?![\\w'])`, 'g');
+  const re = new RegExp(
+    `(?<![\\w.'])(${pairs
+      .map(([a]) => escape(a))
+      .sort((a, b) => b.length - a.length)
+      .join('|')})(?![\\w'])`,
+    'g',
+  );
   const fix = (formula: string) => outsideStrings(formula, (part) => part.replace(re, (m) => byName.get(m) ?? m));
   let block = -1;
   return text

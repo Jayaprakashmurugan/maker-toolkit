@@ -5,7 +5,8 @@
 // works with, as Microsoft's terms require. They are never used as this site's own branding.
 // Microsoft doesn't publish SharePoint, Teams or Outlook logos under those terms, so those show as names only.
 
-export type ProductId = 'power-apps' | 'power-automate' | 'dataverse' | 'power-platform' | 'sharepoint' | 'teams' | 'outlook';
+export type ProductId =
+  'power-apps' | 'power-automate' | 'dataverse' | 'power-platform' | 'sharepoint' | 'teams' | 'outlook';
 
 export interface Product {
   name: string;

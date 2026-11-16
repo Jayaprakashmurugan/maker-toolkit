@@ -31,7 +31,16 @@ export interface ParsedList {
 const M_NS = 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata';
 
 // Built-in columns that are never worth copying even if they look custom.
-const SKIP = new Set(['ContentType', 'Attachments', '_ComplianceTag', '_ComplianceTagWrittenTime', '_ComplianceTagUserId', '_IsRecord', 'ComplianceAssetId', '_ColorTag']);
+const SKIP = new Set([
+  'ContentType',
+  'Attachments',
+  '_ComplianceTag',
+  '_ComplianceTagWrittenTime',
+  '_ComplianceTagUserId',
+  '_IsRecord',
+  'ComplianceAssetId',
+  '_ColorTag',
+]);
 
 /** Turns pasted XML (Atom) or JSON from the REST API into plain property records. */
 function records(text: string): Record<string, unknown>[] {
@@ -39,13 +48,15 @@ function records(text: string): Record<string, unknown>[] {
   if (!t) throw new Error('Nothing pasted yet.');
   if (t.startsWith('{')) {
     const j = JSON.parse(t);
-    if (j.error || j['odata.error']) throw new Error((j.error?.message?.value ?? j.error?.message ?? 'SharePoint returned an error.') as string);
+    if (j.error || j['odata.error'])
+      throw new Error((j.error?.message?.value ?? j.error?.message ?? 'SharePoint returned an error.') as string);
     const root = j.d ?? j;
     const arr = root.results ?? root.value;
     return Array.isArray(arr) ? arr : [root];
   }
   const doc = new DOMParser().parseFromString(t, 'application/xml');
-  if (doc.getElementsByTagName('parsererror').length) throw new Error('This isn’t valid XML. Copy the whole page the URL shows (Ctrl+A, Ctrl+C).');
+  if (doc.getElementsByTagName('parsererror').length)
+    throw new Error('This isn’t valid XML. Copy the whole page the URL shows (Ctrl+A, Ctrl+C).');
   const err = doc.getElementsByTagNameNS(M_NS, 'message')[0];
   if (err) throw new Error(`SharePoint said: ${err.textContent}`);
   const props = [...doc.getElementsByTagNameNS(M_NS, 'properties')];
@@ -60,7 +71,8 @@ const str = (v: unknown) => (v === undefined || v === null ? '' : String(v));
 function cleanSchema(xml: string): string {
   const doc = new DOMParser().parseFromString(xml, 'application/xml');
   const f = doc.documentElement;
-  for (const a of ['ID', 'SourceID', 'Version', 'ColName', 'RowOrdinal', 'WebId', 'Customization']) f.removeAttribute(a);
+  for (const a of ['ID', 'SourceID', 'Version', 'ColName', 'RowOrdinal', 'WebId', 'Customization'])
+    f.removeAttribute(a);
   return new XMLSerializer().serializeToString(f);
 }
 
@@ -77,12 +89,18 @@ export function parseList(listText: string, fieldsText: string): ParsedList {
 
   const all = records(fieldsText);
   const titleField = all.find((f) => f.InternalName === 'Title');
-  const titleRename = titleField && str(titleField.Title) && str(titleField.Title) !== 'Title' ? str(titleField.Title) : undefined;
+  const titleRename =
+    titleField && str(titleField.Title) && str(titleField.Title) !== 'Title' ? str(titleField.Title) : undefined;
 
   const fields: FieldInfo[] = all
     .filter(
       (f) =>
-        !bool(f.FromBaseType) && !bool(f.Hidden) && !bool(f.ReadOnlyField) && !bool(f.Sealed) && !SKIP.has(str(f.InternalName)) && str(f.SchemaXml),
+        !bool(f.FromBaseType) &&
+        !bool(f.Hidden) &&
+        !bool(f.ReadOnlyField) &&
+        !bool(f.Sealed) &&
+        !SKIP.has(str(f.InternalName)) &&
+        str(f.SchemaXml),
     )
     .map((f) => {
       const type = str(f.TypeAsString);
@@ -95,9 +113,17 @@ export function parseList(listText: string, fieldsText: string): ParsedList {
         recommended: true,
       };
       if (type.startsWith('Lookup'))
-        return { ...base, recommended: false, note: 'Points to another list. Create that list on the target first, then add this column by hand.' };
+        return {
+          ...base,
+          recommended: false,
+          note: 'Points to another list. Create that list on the target first, then add this column by hand.',
+        };
       if (type.startsWith('Taxonomy'))
-        return { ...base, recommended: false, note: 'Managed metadata needs a term set on the target. Add this column by hand.' };
+        return {
+          ...base,
+          recommended: false,
+          note: 'Managed metadata needs a term set on the target. Add this column by hand.',
+        };
       if (type === 'Calculated') return { ...base, note: 'Created last, because its formula uses the other columns.' };
       return base;
     })
@@ -137,7 +163,11 @@ const listBody = (p: CopyPlan) => ({
 // AddFieldInternalNameHint (8) keeps internal names; AddFieldToDefaultView (16) shows the column.
 const fieldOptions = (p: CopyPlan) => (p.addToView ? 24 : 8);
 const fieldBody = (p: CopyPlan, f: FieldInfo) => ({
-  parameters: { __metadata: { type: 'SP.XmlSchemaFieldCreationInformation' }, SchemaXml: f.schemaXml, Options: fieldOptions(p) },
+  parameters: {
+    __metadata: { type: 'SP.XmlSchemaFieldCreationInformation' },
+    SchemaXml: f.schemaXml,
+    Options: fieldOptions(p),
+  },
 });
 const site = (p: CopyPlan) => p.targetSite.trim().replace(/\/+$/, '') || 'https://contoso.sharepoint.com/sites/target';
 
@@ -199,7 +229,11 @@ export interface FlowSteps {
 }
 
 export function powerAutomateSteps(p: CopyPlan): FlowSteps {
-  const headers = JSON.stringify({ Accept: 'application/json;odata=verbose', 'Content-Type': 'application/json;odata=verbose' }, null, 2);
+  const headers = JSON.stringify(
+    { Accept: 'application/json;odata=verbose', 'Content-Type': 'application/json;odata=verbose' },
+    null,
+    2,
+  );
   const listTitle = p.list.Title.replace(/'/g, "''");
   return {
     createList: { uri: '_api/web/lists', headers, body: JSON.stringify(listBody(p), null, 2) },
@@ -208,12 +242,20 @@ export function powerAutomateSteps(p: CopyPlan): FlowSteps {
       null,
       2,
     ),
-    createField: { uri: `_api/web/lists/getbytitle('${listTitle}')/fields/createfieldasxml`, body: "@{items('Apply_to_each')}" },
+    createField: {
+      uri: `_api/web/lists/getbytitle('${listTitle}')/fields/createfieldasxml`,
+      body: "@{items('Apply_to_each')}",
+    },
     renameTitle: p.titleRename
       ? {
           uri: `_api/web/lists/getbytitle('${listTitle}')/fields/getbyinternalnameortitle('Title')`,
           headers: JSON.stringify(
-            { Accept: 'application/json;odata=verbose', 'Content-Type': 'application/json;odata=verbose', 'X-HTTP-Method': 'MERGE', 'IF-MATCH': '*' },
+            {
+              Accept: 'application/json;odata=verbose',
+              'Content-Type': 'application/json;odata=verbose',
+              'X-HTTP-Method': 'MERGE',
+              'IF-MATCH': '*',
+            },
             null,
             2,
           ),
@@ -237,7 +279,8 @@ export function pnpScript(p: CopyPlan): string {
     '',
     ...p.fields.map((f) => `Add-PnPFieldFromXml -List ${t} -FieldXml ${ps(f.schemaXml)} | Out-Null  # ${f.title}`),
   ];
-  if (p.titleRename) lines.push('', `Set-PnPField -List ${t} -Identity 'Title' -Values @{ Title = ${ps(p.titleRename)} }`);
+  if (p.titleRename)
+    lines.push('', `Set-PnPField -List ${t} -Identity 'Title' -Values @{ Title = ${ps(p.titleRename)} }`);
   if (p.addToView && p.fields.length) {
     lines.push(
       '',
@@ -257,30 +300,134 @@ const entry = (props: Record<string, string | number | boolean>, term = 'SP.Fiel
   `<entry><category term="${term}" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme" /><content type="application/xml"><m:properties>${Object.entries(
     props,
   )
-    .map(([k, v]) => `<d:${k}${typeof v === 'boolean' ? ' m:type="Edm.Boolean"' : typeof v === 'number' ? ' m:type="Edm.Int32"' : ''}>${esc(String(v))}</d:${k}>`)
+    .map(
+      ([k, v]) =>
+        `<d:${k}${typeof v === 'boolean' ? ' m:type="Edm.Boolean"' : typeof v === 'number' ? ' m:type="Edm.Int32"' : ''}>${esc(String(v))}</d:${k}>`,
+    )
     .join('')}</m:properties></content></entry>`;
 const NS = `xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="${M_NS}"`;
 
 export function sampleXml(): { list: string; fields: string } {
   const list = `<?xml version="1.0" encoding="utf-8"?>${entry(
-    { Title: 'Purchase Requests', Description: 'Requests waiting for approval', BaseTemplate: 100, EnableVersioning: true, EnableAttachments: true, ItemCount: 128 },
+    {
+      Title: 'Purchase Requests',
+      Description: 'Requests waiting for approval',
+      BaseTemplate: 100,
+      EnableVersioning: true,
+      EnableAttachments: true,
+      ItemCount: 128,
+    },
     'SP.List',
   ).replace('<entry>', `<entry ${NS}>`)}`;
-  const f = (InternalName: string, Title: string, TypeAsString: string, TypeDisplayName: string, schema: string, base = false, hidden = false, ro = false) =>
-    entry({ InternalName, StaticName: InternalName, Title, TypeAsString, TypeDisplayName, FromBaseType: base, Hidden: hidden, ReadOnlyField: ro, Sealed: false, SchemaXml: schema });
+  const f = (
+    InternalName: string,
+    Title: string,
+    TypeAsString: string,
+    TypeDisplayName: string,
+    schema: string,
+    base = false,
+    hidden = false,
+    ro = false,
+  ) =>
+    entry({
+      InternalName,
+      StaticName: InternalName,
+      Title,
+      TypeAsString,
+      TypeDisplayName,
+      FromBaseType: base,
+      Hidden: hidden,
+      ReadOnlyField: ro,
+      Sealed: false,
+      SchemaXml: schema,
+    });
   const fields = [
-    f('Title', 'Request', 'Text', 'Single line of text', '<Field ID="{fa564e0f-0c70-4ab9-b863-0177e6ddd247}" Type="Text" Name="Title" DisplayName="Request" Required="TRUE" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="Title" FromBaseType="TRUE" />', true),
-    f('Department', 'Department', 'Choice', 'Choice', '<Field Type="Choice" DisplayName="Department" Format="Dropdown" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0001}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="Department" Name="Department" ColName="nvarchar4" RowOrdinal="0" Version="2"><Default>Finance</Default><CHOICES><CHOICE>Finance</CHOICE><CHOICE>HR</CHOICE><CHOICE>IT</CHOICE></CHOICES></Field>'),
-    f('Amount', 'Amount', 'Currency', 'Currency', '<Field Type="Currency" DisplayName="Amount" Required="TRUE" LCID="1033" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0002}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="Amount" Name="Amount" ColName="float1" RowOrdinal="0" />'),
-    f('DueDate', 'Due date', 'DateTime', 'Date and Time', '<Field Type="DateTime" DisplayName="Due date" Format="DateOnly" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0003}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="DueDate" Name="DueDate" ColName="datetime1" RowOrdinal="0" />'),
-    f('Approver', 'Approver', 'User', 'Person or Group', '<Field Type="User" DisplayName="Approver" List="UserInfo" ShowField="ImnName" UserSelectionMode="PeopleOnly" UserSelectionScope="0" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0004}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="Approver" Name="Approver" ColName="int1" RowOrdinal="0" />'),
-    f('Notes', 'Notes', 'Note', 'Multiple lines of text', '<Field Type="Note" DisplayName="Notes" NumLines="6" RichText="FALSE" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0005}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="Notes" Name="Notes" ColName="ntext2" RowOrdinal="0" />'),
-    f('TotalWithTax', 'Total with tax', 'Calculated', 'Calculated', '<Field Type="Calculated" DisplayName="Total with tax" ResultType="Currency" ReadOnly="TRUE" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0006}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="TotalWithTax" Name="TotalWithTax" ColName="sql_variant1" RowOrdinal="0"><Formula>=Amount*1.18</Formula><FieldRefs><FieldRef Name="Amount" /></FieldRefs></Field>'),
-    f('Project', 'Project', 'Lookup', 'Lookup', '<Field Type="Lookup" DisplayName="Project" List="{11111111-2222-3333-4444-555555555555}" ShowField="Title" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0007}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="Project" Name="Project" ColName="int2" RowOrdinal="0" />'),
-    f('Modified', 'Modified', 'DateTime', 'Date and Time', '<Field Type="DateTime" Name="Modified" ReadOnly="TRUE" />', true, false, true),
-    f('Author', 'Created By', 'User', 'Person or Group', '<Field Type="User" Name="Author" ReadOnly="TRUE" />', true, false, true),
+    f(
+      'Title',
+      'Request',
+      'Text',
+      'Single line of text',
+      '<Field ID="{fa564e0f-0c70-4ab9-b863-0177e6ddd247}" Type="Text" Name="Title" DisplayName="Request" Required="TRUE" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="Title" FromBaseType="TRUE" />',
+      true,
+    ),
+    f(
+      'Department',
+      'Department',
+      'Choice',
+      'Choice',
+      '<Field Type="Choice" DisplayName="Department" Format="Dropdown" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0001}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="Department" Name="Department" ColName="nvarchar4" RowOrdinal="0" Version="2"><Default>Finance</Default><CHOICES><CHOICE>Finance</CHOICE><CHOICE>HR</CHOICE><CHOICE>IT</CHOICE></CHOICES></Field>',
+    ),
+    f(
+      'Amount',
+      'Amount',
+      'Currency',
+      'Currency',
+      '<Field Type="Currency" DisplayName="Amount" Required="TRUE" LCID="1033" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0002}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="Amount" Name="Amount" ColName="float1" RowOrdinal="0" />',
+    ),
+    f(
+      'DueDate',
+      'Due date',
+      'DateTime',
+      'Date and Time',
+      '<Field Type="DateTime" DisplayName="Due date" Format="DateOnly" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0003}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="DueDate" Name="DueDate" ColName="datetime1" RowOrdinal="0" />',
+    ),
+    f(
+      'Approver',
+      'Approver',
+      'User',
+      'Person or Group',
+      '<Field Type="User" DisplayName="Approver" List="UserInfo" ShowField="ImnName" UserSelectionMode="PeopleOnly" UserSelectionScope="0" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0004}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="Approver" Name="Approver" ColName="int1" RowOrdinal="0" />',
+    ),
+    f(
+      'Notes',
+      'Notes',
+      'Note',
+      'Multiple lines of text',
+      '<Field Type="Note" DisplayName="Notes" NumLines="6" RichText="FALSE" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0005}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="Notes" Name="Notes" ColName="ntext2" RowOrdinal="0" />',
+    ),
+    f(
+      'TotalWithTax',
+      'Total with tax',
+      'Calculated',
+      'Calculated',
+      '<Field Type="Calculated" DisplayName="Total with tax" ResultType="Currency" ReadOnly="TRUE" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0006}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="TotalWithTax" Name="TotalWithTax" ColName="sql_variant1" RowOrdinal="0"><Formula>=Amount*1.18</Formula><FieldRefs><FieldRef Name="Amount" /></FieldRefs></Field>',
+    ),
+    f(
+      'Project',
+      'Project',
+      'Lookup',
+      'Lookup',
+      '<Field Type="Lookup" DisplayName="Project" List="{11111111-2222-3333-4444-555555555555}" ShowField="Title" ID="{6a1e2f61-1f1f-4c2b-9a61-0a1a1c1d0007}" SourceID="{0a1b2c3d-0000-4000-8000-000000000001}" StaticName="Project" Name="Project" ColName="int2" RowOrdinal="0" />',
+    ),
+    f(
+      'Modified',
+      'Modified',
+      'DateTime',
+      'Date and Time',
+      '<Field Type="DateTime" Name="Modified" ReadOnly="TRUE" />',
+      true,
+      false,
+      true,
+    ),
+    f(
+      'Author',
+      'Created By',
+      'User',
+      'Person or Group',
+      '<Field Type="User" Name="Author" ReadOnly="TRUE" />',
+      true,
+      false,
+      true,
+    ),
     f('ContentType', 'Content Type', 'Computed', 'Computed', '<Field Type="Computed" Name="ContentType" />', true),
-    f('Attachments', 'Attachments', 'Attachments', 'Attachments', '<Field Type="Attachments" Name="Attachments" />', true),
+    f(
+      'Attachments',
+      'Attachments',
+      'Attachments',
+      'Attachments',
+      '<Field Type="Attachments" Name="Attachments" />',
+      true,
+    ),
   ];
   return { list, fields: `<?xml version="1.0" encoding="utf-8"?><feed ${NS}>${fields.join('')}</feed>` };
 }

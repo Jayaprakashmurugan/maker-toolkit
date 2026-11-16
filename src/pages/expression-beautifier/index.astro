@@ -14,7 +14,7 @@ const faqs = [
   },
   {
     q: 'Which languages does it support?',
-    a: "Power Automate expressions (the Workflow Definition Language, with 'single-quoted' strings) and Power Apps Power Fx formulas (with \"double-quoted\" strings). It detects the language for you, or you can choose it.",
+    a: 'Power Automate expressions (the Workflow Definition Language, with \'single-quoted\' strings) and Power Apps Power Fx formulas (with "double-quoted" strings). It detects the language for you, or you can choose it.',
   },
   {
     q: 'Can I paste the formatted version back into Power Automate?',
@@ -34,7 +34,9 @@ const faqs = [
 <Base title={title} description={description} image="/og/expression-beautifier.png">
   <div class="wrap wrap--wide">
     <header class="page-head">
-      <p class="kicker"><b>Tool</b> · Power Automate + Power Fx</p>
+      <p class="kicker">
+        <b>Tool</b> · Power Automate + Power Fx
+      </p>
       <h1>{title}</h1>
       <p class="page-head__lede">{description}</p>
       <WorksWith href="/expression-beautifier/" />
@@ -74,14 +76,12 @@ const faqs = [
       </div>
     </div>
     <div class="faq" data-reveal-group>
-      {
-        faqs.map((f) => (
-          <details>
-            <summary>{f.q}</summary>
-            <div>{f.a}</div>
-          </details>
-        ))
-      }
+      {faqs.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <div>{f.a}</div>
+        </details>
+      ))}
     </div>
   </section>
 </Base>

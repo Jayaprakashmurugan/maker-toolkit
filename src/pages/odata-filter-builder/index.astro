@@ -34,7 +34,9 @@ const faqs = [
 <Base title={title} description={description} image="/og/odata-filter-builder.png">
   <div class="wrap wrap--wide">
     <header class="page-head">
-      <p class="kicker"><b>Tool</b> · Power Automate · SharePoint + Dataverse</p>
+      <p class="kicker">
+        <b>Tool</b> · Power Automate · SharePoint + Dataverse
+      </p>
       <h1>{title}</h1>
       <p class="page-head__lede">{description}</p>
       <WorksWith href="/odata-filter-builder/" />
@@ -51,14 +53,12 @@ const faqs = [
       </div>
     </div>
     <div class="faq" data-reveal-group>
-      {
-        faqs.map((f) => (
-          <details>
-            <summary>{f.q}</summary>
-            <div>{f.a}</div>
-          </details>
-        ))
-      }
+      {faqs.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <div>{f.a}</div>
+        </details>
+      ))}
     </div>
   </section>
 </Base>

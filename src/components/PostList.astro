@@ -15,33 +15,31 @@ const H = `h${level}` as 'h2' | 'h3';
 ---
 
 <ol class="plist" data-preview-list data-reveal-group>
-  {
-    posts.map((p, i) => {
-      return (
-        <li class="plist__item">
-          <a href={postUrl(p)}>
-            <span class="plist__thumb" aria-hidden="true">
-              {p.data.cover ? (
-                <Image src={p.data.cover} alt="" widths={[320, 640]} sizes="320px" loading="lazy" />
-              ) : (
-                <img src={postCover(p)} alt="" width="1200" height="630" loading="lazy" decoding="async" />
-              )}
+  {posts.map((p, i) => {
+    return (
+      <li class="plist__item">
+        <a href={postUrl(p)}>
+          <span class="plist__thumb" aria-hidden="true">
+            {p.data.cover ? (
+              <Image src={p.data.cover} alt="" widths={[320, 640]} sizes="320px" loading="lazy" />
+            ) : (
+              <img src={postCover(p)} alt="" width="1200" height="630" loading="lazy" decoding="async" />
+            )}
+          </span>
+          <span class="plist__num" aria-hidden="true">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <span class="plist__body">
+            <H class="plist__title">{p.data.title}</H>
+            <span class="plist__meta">
+              {p.data.tags.slice(0, 3).join(' · ')}
+              <span>{readingTime(p.body)} min</span>
+              {p.data.draft && <span class="plist__draft">Draft</span>}
             </span>
-            <span class="plist__num" aria-hidden="true">
-              {String(i + 1).padStart(2, '0')}
-            </span>
-            <span class="plist__body">
-              <H class="plist__title">{p.data.title}</H>
-              <span class="plist__meta">
-                {p.data.tags.slice(0, 3).join(' · ')}
-                <span>{readingTime(p.body)} min</span>
-                {p.data.draft && <span class="plist__draft">Draft</span>}
-              </span>
-            </span>
-            <Icon name="arrow" class="plist__arrow" />
-          </a>
-        </li>
-      );
-    })
-  }
+          </span>
+          <Icon name="arrow" class="plist__arrow" />
+        </a>
+      </li>
+    );
+  })}
 </ol>

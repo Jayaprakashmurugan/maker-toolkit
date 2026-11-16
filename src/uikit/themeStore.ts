@@ -27,8 +27,16 @@ export function resolveTheme(st: StoredTheme | null | undefined): KitTheme {
     if (st.status?.[i] && HEX.test(st.status[i]!)) status[i] = st.status[i]!.toUpperCase();
     if (st.statusFont?.[i] && HEX.test(st.statusFont[i]!)) statusFont[i] = st.statusFont[i]!.toUpperCase();
   }
-  const custom = Boolean(st.colors && Object.keys(st.colors).length) || Boolean(st.status && Object.keys(st.status).length);
-  return { ...base, id: custom ? 'custom' : base.id, name: custom ? `${base.name} (custom)` : base.name, colors, status, statusFont };
+  const custom =
+    Boolean(st.colors && Object.keys(st.colors).length) || Boolean(st.status && Object.keys(st.status).length);
+  return {
+    ...base,
+    id: custom ? 'custom' : base.id,
+    name: custom ? `${base.name} (custom)` : base.name,
+    colors,
+    status,
+    statusFont,
+  };
 }
 
 export function loadStored(): StoredTheme | null {

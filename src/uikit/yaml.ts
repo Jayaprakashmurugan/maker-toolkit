@@ -16,7 +16,11 @@ export interface YamlControl {
 }
 
 /** Where a control sits, which decides how its size and position are written. */
-type Place = { kind: 'auto'; dir: 'Vertical' | 'Horizontal'; parent: ContainerNode } | { kind: 'manual' } | { kind: 'template' } | { kind: 'root' };
+type Place =
+  | { kind: 'auto'; dir: 'Vertical' | 'Horizontal'; parent: ContainerNode }
+  | { kind: 'manual' }
+  | { kind: 'template' }
+  | { kind: 'root' };
 
 const CONTROL_ID: Record<Node['kind'], string> = {
   vCon: 'GroupContainer@1.5.0',
@@ -111,7 +115,11 @@ export function toControl(n: Node, place: Place = { kind: 'root' }): YamlControl
     if (n.border.dashed) p.BorderStyle = 'BorderStyle.Dashed';
   }
   // Labels, shapes, classic icons and galleries have no corner radius in canvas apps.
-  if (n.radius !== undefined && !['label', 'rect', 'circle', 'icon', 'gallery', 'attachments', 'addMedia'].includes(n.kind)) radiusProps(n.radius, p);
+  if (
+    n.radius !== undefined &&
+    !['label', 'rect', 'circle', 'icon', 'gallery', 'attachments', 'addMedia'].includes(n.kind)
+  )
+    radiusProps(n.radius, p);
   if (n.visible) p.Visible = n.visible.fx;
   if (n.onSelect) p.OnSelect = n.onSelect;
   if (n.tooltip !== undefined) p.Tooltip = text(n.tooltip);
@@ -211,9 +219,24 @@ export function toControl(n: Node, place: Place = { kind: 'root' }): YamlControl
       // Everything clear: the drop zone underneath is what people see. Only the drop highlight shows.
       const clear = 'Color.Transparent';
       Object.assign(p, {
-        Fill: clear, Color: clear, HoverFill: clear, HoverColor: clear, PressedFill: clear, PressedColor: clear,
-        ItemFill: clear, ItemColor: clear, ItemHoverFill: clear, ItemHoverColor: clear, ItemPressedFill: clear, ItemPressedColor: clear,
-        ItemErrorFill: clear, ItemErrorColor: clear, AddedItemFill: clear, AddedItemColor: clear, RemovedItemFill: clear, RemovedItemColor: clear,
+        Fill: clear,
+        Color: clear,
+        HoverFill: clear,
+        HoverColor: clear,
+        PressedFill: clear,
+        PressedColor: clear,
+        ItemFill: clear,
+        ItemColor: clear,
+        ItemHoverFill: clear,
+        ItemHoverColor: clear,
+        ItemPressedFill: clear,
+        ItemPressedColor: clear,
+        ItemErrorFill: clear,
+        ItemErrorColor: clear,
+        AddedItemFill: clear,
+        AddedItemColor: clear,
+        RemovedItemFill: clear,
+        RemovedItemColor: clear,
         AddAttachmentText: '""',
         NoAttachmentsText: '""',
         MaxAttachmentsText: '""',

@@ -953,11 +953,7 @@ button {
   padding: 2.5rem 1.5rem;
   color: var(--ink-2);
   text-align: center;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent 0 10px,
-    var(--paper-2) 10px 11px
-  );
+  background-image: repeating-linear-gradient(-45deg, transparent 0 10px, var(--paper-2) 10px 11px);
 }
 .panel__empty-title {
   font-family: var(--f-display);
@@ -1527,7 +1523,6 @@ button {
   color: #8b8a85;
   font-style: italic;
 }
-
 
 .aside-card__text {
   font-size: 0.92rem;
@@ -2478,12 +2473,24 @@ button {
 .cb-tone {
   border-left-width: 4px;
 }
-.cb-tone--default { border-left-color: #d1d1d1; }
-.cb-tone--emphasis { border-left-color: #8a8886; }
-.cb-tone--accent { border-left-color: #5b5fc7; }
-.cb-tone--good { border-left-color: #107c10; }
-.cb-tone--warning { border-left-color: #c19c00; }
-.cb-tone--attention { border-left-color: #c4314b; }
+.cb-tone--default {
+  border-left-color: #d1d1d1;
+}
+.cb-tone--emphasis {
+  border-left-color: #8a8886;
+}
+.cb-tone--accent {
+  border-left-color: #5b5fc7;
+}
+.cb-tone--good {
+  border-left-color: #107c10;
+}
+.cb-tone--warning {
+  border-left-color: #c19c00;
+}
+.cb-tone--attention {
+  border-left-color: #c4314b;
+}
 .cb-gap {
   margin-top: 1.5rem;
 }
@@ -2531,7 +2538,10 @@ button {
   border-radius: 4px;
   background: #ffffff;
   color: #242424;
-  font: 600 14px 'Segoe UI', system-ui, sans-serif;
+  font:
+    600 14px 'Segoe UI',
+    system-ui,
+    sans-serif;
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2551,7 +2561,10 @@ button {
   border-radius: 4px;
   background: #ffffff;
   color: #242424;
-  font: 14px 'Segoe UI', system-ui, sans-serif;
+  font:
+    14px 'Segoe UI',
+    system-ui,
+    sans-serif;
 }
 .acp--dark .ac-pushButton {
   border-color: #5c5c5c;
@@ -3963,9 +3976,7 @@ h4 {
   justify-content: space-between;
   gap: 2rem;
   padding: clamp(1.5rem, 4vw, 2.75rem);
-  background:
-    radial-gradient(120% 90% at 100% 0%, var(--accent-soft), transparent 55%),
-    var(--card);
+  background: radial-gradient(120% 90% at 100% 0%, var(--accent-soft), transparent 55%), var(--card);
 }
 /* The profile card stands on its own here: no tile box behind it. */
 .tile--me {
@@ -4353,7 +4364,11 @@ h4 {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), color-mix(in srgb, var(--cat) 20%, transparent), transparent 65%);
+  background: radial-gradient(
+    320px circle at var(--mx, 50%) var(--my, 0%),
+    color-mix(in srgb, var(--cat) 20%, transparent),
+    transparent 65%
+  );
   opacity: 0;
   transition: opacity 0.35s;
 }
@@ -4480,7 +4495,11 @@ h4 {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 0%), color-mix(in srgb, var(--cat) 22%, transparent), transparent 65%);
+  background: radial-gradient(
+    280px circle at var(--mx, 50%) var(--my, 0%),
+    color-mix(in srgb, var(--cat) 22%, transparent),
+    transparent 65%
+  );
   opacity: 0;
   transition: opacity 0.35s;
 }
@@ -5307,9 +5326,7 @@ html.motion .profile:not(.is-tilting) {
   padding: clamp(1.75rem, 5vw, 3.5rem);
   border: 1px solid var(--rule);
   border-radius: var(--radius-lg);
-  background:
-    radial-gradient(80% 120% at 0% 100%, var(--accent-soft), transparent 60%),
-    var(--card);
+  background: radial-gradient(80% 120% at 0% 100%, var(--accent-soft), transparent 60%), var(--card);
 }
 .band::before {
   content: '';
@@ -5472,8 +5489,7 @@ html.motion .focus__dot::after {
   border: 1px solid var(--rule);
   border-radius: 18px;
   background:
-    radial-gradient(120% 70% at 0% 0%, color-mix(in srgb, var(--c) 12%, transparent), transparent 60%),
-    var(--card);
+    radial-gradient(120% 70% at 0% 0%, color-mix(in srgb, var(--c) 12%, transparent), transparent 60%), var(--card);
 }
 .expertise__icon {
   display: grid;
@@ -5771,7 +5787,9 @@ html.motion .xp__role.is-current::before {
 }
 @keyframes node-pulse {
   50% {
-    box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 18%, transparent), 0 0 16px var(--c);
+    box-shadow:
+      0 0 0 5px color-mix(in srgb, var(--c) 18%, transparent),
+      0 0 16px var(--c);
   }
 }
 .xp__title {
@@ -7230,7 +7248,9 @@ html.motion [data-tilt-ready][data-reveal].is-visible {
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
 }
 .kit-mode button:hover {
   border-color: var(--accent);

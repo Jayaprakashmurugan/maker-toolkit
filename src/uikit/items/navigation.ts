@@ -24,19 +24,62 @@ export const appHeader: KitItem = {
     return {
       root: hCon(
         'hConHeader',
-        { w: fx('Parent.Width', 720), h: 64, fill: 'Primary1', pad: { x: 'Regular' }, gap: 'Small', alignItems: 'Center' },
+        {
+          w: fx('Parent.Width', 720),
+          h: 64,
+          fill: 'Primary1',
+          pad: { x: 'Regular' },
+          gap: 'Small',
+          alignItems: 'Center',
+        },
         [
-          icon('imgHeaderBack', 'arrowLeft', 'White', { w: 28, h: 28, pad: 2, visible: fx(String(r.b('back')), r.b('back')), onSelect: 'Back()', tooltip: 'Back' }),
+          icon('imgHeaderBack', 'arrowLeft', 'White', {
+            w: 28,
+            h: 28,
+            pad: 2,
+            visible: fx(String(r.b('back')), r.b('back')),
+            onSelect: 'Back()',
+            tooltip: 'Back',
+          }),
           vCon('vConHeaderTitles', { w: 'fill', h: 'fill', justify: 'Center', alignItems: 'Stretch' }, [
-            lbl('lblHeaderTitle', { text: r.s('title'), w: 'fill', h: 28, size: 'Title', weight: 'Semibold', color: 'SelectedColor', pad: 0, wrap: false }),
-            lbl('lblHeaderSubtitle', { text: r.s('subtitle'), w: 'fill', h: 20, size: 'Small', color: 'Primary2', pad: 0, wrap: false, visible: fx(String(showSub), showSub) }),
+            lbl('lblHeaderTitle', {
+              text: r.s('title'),
+              w: 'fill',
+              h: 28,
+              size: 'Title',
+              weight: 'Semibold',
+              color: 'SelectedColor',
+              pad: 0,
+              wrap: false,
+            }),
+            lbl('lblHeaderSubtitle', {
+              text: r.s('subtitle'),
+              w: 'fill',
+              h: 20,
+              size: 'Small',
+              color: 'Primary2',
+              pad: 0,
+              wrap: false,
+              visible: fx(String(showSub), showSub),
+            }),
           ]),
           hCon(
             'hConHeaderAvatar',
-            { w: 36, h: 36, radius: 18, fill: { rgba: [255, 255, 255, 0.2] }, justify: 'Center', alignItems: 'Center', visible: fx(String(r.b('avatar')), r.b('avatar')) },
+            {
+              w: 36,
+              h: 36,
+              radius: 18,
+              fill: { rgba: [255, 255, 255, 0.2] },
+              justify: 'Center',
+              alignItems: 'Center',
+              visible: fx(String(r.b('avatar')), r.b('avatar')),
+            },
             [
               lbl('lblHeaderInitials', {
-                text: fx('With({ lclNames: Split(User().FullName, " ") }, Upper(Left(First(lclNames).Value, 1) & Left(Last(lclNames).Value, 1)))', 'JM'),
+                text: fx(
+                  'With({ lclNames: Split(User().FullName, " ") }, Upper(Left(First(lclNames).Value, 1) & Left(Last(lclNames).Value, 1)))',
+                  'JM',
+                ),
                 w: 'fill',
                 h: 'fill',
                 size: 'Small',
@@ -49,13 +92,26 @@ export const appHeader: KitItem = {
           ),
         ],
       ),
-      notes: ['Width follows Parent.Width, so it fills the screen when you paste it at the top.', 'The initials come from User().FullName: the first letters of the first and last name.'],
+      notes: [
+        'Width follows Parent.Width, so it fills the screen when you paste it at the top.',
+        'The initials come from User().FullName: the first letters of the first and last name.',
+      ],
     };
   },
 };
 
-const NAV_ICONS: Record<string, IconName> = { Home: 'home', Requests: 'file', Approvals: 'success', Reports: 'chart', Team: 'users', Settings: 'settings' };
-const svgInner = (shape: IconName) => iconSvg(shape, '#000').replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
+const NAV_ICONS: Record<string, IconName> = {
+  Home: 'home',
+  Requests: 'file',
+  Approvals: 'success',
+  Reports: 'chart',
+  Team: 'users',
+  Settings: 'settings',
+};
+const svgInner = (shape: IconName) =>
+  iconSvg(shape, '#000')
+    .replace(/^<svg[^>]*>/, '')
+    .replace(/<\/svg>$/, '');
 
 export const sidebar: KitItem = {
   slug: 'sidebar',
@@ -66,7 +122,12 @@ export const sidebar: KitItem = {
   canvas: { w: 300, h: 460, bg: 'page' },
   options: [
     { id: 'app', label: 'App name', type: 'text', default: 'Requests' },
-    { id: 'items', label: 'Menu items (one per line)', type: 'lines', default: ['Home', 'Requests', 'Approvals', 'Reports', 'Settings'] },
+    {
+      id: 'items',
+      label: 'Menu items (one per line)',
+      type: 'lines',
+      default: ['Home', 'Requests', 'Approvals', 'Reports', 'Settings'],
+    },
     { id: 'current', label: 'Current item in the preview', type: 'text', default: 'Requests' },
     { id: 'collapsed', label: 'Show collapsed', type: 'toggle', default: false },
   ],
@@ -74,16 +135,37 @@ export const sidebar: KitItem = {
     const r = reader(o);
     const collapsed = r.b('collapsed');
     const items = r.lines('items');
-    const sample = items.map((Title) => ({ Title, Icon: svgInner(NAV_ICONS[Title] ?? 'grid'), Current: Title === r.s('current') }));
+    const sample = items.map((Title) => ({
+      Title,
+      Icon: svgInner(NAV_ICONS[Title] ?? 'grid'),
+      Current: Title === r.s('current'),
+    }));
     const open = fx('!gblNavCollapsed', !collapsed);
     return {
       root: vCon(
         'vConSidebar',
-        { w: fx('If(gblNavCollapsed, 64, 240)', collapsed ? 64 : 240), h: fx('Parent.Height', 440), fill: 'Secondary1', pad: { y: 'Regular' }, gap: 'Regular', alignItems: 'Stretch' },
+        {
+          w: fx('If(gblNavCollapsed, 64, 240)', collapsed ? 64 : 240),
+          h: fx('Parent.Height', 440),
+          fill: 'Secondary1',
+          pad: { y: 'Regular' },
+          gap: 'Regular',
+          alignItems: 'Stretch',
+        },
         [
           hCon('hConSidebarBrand', { w: 'fill', h: 36, pad: { x: 18 }, gap: 'Small', alignItems: 'Center' }, [
             icon('imgSidebarLogo', 'grid', 'White', { w: 28, h: 28 }),
-            lbl('lblSidebarApp', { text: r.s('app'), w: 'fill', h: 'fill', size: 'Subtitle', weight: 'Semibold', color: 'SelectedColor', pad: 0, wrap: false, visible: open }),
+            lbl('lblSidebarApp', {
+              text: r.s('app'),
+              w: 'fill',
+              h: 'fill',
+              size: 'Subtitle',
+              weight: 'Semibold',
+              color: 'SelectedColor',
+              pad: 0,
+              wrap: false,
+              visible: open,
+            }),
           ]),
           gal('galSidebarNav', {
             dir: 'Vertical',
@@ -98,7 +180,14 @@ export const sidebar: KitItem = {
               return [
                 hCon(
                   'hConNavItem',
-                  { w: 'fill', h: 'fill', pad: { x: 18 }, gap: 'Small', alignItems: 'Center', fill: { if: current, then: { rgba: [255, 255, 255, 0.12] }, else: 'Transparent' } },
+                  {
+                    w: 'fill',
+                    h: 'fill',
+                    pad: { x: 18 },
+                    gap: 'Small',
+                    alignItems: 'Center',
+                    fill: { if: current, then: { rgba: [255, 255, 255, 0.12] }, else: 'Transparent' },
+                  },
                   [
                     img('imgNavIcon', {
                       w: 24,
@@ -108,7 +197,16 @@ export const sidebar: KitItem = {
                           mode === 'preview' ? row.sample.Icon : '" & ThisItem.Icon & "'
                         }</svg>`,
                     }),
-                    lbl('lblNavTitle', { text: row.f('Title'), w: 'fill', h: 'fill', size: 'Regular', color: 'SelectedColor', pad: 0, wrap: false, visible: open }),
+                    lbl('lblNavTitle', {
+                      text: row.f('Title'),
+                      w: 'fill',
+                      h: 'fill',
+                      size: 'Regular',
+                      color: 'SelectedColor',
+                      pad: 0,
+                      wrap: false,
+                      visible: open,
+                    }),
                   ],
                 ),
                 rect('shpNavCurrent', { x: 0, y: 8, w: 4, h: 28, fill: 'Accent3', visible: current }),
@@ -166,7 +264,12 @@ export const tabs: KitItem = {
   keywords: ['tabs', 'tab bar', 'segments', 'underline', 'views'],
   canvas: { w: 560, h: 100 },
   options: [
-    { id: 'tabs', label: 'Tabs (one per line)', type: 'lines', default: ['Overview', 'Details', 'Attachments', 'History'] },
+    {
+      id: 'tabs',
+      label: 'Tabs (one per line)',
+      type: 'lines',
+      default: ['Overview', 'Details', 'Attachments', 'History'],
+    },
     { id: 'selected', label: 'Selected tab in the preview', type: 'number', default: 1, min: 1, max: 8 },
   ],
   build(o) {
@@ -196,7 +299,13 @@ export const tabs: KitItem = {
               color: { if: row.selected, then: 'Primary1', else: 'Primary3' },
               onSelect: 'Select(Parent)',
             }),
-            rect('shpTabUnderline', { x: 16, y: fx('Parent.TemplateHeight - 3', 41), w: fx('Parent.TemplateWidth - 32', 88), h: 3, fill: { if: row.selected, then: 'Primary1', else: 'Transparent' } }),
+            rect('shpTabUnderline', {
+              x: 16,
+              y: fx('Parent.TemplateHeight - 3', 41),
+              w: fx('Parent.TemplateWidth - 32', 88),
+              h: 3,
+              fill: { if: row.selected, then: 'Primary1', else: 'Transparent' },
+            }),
           ],
         }),
         rect('shpTabsBaseline', { w: 'fill', h: 1, fill: 'BorderColor' }),
@@ -238,7 +347,9 @@ export const breadcrumbs: KitItem = {
     });
     return {
       root: hCon('hConBreadcrumbs', { w: 480, h: 28, gap: 'Tiny', alignItems: 'Center' }, parts),
-      notes: ['Replace each crumb’s OnSelect with a Navigate to its screen. The current page (the last crumb) has none.'],
+      notes: [
+        'Replace each crumb’s OnSelect with a Navigate to its screen. The current page (the last crumb) has none.',
+      ],
     };
   },
 };
@@ -251,21 +362,32 @@ export const stepper: KitItem = {
   keywords: ['stepper', 'wizard', 'progress', 'steps', 'multi step form', 'status indicator'],
   canvas: { w: 620, h: 120 },
   options: [
-    { id: 'steps', label: 'Steps (one per line)', type: 'lines', default: ['General information', 'Items', 'Attachments', 'Summary'] },
+    {
+      id: 'steps',
+      label: 'Steps (one per line)',
+      type: 'lines',
+      default: ['General information', 'Items', 'Attachments', 'Summary'],
+    },
     { id: 'current', label: 'Current step in the preview', type: 'number', default: 2, min: 1, max: 6 },
   ],
   build(o) {
     const r = reader(o);
     const steps = r.lines('steps').slice(0, 6);
     const current = r.n('current');
-    const sample = steps.map((Title, i) => ({ Step: i + 1, Title, Status: i + 1 < current ? 'Done' : i + 1 === current ? 'Current' : 'Open', Last: i === steps.length - 1 }));
+    const sample = steps.map((Title, i) => ({
+      Step: i + 1,
+      Title,
+      Status: i + 1 < current ? 'Done' : i + 1 === current ? 'Current' : 'Open',
+      Last: i === steps.length - 1,
+    }));
     const width = 140;
     return {
       root: gal('galStepper', {
         dir: 'Horizontal',
         w: width * steps.length,
         h: 64,
-        items: 'AddColumns(fxSteps, Status, If(Step < gblCurrentStep, "Done", Step = gblCurrentStep, "Current", "Open"))',
+        items:
+          'AddColumns(fxSteps, Status, If(Step < gblCurrentStep, "Done", Step = gblCurrentStep, "Current", "Open"))',
         sample,
         templateSize: width,
         template: (row) => {
@@ -273,17 +395,46 @@ export const stepper: KitItem = {
           const done = fx('ThisItem.Status = "Done"', status === 'Done');
           const cur = fx('ThisItem.Status = "Current"', status === 'Current');
           return [
-            rect('shpStepLine', { x: fx('Parent.TemplateWidth / 2 + 18', width / 2 + 18), y: 15, w: fx('Parent.TemplateWidth - 36', width - 36), h: 2, fill: { if: done, then: 'SuccessColor', else: 'BorderColor' }, visible: fx('ThisItem.Step < CountRows(fxSteps)', !row.sample.Last) }),
+            rect('shpStepLine', {
+              x: fx('Parent.TemplateWidth / 2 + 18', width / 2 + 18),
+              y: 15,
+              w: fx('Parent.TemplateWidth - 36', width - 36),
+              h: 2,
+              fill: { if: done, then: 'SuccessColor', else: 'BorderColor' },
+              visible: fx('ThisItem.Step < CountRows(fxSteps)', !row.sample.Last),
+            }),
             circle('shpStepDot', {
               x: fx('(Parent.TemplateWidth - 32) / 2', (width - 32) / 2),
               y: 0,
               w: 32,
               h: 32,
-              fill: { switch: 'ThisItem.Status', cases: [['Done', 'SuccessColor'], ['Current', 'Primary1']], else: 'Fill', pick: status },
-              border: { color: { switch: 'ThisItem.Status', cases: [['Done', 'SuccessColor'], ['Current', 'Primary1']], else: 'BorderColor', pick: status }, thickness: 'Regular' },
+              fill: {
+                switch: 'ThisItem.Status',
+                cases: [
+                  ['Done', 'SuccessColor'],
+                  ['Current', 'Primary1'],
+                ],
+                else: 'Fill',
+                pick: status,
+              },
+              border: {
+                color: {
+                  switch: 'ThisItem.Status',
+                  cases: [
+                    ['Done', 'SuccessColor'],
+                    ['Current', 'Primary1'],
+                  ],
+                  else: 'BorderColor',
+                  pick: status,
+                },
+                thickness: 'Regular',
+              },
             }),
             lbl('lblStepNumber', {
-              text: fx('If(ThisItem.Status = "Done", "✓", Text(ThisItem.Step))', status === 'Done' ? '✓' : String(row.sample.Step)),
+              text: fx(
+                'If(ThisItem.Status = "Done", "✓", Text(ThisItem.Step))',
+                status === 'Done' ? '✓' : String(row.sample.Step),
+              ),
               x: fx('(Parent.TemplateWidth - 32) / 2', (width - 32) / 2),
               y: 0,
               w: 32,
@@ -311,8 +462,12 @@ export const stepper: KitItem = {
         },
       }),
       formulas: `fxSteps =\n[\n${steps.map((s, i) => `    { Step: ${i + 1}, Title: ${str(s)} }`).join(',\n')}\n];`,
-      onVisible: ['// 1 on the first screen of the form, 2 on the second, and so on', 'Set(gblCurrentStep, 1)'].join('\n'),
-      notes: ['Set gblCurrentStep on each screen of the form, or with Next and Back buttons: Set(gblCurrentStep, gblCurrentStep + 1).'],
+      onVisible: ['// 1 on the first screen of the form, 2 on the second, and so on', 'Set(gblCurrentStep, 1)'].join(
+        '\n',
+      ),
+      notes: [
+        'Set gblCurrentStep on each screen of the form, or with Next and Back buttons: Set(gblCurrentStep, gblCurrentStep + 1).',
+      ],
       uses: [
         { name: 'fxSteps', what: 'Named formula: the steps' },
         { name: 'gblCurrentStep', what: 'Global variable: the step the user is on' },
@@ -337,12 +492,29 @@ export const pagination: KitItem = {
     const size = r.n('size');
     const page = r.n('page');
     const pages = 8;
-    const ghost = { fill: 'Transparent', color: 'Primary1', border: { color: 'BorderColor', thickness: 'Thin' }, hoverFill: 'HoverFill', radius: 'Medium', size: 'Small' } as const;
+    const ghost = {
+      fill: 'Transparent',
+      color: 'Primary1',
+      border: { color: 'BorderColor', thickness: 'Thin' },
+      hoverFill: 'HoverFill',
+      radius: 'Medium',
+      size: 'Small',
+    } as const;
     return {
       root: hCon('hConPagination', { w: 400, h: 40, gap: 'Small', alignItems: 'Center', justify: 'Center' }, [
-        btn('btnPagePrevious', { ...ghost, text: 'Previous', w: 100, h: 34, disabled: fx('lclPage <= 1', page <= 1), onSelect: 'UpdateContext({ lclPage: lclPage - 1 })' }),
+        btn('btnPagePrevious', {
+          ...ghost,
+          text: 'Previous',
+          w: 100,
+          h: 34,
+          disabled: fx('lclPage <= 1', page <= 1),
+          onSelect: 'UpdateContext({ lclPage: lclPage - 1 })',
+        }),
         lbl('lblPageCount', {
-          text: fx(`"Page " & lclPage & " of " & Max(1, RoundUp(CountRows(colRequests) / ${size}, 0))`, `Page ${page} of ${pages}`),
+          text: fx(
+            `"Page " & lclPage & " of " & Max(1, RoundUp(CountRows(colRequests) / ${size}, 0))`,
+            `Page ${page} of ${pages}`,
+          ),
           w: 140,
           h: 'fill',
           size: 'Small',
@@ -370,4 +542,3 @@ export const pagination: KitItem = {
     };
   },
 };
-

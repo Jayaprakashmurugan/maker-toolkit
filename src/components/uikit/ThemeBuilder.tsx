@@ -11,9 +11,24 @@ import YamlCode from './YamlCode';
 
 const GROUPS: { title: string; keys: ColorKey[] }[] = [
   { title: 'Brand', keys: ['Primary1', 'Primary2', 'Primary3'] },
-  { title: 'Surfaces', keys: ['Secondary1', 'Secondary2', 'Secondary3', 'Fill', 'BackgroundFill', 'BorderColor', 'TextColor'] },
+  {
+    title: 'Surfaces',
+    keys: ['Secondary1', 'Secondary2', 'Secondary3', 'Fill', 'BackgroundFill', 'BorderColor', 'TextColor'],
+  },
   { title: 'Accents', keys: ['Accent1', 'Accent2', 'Accent3'] },
-  { title: 'States', keys: ['HoverFill', 'HoverBorderColor', 'PressedFill', 'PressedBorderColor', 'SelectedFill', 'SelectedColor', 'DisabledFill', 'DisabledColor'] },
+  {
+    title: 'States',
+    keys: [
+      'HoverFill',
+      'HoverBorderColor',
+      'PressedFill',
+      'PressedBorderColor',
+      'SelectedFill',
+      'SelectedColor',
+      'DisabledFill',
+      'DisabledColor',
+    ],
+  },
   { title: 'Messages', keys: ['SuccessColor', 'WarningColor', 'ErrorColor'] },
 ];
 
@@ -69,7 +84,10 @@ export default function ThemeBuilder() {
               aria-checked={base === t.id && theme.id !== 'custom'}
               onClick={() => saveStored(t.id === 'slate' ? null : { base: t.id })}
             >
-              <i style={{ background: `linear-gradient(135deg, ${t.colors.Primary1} 50%, ${t.colors.Secondary1} 50%)` }} aria-hidden="true" />
+              <i
+                style={{ background: `linear-gradient(135deg, ${t.colors.Primary1} 50%, ${t.colors.Secondary1} 50%)` }}
+                aria-hidden="true"
+              />
               {t.name}
             </button>
           ))}
@@ -78,7 +96,12 @@ export default function ThemeBuilder() {
           <fieldset key={g.title} className="tb-group">
             <legend>{g.title}</legend>
             {g.keys.map((k) => (
-              <Swatch key={k} label={k} value={theme.colors[k]} onChange={(v) => update({ colors: { ...stored?.colors, [k]: v } })} />
+              <Swatch
+                key={k}
+                label={k}
+                value={theme.colors[k]}
+                onChange={(v) => update({ colors: { ...stored?.colors, [k]: v } })}
+              />
             ))}
           </fieldset>
         ))}
@@ -89,8 +112,18 @@ export default function ThemeBuilder() {
               <span className="tb-pill" style={{ background: theme.status[i], color: theme.statusFont[i] }}>
                 {i}
               </span>
-              <input type="color" value={theme.status[i]} aria-label={`Status ${i} fill`} onChange={(e) => update({ status: { ...stored?.status, [i]: e.target.value.toUpperCase() } })} />
-              <input type="color" value={theme.statusFont[i]} aria-label={`Status ${i} text`} onChange={(e) => update({ statusFont: { ...stored?.statusFont, [i]: e.target.value.toUpperCase() } })} />
+              <input
+                type="color"
+                value={theme.status[i]}
+                aria-label={`Status ${i} fill`}
+                onChange={(e) => update({ status: { ...stored?.status, [i]: e.target.value.toUpperCase() } })}
+              />
+              <input
+                type="color"
+                value={theme.statusFont[i]}
+                aria-label={`Status ${i} text`}
+                onChange={(e) => update({ statusFont: { ...stored?.statusFont, [i]: e.target.value.toUpperCase() } })}
+              />
               <small>{STATUS_MEANING[i]}</small>
             </div>
           ))}

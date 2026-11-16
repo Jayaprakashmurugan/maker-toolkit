@@ -65,7 +65,15 @@ export const GET: APIRoute = async () => {
       s: ['ui kit component yaml', ...(i.keywords ?? [])].join(' ').toLowerCase(),
       c: categoryById('power-apps').color,
     })),
-    { t: 'Design system (fxConfig)', u: '/ui-kit/design-system/', k: 'UI Kit', g: 'Design system', d: 'Colors, sizes and naming conventions for the UI Kit, with a theme builder.', s: 'fxconfig theme colors naming conventions prefixes design tokens', c: categoryById('power-apps').color },
+    {
+      t: 'Design system (fxConfig)',
+      u: '/ui-kit/design-system/',
+      k: 'UI Kit',
+      g: 'Design system',
+      d: 'Colors, sizes and naming conventions for the UI Kit, with a theme builder.',
+      s: 'fxconfig theme colors naming conventions prefixes design tokens',
+      c: categoryById('power-apps').color,
+    },
     ...posts.map((p) => ({
       t: p.data.title,
       u: postUrl(p),
@@ -75,9 +83,33 @@ export const GET: APIRoute = async () => {
       s: ['blog guide', ...p.data.tags].join(' ').toLowerCase(),
       c: '#4c8dff',
     })),
-    { t: 'What’s new', u: '/changelog/', k: 'Page', g: 'Site', d: 'New tools, tool updates and blog posts.', s: 'changelog release updates new', c: '#857f73' },
-    { t: 'About', u: '/about/', k: 'Page', g: 'Site', d: 'Who makes this site and why.', s: 'author contact', c: '#857f73' },
-    { t: 'Privacy & terms', u: '/privacy/', k: 'Page', g: 'Site', d: 'No cookies, no tracking, nothing leaves your browser.', s: 'privacy cookies terms', c: '#857f73' },
+    {
+      t: 'What’s new',
+      u: '/changelog/',
+      k: 'Page',
+      g: 'Site',
+      d: 'New tools, tool updates and blog posts.',
+      s: 'changelog release updates new',
+      c: '#857f73',
+    },
+    {
+      t: 'About',
+      u: '/about/',
+      k: 'Page',
+      g: 'Site',
+      d: 'Who makes this site and why.',
+      s: 'author contact',
+      c: '#857f73',
+    },
+    {
+      t: 'Privacy & terms',
+      u: '/privacy/',
+      k: 'Page',
+      g: 'Site',
+      d: 'No cookies, no tracking, nothing leaves your browser.',
+      s: 'privacy cookies terms',
+      c: '#857f73',
+    },
   ];
   return new Response(JSON.stringify(entries), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
 };

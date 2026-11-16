@@ -1,5 +1,16 @@
 import { useState } from 'react';
-import { OP_LABELS, OUTLOOK_FIELDS, PRESETS, TYPE_LABELS, buildConditions, opsFor, type FieldType, type Op, type Rule, type Source } from '../lib/triggerCondition';
+import {
+  OP_LABELS,
+  OUTLOOK_FIELDS,
+  PRESETS,
+  TYPE_LABELS,
+  buildConditions,
+  opsFor,
+  type FieldType,
+  type Op,
+  type Rule,
+  type Source,
+} from '../lib/triggerCondition';
 import { CodeLine } from './FormulaDetail';
 
 const SOURCES: [Source, string][] = [
@@ -18,7 +29,7 @@ const fieldPlaceholder: Record<Source, string> = {
   sharepoint: 'Internal name, e.g. Status',
   dataverse: 'Logical name, e.g. statuscode',
   outlook: '',
-  other: "Path in the trigger body, e.g. status or order/total",
+  other: 'Path in the trigger body, e.g. status or order/total',
 };
 
 export default function TriggerBuilder() {
@@ -32,7 +43,8 @@ export default function TriggerBuilder() {
       rs.map((r, k) => {
         if (k !== i) return r;
         const next = { ...r, ...patch };
-        if (patch.type && patch.type !== r.type) Object.assign(next, { value: patch.type === 'bool' ? 'Yes' : '', dynamic: false });
+        if (patch.type && patch.type !== r.type)
+          Object.assign(next, { value: patch.type === 'bool' ? 'Yes' : '', dynamic: false });
         if (!opsFor(next.type).includes(next.op)) next.op = opsFor(next.type)[0];
         return next;
       }),
@@ -122,16 +134,34 @@ export default function TriggerBuilder() {
                 ))}
               </select>
             ) : (
-              <input className="cb-input od-field" value={r.field} onChange={(e) => update(i, { field: e.target.value })} placeholder={fieldPlaceholder[source]} aria-label="Column" spellCheck={false} />
+              <input
+                className="cb-input od-field"
+                value={r.field}
+                onChange={(e) => update(i, { field: e.target.value })}
+                placeholder={fieldPlaceholder[source]}
+                aria-label="Column"
+                spellCheck={false}
+              />
             )}
-            <select className="cb-input" value={r.type} onChange={(e) => update(i, { type: e.target.value as FieldType })} aria-label="Type" disabled={source === 'outlook'}>
+            <select
+              className="cb-input"
+              value={r.type}
+              onChange={(e) => update(i, { type: e.target.value as FieldType })}
+              aria-label="Type"
+              disabled={source === 'outlook'}
+            >
               {types.map(([t, label]) => (
                 <option key={t} value={t}>
                   {label}
                 </option>
               ))}
             </select>
-            <select className="cb-input" value={r.op} onChange={(e) => update(i, { op: e.target.value as Op })} aria-label="Condition">
+            <select
+              className="cb-input"
+              value={r.op}
+              onChange={(e) => update(i, { op: e.target.value as Op })}
+              aria-label="Condition"
+            >
               {opsFor(r.type).map((op) => (
                 <option key={op} value={op}>
                   {OP_LABELS[op]}
@@ -142,7 +172,12 @@ export default function TriggerBuilder() {
               {r.op !== 'empty' && r.op !== 'notempty' && (
                 <>
                   {r.type === 'bool' && !r.dynamic ? (
-                    <select className="cb-input" value={/^(true|yes|1)$/i.test(r.value) ? 'Yes' : 'No'} onChange={(e) => update(i, { value: e.target.value })} aria-label="Value">
+                    <select
+                      className="cb-input"
+                      value={/^(true|yes|1)$/i.test(r.value) ? 'Yes' : 'No'}
+                      onChange={(e) => update(i, { value: e.target.value })}
+                      aria-label="Value"
+                    >
                       <option>Yes</option>
                       <option>No</option>
                     </select>
@@ -158,16 +193,31 @@ export default function TriggerBuilder() {
                     />
                   )}
                   <label className="ts-check od-dyn" title="Compare with an expression instead of fixed text">
-                    <input type="checkbox" checked={r.dynamic} onChange={(e) => update(i, { dynamic: e.target.checked, value: '' })} /> fx
+                    <input
+                      type="checkbox"
+                      checked={r.dynamic}
+                      onChange={(e) => update(i, { dynamic: e.target.checked, value: '' })}
+                    />{' '}
+                    fx
                   </label>
                   {(r.type === 'text' || r.type === 'choice' || r.type === 'person') && (
                     <label className="ts-check od-dyn" title="Ignore upper and lower case">
-                      <input type="checkbox" checked={r.ignoreCase} onChange={(e) => update(i, { ignoreCase: e.target.checked })} /> Aa
+                      <input
+                        type="checkbox"
+                        checked={r.ignoreCase}
+                        onChange={(e) => update(i, { ignoreCase: e.target.checked })}
+                      />{' '}
+                      Aa
                     </label>
                   )}
                 </>
               )}
-              <button type="button" className="icon-btn cb-x" aria-label="Remove condition" onClick={() => setRules((rs) => rs.filter((_, k) => k !== i))}>
+              <button
+                type="button"
+                className="icon-btn cb-x"
+                aria-label="Remove condition"
+                onClick={() => setRules((rs) => rs.filter((_, k) => k !== i))}
+              >
                 ×
               </button>
             </div>
@@ -186,17 +236,35 @@ export default function TriggerBuilder() {
           <li>
             On the trigger, open <b>Settings</b> and find <b>Trigger conditions</b>.
           </li>
-          <li>{lines.length > 1 ? 'Add one condition box per line below and paste each line into its own box.' : 'Add a condition and paste this line.'}</li>
+          <li>
+            {lines.length > 1
+              ? 'Add one condition box per line below and paste each line into its own box.'
+              : 'Add a condition and paste this line.'}
+          </li>
         </ol>
         {lines.length ? (
           lines.map((l, i) => <CodeLine key={i} code={l} label={`trigger condition ${i + 1}`} lang="wdl" />)
         ) : (
-          <p className="sh-intro">{rules.length ? 'Type a column name to see the condition here.' : 'Add a condition to see it here.'}</p>
+          <p className="sh-intro">
+            {rules.length ? 'Type a column name to see the condition here.' : 'Add a condition to see it here.'}
+          </p>
         )}
         <ul className="notes od-tips">
-          <li>When a condition is false, the flow doesn’t start at all, so it uses no runs and doesn’t appear in run history.</li>
-          {source === 'sharepoint' && <li>Use internal column names. Choice and lookup columns are read through /Value, people through /Email.</li>}
-          {source === 'dataverse' && <li>Dataverse triggers also have a “Filter rows” setting that takes an OData filter, which can be simpler for basic checks.</li>}
+          <li>
+            When a condition is false, the flow doesn’t start at all, so it uses no runs and doesn’t appear in run
+            history.
+          </li>
+          {source === 'sharepoint' && (
+            <li>
+              Use internal column names. Choice and lookup columns are read through /Value, people through /Email.
+            </li>
+          )}
+          {source === 'dataverse' && (
+            <li>
+              Dataverse triggers also have a “Filter rows” setting that takes an OData filter, which can be simpler for
+              basic checks.
+            </li>
+          )}
           {join === 'or' && <li>Separate boxes always mean AND, so “any is true” is written as one @or(...) line.</li>}
         </ul>
       </section>

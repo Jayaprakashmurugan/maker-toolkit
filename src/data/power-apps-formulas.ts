@@ -37,7 +37,10 @@ export const formulas: RefItem[] = [
     ],
     examples: [
       { code: `If(Value(txtAge.Text) >= 18, "Adult", "Minor")`, result: '"Adult" when the age is 18 or more' },
-      { code: `If(Score >= 90, "A", Score >= 75, "B", "C")`, result: 'Checks conditions in order and returns the first match' },
+      {
+        code: `If(Score >= 90, "A", Score >= 75, "B", "C")`,
+        result: 'Checks conditions in order and returns the first match',
+      },
     ],
     notes: ['Conditions are checked from left to right; evaluation stops at the first true one.'],
     tags: ['condition', 'else', 'branch', 'ternary'],
@@ -100,7 +103,10 @@ export const formulas: RefItem[] = [
     summary: 'Returns the first argument that is not blank or an empty string.',
     syntax: 'Coalesce(Value1 [, Value2, ...])',
     examples: [
-      { code: `Coalesce(txtNickname.Text, User().FullName)`, result: 'The nickname, or the full name if none was typed' },
+      {
+        code: `Coalesce(txtNickname.Text, User().FullName)`,
+        result: 'The nickname, or the full name if none was typed',
+      },
     ],
     notes: ['Empty strings count as blank, so this is a tidy way to supply a fallback value.'],
     tags: ['default value', 'fallback', 'null', 'nvl'],
@@ -217,7 +223,11 @@ export const formulas: RefItem[] = [
     params: [
       { name: 'OldString', description: 'The text to find.' },
       { name: 'NewString', description: 'The replacement text.' },
-      { name: 'InstanceNumber', description: 'Replace only this occurrence. All occurrences if omitted.', optional: true },
+      {
+        name: 'InstanceNumber',
+        description: 'Replace only this occurrence. All occurrences if omitted.',
+        optional: true,
+      },
     ],
     examples: [{ code: `Substitute("2026/10/23", "/", "-")`, result: '"2026-10-23"' }],
     tags: ['replace text', 'find and replace'],
@@ -257,7 +267,12 @@ export const formulas: RefItem[] = [
     category: 'Text',
     summary: 'Checks whether a string begins with another string.',
     syntax: 'StartsWith(Text, StartText)',
-    examples: [{ code: `Filter(Contacts, StartsWith(FullName, txtSearch.Text))`, result: 'Contacts whose name starts with the search' }],
+    examples: [
+      {
+        code: `Filter(Contacts, StartsWith(FullName, txtSearch.Text))`,
+        result: 'Contacts whose name starts with the search',
+      },
+    ],
     notes: ['Not case-sensitive. Often delegable, which makes it a good choice for search boxes.'],
     tags: ['prefix', 'begins with'],
     docs: 'function-startswith',
@@ -308,7 +323,10 @@ export const formulas: RefItem[] = [
     summary: 'Encodes special characters so text can be used safely inside a URL.',
     syntax: 'EncodeUrl(String)',
     examples: [
-      { code: `Launch("https://www.bing.com/search?q=" & EncodeUrl(txtQuery.Text))`, result: 'Opens a search with the typed words' },
+      {
+        code: `Launch("https://www.bing.com/search?q=" & EncodeUrl(txtQuery.Text))`,
+        result: 'Opens a search with the typed words',
+      },
     ],
     tags: ['url encode', 'query string', 'escape'],
     docs: 'function-encode-decode',
@@ -455,7 +473,9 @@ export const formulas: RefItem[] = [
     category: 'Date & Time',
     summary: 'Checks whether a date/time value falls on today in the user’s time zone.',
     syntax: 'IsToday(DateTime)',
-    examples: [{ code: `If(IsToday(ThisItem.DueDate), Color.Orange, Color.Black)`, result: 'Highlights items due today' }],
+    examples: [
+      { code: `If(IsToday(ThisItem.DueDate), Color.Orange, Color.Black)`, result: 'Highlights items due today' },
+    ],
     tags: ['due today', 'same day'],
     docs: 'function-now-today-istoday',
   },
@@ -490,7 +510,9 @@ export const formulas: RefItem[] = [
     category: 'Date & Time',
     summary: 'Returns the difference between two date/time values in the units you choose.',
     syntax: 'DateDiff(StartDateTime, EndDateTime [, Units])',
-    examples: [{ code: `DateDiff(Today(), dpDueDate.SelectedDate, TimeUnit.Days)`, result: 'Days left until the due date' }],
+    examples: [
+      { code: `DateDiff(Today(), dpDueDate.SelectedDate, TimeUnit.Days)`, result: 'Days left until the due date' },
+    ],
     notes: ['Returns whole units only, with no fractions. Days are the default unit.'],
     tags: ['days between', 'age', 'duration', 'difference'],
     docs: 'function-dateadd-datediff',
@@ -545,7 +567,9 @@ export const formulas: RefItem[] = [
     category: 'Date & Time',
     summary: 'Returns the hour part of a date/time value, from 0 to 23.',
     syntax: 'Hour(DateTime)',
-    examples: [{ code: `If(Hour(Now()) < 12, "Good morning", "Good afternoon")`, result: 'A greeting that fits the time' }],
+    examples: [
+      { code: `If(Hour(Now()) < 12, "Good morning", "Good afternoon")`, result: 'A greeting that fits the time' },
+    ],
     tags: ['time part'],
     docs: 'function-datetime-parts',
   },
@@ -570,9 +594,7 @@ export const formulas: RefItem[] = [
       { name: 'Table', description: 'The table or data source to filter.' },
       { name: 'Condition', description: 'A test for each record. All conditions must be true.' },
     ],
-    examples: [
-      { code: `Filter(Tasks, AssignedTo.Email = User().Email, Status <> "Done")`, result: 'My open tasks' },
-    ],
+    examples: [{ code: `Filter(Tasks, AssignedTo.Email = User().Email, Status <> "Done")`, result: 'My open tasks' }],
     notes: [
       'On large data sources, keep conditions delegable. Otherwise only the first 500 records (adjustable up to 2,000) are checked.',
     ],
@@ -597,7 +619,9 @@ export const formulas: RefItem[] = [
     category: 'Table',
     summary: 'Returns records where any of the listed text columns contains the search text.',
     syntax: 'Search(Table, SearchString, Column1 [, Column2, ...])',
-    examples: [{ code: `Search(Contacts, txtSearch.Text, FullName, Email)`, result: 'Contacts matching the search box' }],
+    examples: [
+      { code: `Search(Contacts, txtSearch.Text, FullName, Email)`, result: 'Contacts matching the search box' },
+    ],
     notes: ['Not case-sensitive. An empty search string returns the whole table.'],
     tags: ['search box', 'contains', 'find'],
     docs: 'function-filter-lookup',
@@ -617,7 +641,10 @@ export const formulas: RefItem[] = [
     summary: 'Sorts a table by one or more columns, each with its own direction.',
     syntax: 'SortByColumns(Table, Column1 [, SortOrder1, Column2, SortOrder2, ...])',
     examples: [
-      { code: `SortByColumns(Tasks, DueDate, SortOrder.Ascending, Title, SortOrder.Ascending)`, result: 'By due date, then title' },
+      {
+        code: `SortByColumns(Tasks, DueDate, SortOrder.Ascending, Title, SortOrder.Ascending)`,
+        result: 'By due date, then title',
+      },
     ],
     tags: ['order by', 'multi sort'],
     docs: 'function-sort',
@@ -691,7 +718,9 @@ export const formulas: RefItem[] = [
     category: 'Table',
     summary: 'Returns a copy of a table with extra calculated columns. The source is unchanged.',
     syntax: 'AddColumns(Table, ColumnName1, Formula1 [, ColumnName2, Formula2, ...])',
-    examples: [{ code: `AddColumns(Orders, LineTotal, Quantity * UnitPrice)`, result: 'Orders with a LineTotal column' }],
+    examples: [
+      { code: `AddColumns(Orders, LineTotal, Quantity * UnitPrice)`, result: 'Orders with a LineTotal column' },
+    ],
     tags: ['calculated column', 'shape', 'add field'],
     docs: 'function-table-shaping',
   },
@@ -768,7 +797,9 @@ export const formulas: RefItem[] = [
     category: 'Table',
     summary: 'Generates a single-column table of sequential numbers.',
     syntax: 'Sequence(Records [, Start [, Step]])',
-    examples: [{ code: `ForAll(Sequence(12), Text(Date(2026, Value, 1), "mmmm"))`, result: 'The names of the 12 months' }],
+    examples: [
+      { code: `ForAll(Sequence(12), Text(Date(2026, Value, 1), "mmmm"))`, result: 'The names of the 12 months' },
+    ],
     notes: ['The result column is named Value.'],
     tags: ['range', 'numbers', 'loop n times'],
     docs: 'function-sequence',
@@ -779,7 +810,10 @@ export const formulas: RefItem[] = [
     summary: 'Creates a temporary table from records you write inline.',
     syntax: 'Table(Record1 [, Record2, ...])',
     examples: [
-      { code: `Table({ Label: "Low", Level: 1 }, { Label: "High", Level: 2 })`, result: 'A two-row table for a dropdown' },
+      {
+        code: `Table({ Label: "Low", Level: 1 }, { Label: "High", Level: 2 })`,
+        result: 'A two-row table for a dropdown',
+      },
     ],
     tags: ['inline table', 'static list', 'records'],
     docs: 'function-table',
@@ -809,7 +843,9 @@ export const formulas: RefItem[] = [
     category: 'Data source',
     summary: 'Returns a record holding the default values of a data source. Used with Patch to create records.',
     syntax: 'Defaults(DataSource)',
-    examples: [{ code: `Patch(Requests, Defaults(Requests), { Title: "New request" })`, result: 'Creates a new record' }],
+    examples: [
+      { code: `Patch(Requests, Defaults(Requests), { Title: "New request" })`, result: 'Creates a new record' },
+    ],
     tags: ['new record', 'create'],
     docs: 'function-defaults',
   },
@@ -828,7 +864,9 @@ export const formulas: RefItem[] = [
     category: 'Data source',
     summary: 'Empties a collection and then fills it with new records, in one step.',
     syntax: 'ClearCollect(Collection, Item1 [, Item2, ...])',
-    examples: [{ code: `ClearCollect(colOpen, Filter(Tasks, Status = "Open"))`, result: 'A fresh local copy of open tasks' }],
+    examples: [
+      { code: `ClearCollect(colOpen, Filter(Tasks, Status = "Open"))`, result: 'A fresh local copy of open tasks' },
+    ],
     tags: ['cache', 'reload collection', 'local data'],
     docs: 'function-clear-collect-clearcollect',
   },
@@ -933,7 +971,10 @@ export const formulas: RefItem[] = [
     summary: 'Moves to another screen, optionally with a transition and context variables.',
     syntax: 'Navigate(Screen [, Transition [, UpdateContextRecord]])',
     examples: [
-      { code: `Navigate(DetailsScreen, ScreenTransition.Cover, { selectedId: ThisItem.ID })`, result: 'Opens the details screen' },
+      {
+        code: `Navigate(DetailsScreen, ScreenTransition.Cover, { selectedId: ThisItem.ID })`,
+        result: 'Opens the details screen',
+      },
     ],
     tags: ['go to screen', 'change screen'],
     docs: 'function-navigate',
@@ -990,7 +1031,9 @@ export const formulas: RefItem[] = [
       { name: 'NotificationType', description: 'Success, Warning, Error or Information.', optional: true },
       { name: 'Timeout', description: 'Milliseconds before it hides. 0 keeps it until dismissed.', optional: true },
     ],
-    examples: [{ code: `Notify("Saved!", NotificationType.Success, 3000)`, result: 'A green banner for three seconds' }],
+    examples: [
+      { code: `Notify("Saved!", NotificationType.Success, 3000)`, result: 'A green banner for three seconds' },
+    ],
     tags: ['toast', 'message', 'alert', 'banner'],
     docs: 'function-showerror',
   },
@@ -1162,7 +1205,9 @@ export const formulas: RefItem[] = [
     category: 'JSON',
     summary: 'Reads JSON text into a dynamic value that you convert with Text, Value and similar functions.',
     syntax: 'ParseJSON(JSONString)',
-    examples: [{ code: `Text(ParseJSON(varResponse).customer.name)`, result: 'The customer name from a flow’s response' }],
+    examples: [
+      { code: `Text(ParseJSON(varResponse).customer.name)`, result: 'The customer name from a flow’s response' },
+    ],
     notes: ['Fields come back untyped, so convert each one to the type you need.'],
     tags: ['deserialize', 'parse', 'flow response', 'api'],
     docs: 'function-parsejson',
@@ -1275,7 +1320,9 @@ export const formulas: RefItem[] = [
     summary: 'Returns a random decimal number from 0 up to, but not including, 1.',
     syntax: 'Rand()',
     examples: [{ code: `Round(Rand() * 100, 0)`, result: 'A random number from 0 to 100' }],
-    notes: ['Rand is volatile: it gets a new value whenever the formula recalculates. Store it with Set to keep one value.'],
+    notes: [
+      'Rand is volatile: it gets a new value whenever the formula recalculates. Store it with Set to keep one value.',
+    ],
     tags: ['random'],
     docs: 'function-rand',
   },
@@ -1657,7 +1704,9 @@ export const formulas: RefItem[] = [
     category: 'Data source',
     summary: 'Replaces a whole record in a data source with a new one.',
     syntax: 'Update(DataSource, OldRecord, NewRecord [, RemoveFlags.All])',
-    examples: [{ code: `Update(colCart, First(colCart), { Product: "Pen", Qty: 3 })`, result: 'Replaces the first cart line' }],
+    examples: [
+      { code: `Update(colCart, First(colCart), { Product: "Pen", Qty: 3 })`, result: 'Replaces the first cart line' },
+    ],
     notes: ['Columns you leave out are cleared. Use Patch to change only some columns.'],
     tags: ['replace record'],
     docs: 'function-update-updateif',
@@ -1676,7 +1725,9 @@ export const formulas: RefItem[] = [
     category: 'Data source',
     summary: 'Links two Dataverse records through a one-to-many or many-to-many relationship.',
     syntax: 'Relate(Record1.RelatedTable, Record2)',
-    examples: [{ code: `Relate(gallProjects.Selected.Members, cmbPeople.Selected)`, result: 'Adds a person to the project' }],
+    examples: [
+      { code: `Relate(gallProjects.Selected.Members, cmbPeople.Selected)`, result: 'Adds a person to the project' },
+    ],
     tags: ['dataverse', 'many to many', 'link records'],
     docs: 'function-relate-unrelate',
   },
@@ -1685,7 +1736,9 @@ export const formulas: RefItem[] = [
     category: 'Data source',
     summary: 'Removes the link between two related Dataverse records.',
     syntax: 'Unrelate(Record1.RelatedTable, Record2)',
-    examples: [{ code: `Unrelate(gallProjects.Selected.Members, ThisItem)`, result: 'Removes a person from the project' }],
+    examples: [
+      { code: `Unrelate(gallProjects.Selected.Members, ThisItem)`, result: 'Removes a person from the project' },
+    ],
     tags: ['dataverse', 'many to many', 'unlink records'],
     docs: 'function-relate-unrelate',
   },
@@ -1712,7 +1765,9 @@ export const formulas: RefItem[] = [
     category: 'Data source',
     summary: 'Returns information about a data source, such as permissions or a column’s display name.',
     syntax: 'DataSourceInfo(DataSource, Information [, ColumnName])',
-    examples: [{ code: `DataSourceInfo(Tasks, DataSourceInfo.CreatePermission)`, result: 'true if the user can create tasks' }],
+    examples: [
+      { code: `DataSourceInfo(Tasks, DataSourceInfo.CreatePermission)`, result: 'true if the user can create tasks' },
+    ],
     tags: ['permissions', 'can edit', 'max length'],
     docs: 'function-datasourceinfo',
   },
@@ -1739,7 +1794,9 @@ export const formulas: RefItem[] = [
     category: 'Data source',
     summary: 'Loads a collection that was saved on the device with SaveData.',
     syntax: 'LoadData(Collection, Name [, IgnoreNonexistentFile])',
-    examples: [{ code: `LoadData(colDrafts, "drafts", true)`, result: 'Restores the drafts, with no error if none were saved' }],
+    examples: [
+      { code: `LoadData(colDrafts, "drafts", true)`, result: 'Restores the drafts, with no error if none were saved' },
+    ],
     tags: ['offline', 'local storage', 'cache'],
     docs: 'function-savedata-loaddata',
   },
@@ -1759,7 +1816,12 @@ export const formulas: RefItem[] = [
     category: 'Behavior',
     summary: 'Shows a confirmation dialog and returns true if the user confirms.',
     syntax: 'Confirm(Message [, OptionsRecord])',
-    examples: [{ code: `If(Confirm("Delete this item?"), Remove(Tasks, ThisItem))`, result: 'Deletes only after the user agrees' }],
+    examples: [
+      {
+        code: `If(Confirm("Delete this item?"), Remove(Tasks, ThisItem))`,
+        result: 'Deletes only after the user agrees',
+      },
+    ],
     notes: ['The options record can set Title, Subtitle, ConfirmButton and CancelButton.'],
     tags: ['are you sure', 'dialog', 'popup', 'delete confirmation'],
     docs: 'function-confirm',
@@ -1859,7 +1921,9 @@ export const formulas: RefItem[] = [
     category: 'Information',
     summary: 'Returns the user’s language tag, such as "en-US".',
     syntax: 'Language()',
-    examples: [{ code: `If(StartsWith(Language(), "fr"), "Bonjour", "Hello")`, result: 'A greeting in the user’s language' }],
+    examples: [
+      { code: `If(StartsWith(Language(), "fr"), "Bonjour", "Hello")`, result: 'A greeting in the user’s language' },
+    ],
     tags: ['locale', 'translation', 'multilingual'],
     docs: 'function-language',
   },
@@ -1929,7 +1993,10 @@ export const formulas: RefItem[] = [
     summary: 'Returns the device’s GPS position: latitude, longitude and altitude.',
     syntax: 'Location.Latitude  |  Location.Longitude  |  Location.Altitude',
     examples: [
-      { code: `Patch(Visits, Defaults(Visits), { Lat: Location.Latitude, Lon: Location.Longitude })`, result: 'Saves where a visit happened' },
+      {
+        code: `Patch(Visits, Defaults(Visits), { Lat: Location.Latitude, Lon: Location.Longitude })`,
+        result: 'Saves where a visit happened',
+      },
     ],
     tags: ['gps', 'geolocation', 'coordinates', 'map'],
     docs: 'signals',
@@ -2031,7 +2098,12 @@ export const formulas: RefItem[] = [
     category: 'Operators',
     summary: 'Gives the current record a name, which helps in nested galleries and loops.',
     syntax: 'Table As Name',
-    examples: [{ code: `ForAll(Orders As o, Patch(Archive, Defaults(Archive), { OrderId: o.ID }))`, result: 'Clear names in nested logic' }],
+    examples: [
+      {
+        code: `ForAll(Orders As o, Patch(Archive, Defaults(Archive), { OrderId: o.ID }))`,
+        result: 'Clear names in nested logic',
+      },
+    ],
     tags: ['alias', 'nested loop', 'rename record'],
     docs: 'operators#thisitem-thisrecord-and-as-operators',
   },
@@ -2060,7 +2132,9 @@ export const formulas: RefItem[] = [
     category: 'AI',
     summary: 'Uses AI to sort text into one of the categories you provide.',
     syntax: 'AIClassify(Text, Categories)',
-    examples: [{ code: `AIClassify(txtFeedback.Text, ["Billing", "Technical", "Other"])`, result: 'The best-matching category' }],
+    examples: [
+      { code: `AIClassify(txtFeedback.Text, ["Billing", "Technical", "Other"])`, result: 'The best-matching category' },
+    ],
     notes: ['AI functions must be available in your environment, and results can vary.'],
     tags: ['classify', 'categorize', 'copilot', 'ai builder'],
     docs: 'function-ai',
@@ -2122,7 +2196,12 @@ export const formulas: RefItem[] = [
     category: 'Testing',
     summary: 'In a Test Studio test, checks that a condition is true and fails the test if not.',
     syntax: 'Assert(Condition [, Message])',
-    examples: [{ code: `Assert(CountRows(colCart) = 1, "Cart should have one line")`, result: 'Fails the test with your message' }],
+    examples: [
+      {
+        code: `Assert(CountRows(colCart) = 1, "Cart should have one line")`,
+        result: 'Fails the test with your message',
+      },
+    ],
     tags: ['test studio', 'unit test'],
     docs: 'function-assert',
   },
@@ -2131,7 +2210,12 @@ export const formulas: RefItem[] = [
     category: 'Testing',
     summary: 'Writes a message to Monitor, test results and Application Insights.',
     syntax: 'Trace(Message [, TraceSeverity [, CustomRecord]])',
-    examples: [{ code: `Trace("Save failed", TraceSeverity.Error, { id: ThisItem.ID })`, result: 'A log entry you can search later' }],
+    examples: [
+      {
+        code: `Trace("Save failed", TraceSeverity.Error, { id: ThisItem.ID })`,
+        result: 'A log entry you can search later',
+      },
+    ],
     tags: ['logging', 'debug', 'application insights', 'monitor'],
     docs: 'function-trace',
   },
@@ -2186,7 +2270,9 @@ export const formulas: RefItem[] = [
     category: 'Behavior',
     summary: 'Shows a pop-up with host details, such as the offline sync status of a mobile app.',
     syntax: 'ShowHostInfo(HostInfo)',
-    examples: [{ code: `ShowHostInfo(HostInfo.OfflineSync)`, result: 'Shows sync status, last sync time and downloaded tables' }],
+    examples: [
+      { code: `ShowHostInfo(HostInfo.OfflineSync)`, result: 'Shows sync status, last sync time and downloaded tables' },
+    ],
     tags: ['offline', 'sync status'],
     docs: 'showhostinfo',
   },
@@ -2211,7 +2297,10 @@ export const formulas: RefItem[] = [
     summary: 'Defines a named type for records and tables, for ParseJSON and user-defined functions.',
     syntax: 'Type(TypeSpecification)',
     examples: [
-      { code: `BookType := Type({ Title: Text, Author: Text, Published: Number });`, result: 'A record type, defined in App.Formulas' },
+      {
+        code: `BookType := Type({ Title: Text, Author: Text, Published: Number });`,
+        result: 'A record type, defined in App.Formulas',
+      },
       { code: `ParseJSON(varJson, BookType).Title`, result: 'Typed JSON: no Text() conversion needed' },
     ],
     notes: ['Define types in App.Formulas. Tables use square brackets: Type([ BookType ]).'],

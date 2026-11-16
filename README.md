@@ -14,40 +14,40 @@ npm run preview   # serve dist/ to check the production build
 
 ## Where things live
 
-| Path | What it is |
-| --- | --- |
-| `src/site.config.ts` | Site name, author, links, Google verification and analytics token. **Edit this first.** |
-| `astro.config.mjs` | `site:` is your public URL (used for the sitemap, canonical links and share images). |
-| `src/data/power-apps-formulas.ts` | Power Apps (Power Fx) formulas and their categories. |
-| `src/data/power-automate-expressions.ts` | Power Automate expression functions and their categories. |
-| `src/data/desktop-formulas.ts` | Power Fx for desktop flows: Microsoft's list of 130 functions, reusing Power Apps entries with desktop examples. |
-| `src/data/references.ts` | Ties each dataset to its URL, title, FAQ and search hint. |
-| `src/data/products.ts` + `public/products/` | The Microsoft products a tool works with. Icons are Microsoft's official Power Platform icons, used unmodified and always next to the product name, per Microsoft's terms (see `public/products/NOTICE.txt`). |
-| `src/data/tools.ts` | The four categories and every tool. The homepage, category pages (`/power-apps/` etc.), header, footer and search are all built from it. |
-| `src/components/ToolGrid.astro` | The equal-weight tool cards used on the homepage and category pages. |
-| `src/content/blog/` + `src/content.config.ts` | Blog posts (Markdown) and the fields each post needs. |
-| `src/data/videos.ts` | Your YouTube videos; thumbnails are copied at build time by `src/pages/videos/thumbs/`. |
-| `src/components/ProfileCard.astro`, `PageHead.astro`, `SectionHead.astro`, `Icon.astro` | Your profile card, page and section headings, and the icon set. |
-| `src/scripts/search.ts` + `src/pages/search-index.json.ts` | Site-wide search (Ctrl K or /) over every tool and reference entry; the index is built at build time and loaded on first use. |
-| `src/data/changelog.ts` | Entries for the "What's new" page: new tools, tool updates and blog posts only (`kind: 'tool'` or `'blog'`), not design or profile changes. |
-| `src/components/ReferenceIndex.astro` | Shared layout for a reference page (explorer, A–Z index, FAQ). |
-| `src/components/ReferenceItem.astro` | Shared layout for one formula/expression page. |
-| `src/components/ReferenceExplorer.tsx` | The interactive explorer (search, A–Z, categories, cards/tree, detail panel). |
-| `src/components/Beautifier.tsx` + `src/lib/beautify.ts` | The Expression Beautifier UI and its formatting/checking engine. |
-| `src/components/SchemaHelper.tsx` + `src/lib/jsonSchema.ts` | The JSON Schema Helper UI and its schema, expression and JSON-error engine. |
-| `src/components/ExpressionPicker.tsx` + `src/lib/jsonExpression.ts` | The Expression Picker: JSON tree and the path-to-expression (and Power Fx) builder. |
-| `src/components/TableStyler.tsx` + `src/lib/htmlTable.ts` | The HTML Table Styler: presets, inline/style-block output and the email preview. |
-| `src/components/CardBuilder.tsx` + `src/lib/adaptiveCard.ts` | The Adaptive Card Builder: templates, card JSON, reply expressions; preview uses the official `adaptivecards` renderer. |
-| `src/components/ODataBuilder.tsx` + `src/lib/odata.ts` | The OData Filter Builder: per-source formatting rules, date shortcuts and the SharePoint internal-name converter. |
-| `src/components/TriggerBuilder.tsx` + `src/lib/triggerCondition.ts` | The Trigger Condition Builder: field paths per trigger, null-safe text checks, presets and AND/OR output. |
-| `src/components/SvgConverter.tsx` + `src/lib/svgPowerApps.ts` | SVG to Power Apps: cleans and re-serializes the SVG with single quotes, finds its colors and builds the Image formula. |
-| `src/components/RegexTester.tsx` + `src/lib/powerFxRegex.ts` | The Regex Tester: Power Fx 1.0 rule checker, translation to an equivalent JavaScript RegExp (run in a worker with a timeout), and formula output. |
-| `src/components/ListCopier.tsx` + `src/lib/spList.ts` | The List Copier: parses SharePoint REST XML/JSON and generates console, Power Automate and PnP scripts. |
-| `src/lib/og.ts` + `src/pages/og/` | Share images (1200×630 PNG) generated for every page at build time. |
-| `src/lib/logo.ts` | The logo's paths and colors: the single source for the header logo, favicons, app icons and brand kit. |
-| `src/pages/favicon.*.ts`, `[icon].png.ts`, `site.webmanifest.ts`, `brand/` | Favicon, home-screen icons, manifest and brand kit, all generated from `logo.ts`. |
-| `src/pages/` | One file per URL. `[slug].astro` files generate a page per formula or expression. |
-| `src/styles/global.css` | All styling. Colors are CSS variables at the top (light and dark). |
+| Path                                                                                    | What it is                                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/site.config.ts`                                                                    | Site name, author, links, Google verification and analytics token. **Edit this first.**                                                                                                                       |
+| `astro.config.mjs`                                                                      | `site:` is your public URL (used for the sitemap, canonical links and share images).                                                                                                                          |
+| `src/data/power-apps-formulas.ts`                                                       | Power Apps (Power Fx) formulas and their categories.                                                                                                                                                          |
+| `src/data/power-automate-expressions.ts`                                                | Power Automate expression functions and their categories.                                                                                                                                                     |
+| `src/data/desktop-formulas.ts`                                                          | Power Fx for desktop flows: Microsoft's list of 130 functions, reusing Power Apps entries with desktop examples.                                                                                              |
+| `src/data/references.ts`                                                                | Ties each dataset to its URL, title, FAQ and search hint.                                                                                                                                                     |
+| `src/data/products.ts` + `public/products/`                                             | The Microsoft products a tool works with. Icons are Microsoft's official Power Platform icons, used unmodified and always next to the product name, per Microsoft's terms (see `public/products/NOTICE.txt`). |
+| `src/data/tools.ts`                                                                     | The four categories and every tool. The homepage, category pages (`/power-apps/` etc.), header, footer and search are all built from it.                                                                      |
+| `src/components/ToolGrid.astro`                                                         | The equal-weight tool cards used on the homepage and category pages.                                                                                                                                          |
+| `src/content/blog/` + `src/content.config.ts`                                           | Blog posts (Markdown) and the fields each post needs.                                                                                                                                                         |
+| `src/data/videos.ts`                                                                    | Your YouTube videos; thumbnails are copied at build time by `src/pages/videos/thumbs/`.                                                                                                                       |
+| `src/components/ProfileCard.astro`, `PageHead.astro`, `SectionHead.astro`, `Icon.astro` | Your profile card, page and section headings, and the icon set.                                                                                                                                               |
+| `src/scripts/search.ts` + `src/pages/search-index.json.ts`                              | Site-wide search (Ctrl K or /) over every tool and reference entry; the index is built at build time and loaded on first use.                                                                                 |
+| `src/data/changelog.ts`                                                                 | Entries for the "What's new" page: new tools, tool updates and blog posts only (`kind: 'tool'` or `'blog'`), not design or profile changes.                                                                   |
+| `src/components/ReferenceIndex.astro`                                                   | Shared layout for a reference page (explorer, A–Z index, FAQ).                                                                                                                                                |
+| `src/components/ReferenceItem.astro`                                                    | Shared layout for one formula/expression page.                                                                                                                                                                |
+| `src/components/ReferenceExplorer.tsx`                                                  | The interactive explorer (search, A–Z, categories, cards/tree, detail panel).                                                                                                                                 |
+| `src/components/Beautifier.tsx` + `src/lib/beautify.ts`                                 | The Expression Beautifier UI and its formatting/checking engine.                                                                                                                                              |
+| `src/components/SchemaHelper.tsx` + `src/lib/jsonSchema.ts`                             | The JSON Schema Helper UI and its schema, expression and JSON-error engine.                                                                                                                                   |
+| `src/components/ExpressionPicker.tsx` + `src/lib/jsonExpression.ts`                     | The Expression Picker: JSON tree and the path-to-expression (and Power Fx) builder.                                                                                                                           |
+| `src/components/TableStyler.tsx` + `src/lib/htmlTable.ts`                               | The HTML Table Styler: presets, inline/style-block output and the email preview.                                                                                                                              |
+| `src/components/CardBuilder.tsx` + `src/lib/adaptiveCard.ts`                            | The Adaptive Card Builder: templates, card JSON, reply expressions; preview uses the official `adaptivecards` renderer.                                                                                       |
+| `src/components/ODataBuilder.tsx` + `src/lib/odata.ts`                                  | The OData Filter Builder: per-source formatting rules, date shortcuts and the SharePoint internal-name converter.                                                                                             |
+| `src/components/TriggerBuilder.tsx` + `src/lib/triggerCondition.ts`                     | The Trigger Condition Builder: field paths per trigger, null-safe text checks, presets and AND/OR output.                                                                                                     |
+| `src/components/SvgConverter.tsx` + `src/lib/svgPowerApps.ts`                           | SVG to Power Apps: cleans and re-serializes the SVG with single quotes, finds its colors and builds the Image formula.                                                                                        |
+| `src/components/RegexTester.tsx` + `src/lib/powerFxRegex.ts`                            | The Regex Tester: Power Fx 1.0 rule checker, translation to an equivalent JavaScript RegExp (run in a worker with a timeout), and formula output.                                                             |
+| `src/components/ListCopier.tsx` + `src/lib/spList.ts`                                   | The List Copier: parses SharePoint REST XML/JSON and generates console, Power Automate and PnP scripts.                                                                                                       |
+| `src/lib/og.ts` + `src/pages/og/`                                                       | Share images (1200×630 PNG) generated for every page at build time.                                                                                                                                           |
+| `src/lib/logo.ts`                                                                       | The logo's paths and colors: the single source for the header logo, favicons, app icons and brand kit.                                                                                                        |
+| `src/pages/favicon.*.ts`, `[icon].png.ts`, `site.webmanifest.ts`, `brand/`              | Favicon, home-screen icons, manifest and brand kit, all generated from `logo.ts`.                                                                                                                             |
+| `src/pages/`                                                                            | One file per URL. `[slug].astro` files generate a page per formula or expression.                                                                                                                             |
+| `src/styles/global.css`                                                                 | All styling. Colors are CSS variables at the top (light and dark).                                                                                                                                            |
 
 ## Write a blog post
 

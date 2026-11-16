@@ -27,7 +27,12 @@ export default function NamingChecker() {
   const row = (name: string, type: string, suggestion: string, why?: string) => (
     <tr key={name} className={skip[name] ? 'is-skipped' : undefined}>
       <td>
-        <input type="checkbox" checked={!skip[name]} onChange={(e) => setSkip((s) => ({ ...s, [name]: !e.target.checked }))} aria-label={`Rename ${name}`} />
+        <input
+          type="checkbox"
+          checked={!skip[name]}
+          onChange={(e) => setSkip((s) => ({ ...s, [name]: !e.target.checked }))}
+          aria-label={`Rename ${name}`}
+        />
       </td>
       <td>
         <code>{name}</code>
@@ -82,8 +87,8 @@ export default function NamingChecker() {
       {checked > 0 && (
         <>
           <p className="nc-summary">
-            <b>{checked}</b> controls checked · <b className={toFix.length ? 'is-bad' : 'is-good'}>{toFix.length}</b> to rename ·{' '}
-            <b className={varFix.length ? 'is-bad' : 'is-good'}>{varFix.length}</b> variables to rename
+            <b>{checked}</b> controls checked · <b className={toFix.length ? 'is-bad' : 'is-good'}>{toFix.length}</b> to
+            rename · <b className={varFix.length ? 'is-bad' : 'is-good'}>{varFix.length}</b> variables to rename
           </p>
 
           {toFix.length + varFix.length === 0 ? (
@@ -101,12 +106,21 @@ export default function NamingChecker() {
                   <caption>
                     Variables and collections
                     <label className="nc-vars">
-                      <input type="checkbox" checked={vars} onChange={(e) => setVars(e.target.checked)} /> rename these too
+                      <input type="checkbox" checked={vars} onChange={(e) => setVars(e.target.checked)} /> rename these
+                      too
                     </label>
                   </caption>
                   <tbody>
                     {varFix.map((v) =>
-                      row(v.name, v.kind === 'global' ? 'Global variable (Set)' : v.kind === 'local' ? 'Local variable (UpdateContext)' : 'Collection (ClearCollect)', v.suggestion),
+                      row(
+                        v.name,
+                        v.kind === 'global'
+                          ? 'Global variable (Set)'
+                          : v.kind === 'local'
+                            ? 'Local variable (UpdateContext)'
+                            : 'Collection (ClearCollect)',
+                        v.suggestion,
+                      ),
                     )}
                   </tbody>
                 </table>

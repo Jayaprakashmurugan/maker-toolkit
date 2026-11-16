@@ -124,7 +124,12 @@ export function cardJson(m: CardModel): Record<string, unknown> {
 
   m.inputs.forEach((inp, i) => {
     const id = idSafe(inp.id, i);
-    const common = { id, label: inp.label, isRequired: inp.required, ...(inp.required ? { errorMessage: `${inp.label || 'This field'} is required` } : {}) };
+    const common = {
+      id,
+      label: inp.label,
+      isRequired: inp.required,
+      ...(inp.required ? { errorMessage: `${inp.label || 'This field'} is required` } : {}),
+    };
     if (inp.kind === 'choice') {
       const choices = inp.options
         .split(',')
@@ -133,7 +138,8 @@ export function cardJson(m: CardModel): Record<string, unknown> {
         .map((o) => ({ title: o, value: o }));
       body.push({ type: 'Input.ChoiceSet', ...common, style: choices.length <= 4 ? 'expanded' : 'compact', choices });
     } else if (inp.kind === 'date') body.push({ type: 'Input.Date', ...common });
-    else if (inp.kind === 'toggle') body.push({ type: 'Input.Toggle', id, title: inp.label || 'Yes', valueOn: 'true', valueOff: 'false' });
+    else if (inp.kind === 'toggle')
+      body.push({ type: 'Input.Toggle', id, title: inp.label || 'Yes', valueOn: 'true', valueOff: 'false' });
     else body.push({ type: 'Input.Text', ...common, isMultiline: inp.kind === 'multiline' });
   });
 
@@ -163,8 +169,11 @@ export interface ResponseExpr {
 export function responseExpressions(m: CardModel, actionName: string): ResponseExpr[] {
   const a = `body('${(actionName.trim() || 'Post adaptive card and wait for a response').replace(/\s+/g, '_').replace(/'/g, "''")}')`;
   const rows: ResponseExpr[] = [];
-  if (m.buttons.some((b) => b.kind === 'submit')) rows.push({ label: 'Which button was pressed', expression: `${a}?['data']?['action']` });
-  m.inputs.forEach((inp, i) => rows.push({ label: inp.label || `Input ${i + 1}`, expression: `${a}?['data']?['${idSafe(inp.id, i)}']` }));
+  if (m.buttons.some((b) => b.kind === 'submit'))
+    rows.push({ label: 'Which button was pressed', expression: `${a}?['data']?['action']` });
+  m.inputs.forEach((inp, i) =>
+    rows.push({ label: inp.label || `Input ${i + 1}`, expression: `${a}?['data']?['${idSafe(inp.id, i)}']` }),
+  );
   rows.push({ label: 'Who responded (email)', expression: `${a}?['responder']?['userPrincipalName']` });
   return rows;
 }

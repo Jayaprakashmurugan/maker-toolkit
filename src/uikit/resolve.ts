@@ -15,7 +15,13 @@ export function colorFx(c: Color): string {
   if ('fade' in c) return `ColorFade(fxColorConfigs.${c.fade}, ${c.by}%)`;
   if ('if' in c) return `If(${c.if.fx}, ${colorFx(c.then)}, ${colorFx(c.else)})`;
   if ('switch' in c)
-    return ['Switch(', `    ${c.switch},`, ...c.cases.map(([v, col]) => `    "${v}", ${colorFx(col)},`), `    ${colorFx(c.else)}`, ')'].join('\n');
+    return [
+      'Switch(',
+      `    ${c.switch},`,
+      ...c.cases.map(([v, col]) => `    "${v}", ${colorFx(col)},`),
+      `    ${colorFx(c.else)}`,
+      ')',
+    ].join('\n');
   const [r, g, b, a] = c.rgba;
   return `RGBA(${r}, ${g}, ${b}, ${a})`;
 }
@@ -54,10 +60,21 @@ export function colorCss(c: Color | undefined): string | undefined {
 }
 
 export const sizePx = (s: Size | undefined, t: KitTheme) =>
-  s === undefined ? t.size.Regular : isFx(s) ? (typeof s.v === 'number' ? s.v : t.size.Regular) : typeof s === 'number' ? s : t.size[s];
-export const radiusPx = (r: Radius | undefined, t: KitTheme) => (r === undefined ? 0 : typeof r === 'number' ? r : t.radius[r]);
-export const thicknessPx = (x: Thickness | undefined, t: KitTheme) => (x === undefined ? 1 : typeof x === 'number' ? x : t.thickness[x]);
-export const spacePx = (s: Space | undefined, t: KitTheme) => (s === undefined ? 0 : typeof s === 'number' ? s : t.padding[s]);
+  s === undefined
+    ? t.size.Regular
+    : isFx(s)
+      ? typeof s.v === 'number'
+        ? s.v
+        : t.size.Regular
+      : typeof s === 'number'
+        ? s
+        : t.size[s];
+export const radiusPx = (r: Radius | undefined, t: KitTheme) =>
+  r === undefined ? 0 : typeof r === 'number' ? r : t.radius[r];
+export const thicknessPx = (x: Thickness | undefined, t: KitTheme) =>
+  x === undefined ? 1 : typeof x === 'number' ? x : t.thickness[x];
+export const spacePx = (s: Space | undefined, t: KitTheme) =>
+  s === undefined ? 0 : typeof s === 'number' ? s : t.padding[s];
 
 export function padCss(p: Pad | undefined, t: KitTheme): string | undefined {
   if (p === undefined) return undefined;

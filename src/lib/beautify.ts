@@ -29,6 +29,8 @@ export interface Tok {
   v: string;
   pos: number;
   unary?: boolean;
+  /** A Power Fx word used as an operator, like And in `a And (b Or c)`. */
+  opWord?: boolean;
 }
 
 interface Group {
@@ -44,6 +46,18 @@ type Part = Tok | Group;
 const WIDTH = 72;
 const PAIRS: Record<string, string> = { '(': ')', '[': ']', '{': '}' };
 const isGroup = (p: Part): p is Group => (p as Group).kind === 'g';
+
+/**
+ * Whether a Power Fx word is an operator here (`x in [1, 2]`, `a And (b Or c)`) rather than a name or a call. And, Or
+ * and Not are functions too: And and Or are operators only after an operand, and Not is one unless it's written like
+ * a call, `Not(x)`.
+ */
+function isOpWord(word: string, prev: Tok | undefined, next: string | undefined): boolean {
+  if (word === 'And' || word === 'Or')
+    return !!prev && ['word', 'num', 'str', 'close'].includes(prev.t) && !prev.opWord;
+  if (word === 'Not') return next !== '(';
+  return word === 'in' || word === 'exactin' || word === 'As';
+}
 
 /** Guess the language from quote style and function-name casing. */
 export function detectLang(src: string): Lang {
@@ -73,22 +87,48 @@ export function tokenize(
   const quote = lang === 'wdl' ? "'" : '"';
   let i = 0;
 
-  const readQuoted = (q: string, what: string) => {
-    let j = i + 1;
-    for (;;) {
-      if (j >= src.length) {
-        report?.(`This ${what} is never closed.`, i, 'strings');
-        return src.length;
-      }
-      if (src[j] === q) {
-        if (src[j + 1] === q) {
-          j += 2;
-          continue;
-        }
-        return j + 1;
-      }
-      j++;
+  // Where the string opening at `from` ends (just past its closing quote), or -1 if it never does. A doubled quote is
+  // an escaped one.
+  const skipQuoted = (q: string, from: number): number => {
+    let j = from + 1;
+    while (j < src.length) {
+      if (src[j] === q && src[j + 1] !== q) return j + 1;
+      j += src[j] === q ? 2 : 1;
     }
+    return -1;
+  };
+
+  // The same for a Power Fx interpolated string, $"Hi {User().FullName}". In its text, "" is a quote and {{ and }} are
+  // braces. A {…} hole holds an expression, where braces nest and strings are skipped whole, so a quote or brace in
+  // there doesn't end anything.
+  const skipInterpolated = (from: number): number => {
+    let depth = 0; // braces open in the current hole; 0 means we're in the text
+    let j = from + 2;
+    while (j >= 0 && j < src.length) {
+      const ch = src[j];
+      if (depth === 0) {
+        if ((ch === '"' || ch === '{' || ch === '}') && src[j + 1] === ch) j += 2;
+        else if (ch === '"') return j + 1;
+        else {
+          if (ch === '{') depth = 1;
+          j++;
+        }
+      } else if (src.startsWith('$"', j)) j = skipInterpolated(j);
+      else if (ch === '"' || ch === "'") j = skipQuoted(ch, j);
+      else {
+        if (ch === '{') depth++;
+        if (ch === '}') depth--;
+        j++;
+      }
+    }
+    return -1;
+  };
+
+  const readQuoted = (q: string, what: string) => {
+    const end = q === '$"' ? skipInterpolated(i) : skipQuoted(q, i);
+    if (end >= 0) return end;
+    report?.(`This ${what} is never closed.`, i, 'strings');
+    return src.length;
   };
 
   while (i < src.length) {
@@ -96,6 +136,13 @@ export function tokenize(
     const rest = src.slice(i);
     if (/\s/.test(c)) {
       i++;
+      continue;
+    }
+    if (lang === 'powerfx' && rest.startsWith('$"')) {
+      // One token, holes and all, so nothing inside the string is reformatted.
+      const end = readQuoted('$"', 'string');
+      toks.push({ t: 'str', v: src.slice(i, end), pos: i });
+      i = end;
       continue;
     }
     if (c === quote) {
@@ -140,7 +187,8 @@ export function tokenize(
     }
     const word = /^[A-Za-z_$][\w$]*/.exec(rest);
     if (word) {
-      toks.push({ t: 'word', v: word[0], pos: i });
+      const opWord = lang === 'powerfx' && isOpWord(word[0], toks[toks.length - 1], src[i + word[0].length]);
+      toks.push({ t: 'word', v: word[0], pos: i, opWord });
       i += word[0].length;
       continue;
     }
@@ -167,7 +215,8 @@ export function tokenize(
     const v = op ? op[0] : c;
     const prev = toks[toks.length - 1];
     const unary =
-      (v === '-' || v === '+' || v === '!') && (!prev || ['op', 'open', 'comma', 'semi', 'colon'].includes(prev.t));
+      (v === '-' || v === '+' || v === '!') &&
+      (!prev || !!prev.opWord || ['op', 'open', 'comma', 'semi', 'colon'].includes(prev.t));
     toks.push({ t: 'op', v, pos: i, unary });
     i += v.length;
   }
@@ -231,7 +280,7 @@ function space(prev: Part | null, next: Part): string {
   const a = lastTok(prev);
   const b = firstTok(next);
   if (b.t === 'cmt' || a.t === 'cmt') return ' ';
-  if (b.t === 'open') return ['word', 'close', 'q', 'at', 'dot', 'str'].includes(a.t) ? '' : ' ';
+  if (b.t === 'open') return ['word', 'close', 'q', 'at', 'dot', 'str'].includes(a.t) && !a.opWord ? '' : ' ';
   if (a.t === 'at' || a.t === 'dot' || b.t === 'dot' || a.t === 'q' || b.t === 'q') return '';
   if (b.t === 'colon') return '';
   if (a.t === 'colon') return ' ';
@@ -299,6 +348,13 @@ export function beautify(src: string, opts: { lang: Lang; mode: Mode; indent: nu
     });
   };
 
+  // A separator right after a // comment goes on the next line, or the comment would swallow it.
+  const writeSep = (sep: Tok) => {
+    if (pendingBreak >= 0) newline(pendingBreak);
+    pendingBreak = -1;
+    write(sep.v);
+  };
+
   const printGroup = (g: Group, ind: number) => {
     const flat = flatGroup(g);
     const empty = g.items.length === 1 && g.items[0].length === 0;
@@ -313,7 +369,7 @@ export function beautify(src: string, opts: { lang: Lang; mode: Mode; indent: nu
       pendingBreak = -1;
       newline(ind + step);
       printItem(it, ind + step);
-      if (k < g.seps.length) write(g.seps[k].v);
+      if (k < g.seps.length) writeSep(g.seps[k]);
     });
     pendingBreak = -1;
     newline(ind);
@@ -328,7 +384,7 @@ export function beautify(src: string, opts: { lang: Lang; mode: Mode; indent: nu
     }
     pendingBreak = -1;
     printItem(it, 0);
-    if (k < root.seps.length) write(root.seps[k].v);
+    if (k < root.seps.length) writeSep(root.seps[k]);
   });
 
   let depth = 0;
@@ -337,7 +393,7 @@ export function beautify(src: string, opts: { lang: Lang; mode: Mode; indent: nu
   toks.forEach((t, k) => {
     if (t.t === 'open') depth = Math.max(depth, ++cur);
     if (t.t === 'close') cur = Math.max(0, cur - 1);
-    if (t.t === 'word' && toks[k + 1]?.v === '(') functions++;
+    if (t.t === 'word' && !t.opWord && toks[k + 1]?.v === '(') functions++;
   });
 
   const output = lines

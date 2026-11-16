@@ -38,7 +38,7 @@ function render(code: string, lang: Lang): ReactNode[] {
     if (t.t === 'str') cls = 'tk-str';
     else if (t.t === 'num') cls = 'tk-num';
     else if (t.t === 'cmt') cls = 'tk-cmt';
-    else if (t.t === 'word') cls = toks[k + 1]?.v === '(' ? 'tk-fn' : KEYWORDS.has(t.v) ? 'tk-kw' : '';
+    else if (t.t === 'word') cls = toks[k + 1]?.v === '(' && !t.opWord ? 'tk-fn' : KEYWORDS.has(t.v) ? 'tk-kw' : '';
     else if (t.t === 'open') cls = `rb rb${depth++ % 6}`;
     else if (t.t === 'close') cls = `rb rb${(depth = Math.max(0, depth - 1)) % 6}`;
     else if (t.t === 'op' || t.t === 'q' || t.t === 'at') cls = 'tk-op';

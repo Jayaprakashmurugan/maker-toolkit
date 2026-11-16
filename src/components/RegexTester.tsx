@@ -10,28 +10,17 @@ import {
   type Host,
   type RegexOptions,
 } from '../lib/powerFxRegex';
+import { MATCH_WORKER, createMatchRunner, type Hit, type MatchReply, type MatchResult } from '../lib/regexRunner';
 import { CodeLine } from './FormulaDetail';
 
-interface Hit {
-  full: string;
-  index: number;
-  subs: (string | null)[];
-  groups: Record<string, string | null> | null;
-}
-interface LineResult {
-  first: Hit | null;
-  all: Hit[];
-}
-type Results = { id: number; lines: LineResult[] } | { id: number; timeout: true };
-
 // Matching runs in a worker so a runaway pattern can be stopped instead of freezing the page.
-const WORKER = `onmessage = (e) => {
-  const { id, source, flags, texts, all } = e.data;
-  const re = new RegExp(source, flags), reG = new RegExp(source, flags + 'g');
-  const hit = (m) => m && { full: m[0], index: m.index, subs: m.slice(1).map((s) => s ?? null), groups: m.groups ? Object.fromEntries(Object.entries(m.groups).map(([k, v]) => [k, v ?? null])) : null };
-  postMessage({ id, lines: texts.map((t) => ({ first: hit(re.exec(t)), all: all ? [...t.matchAll(reG)].slice(0, 500).map(hit) : [] })) });
-};`;
-const TIMEOUT = 1500;
+function startWorker(onReply: (reply: MatchReply) => void) {
+  const url = URL.createObjectURL(new Blob([MATCH_WORKER], { type: 'text/javascript' }));
+  const w = new Worker(url);
+  URL.revokeObjectURL(url);
+  w.onmessage = (e) => onReply(e.data);
+  return w;
+}
 
 const ANCHORS: [Anchor, string][] = [
   ['Complete', 'Whole text'],
@@ -90,10 +79,9 @@ export default function RegexTester() {
   const [perLine, setPerLine] = useState(true);
   const [ref, setRef] = useState('TextInput1.Text');
   const [preset, setPreset] = useState(PRESETS[0].label);
-  const [results, setResults] = useState<Results | null>(null);
-  const worker = useRef<Worker | null>(null);
+  const [results, setResults] = useState<MatchResult | null>(null);
+  const [runner] = useState(() => createMatchRunner({ createWorker: startWorker, onResult: setResults }));
   const job = useRef(0);
-  const done = useRef(0);
 
   const opts: RegexOptions = useMemo(
     () => ({
@@ -108,37 +96,19 @@ export default function RegexTester() {
   const texts = useMemo(() => (perLine ? text.split(/\r?\n/) : [text]), [text, perLine]);
 
   useEffect(() => {
-    if (!compiled?.ok) return setResults(null);
-    const id = ++job.current;
-    const start = () => {
-      const url = URL.createObjectURL(new Blob([WORKER], { type: 'text/javascript' }));
-      const w = new Worker(url);
-      URL.revokeObjectURL(url);
-      w.onmessage = (e) => {
-        if (e.data.id !== job.current) return;
-        done.current = e.data.id;
-        setResults(e.data);
-      };
-      return w;
-    };
-    worker.current ??= start();
-    worker.current.postMessage({
-      id,
+    if (!compiled?.ok) {
+      runner.cancel();
+      return setResults(null);
+    }
+    job.current = runner.run({
       source: compiled.source,
       flags: compiled.flags,
       texts,
       all: !perLine || anchor === 'Contains',
     });
-    const t = setTimeout(() => {
-      if (job.current !== id || done.current === id) return;
-      worker.current?.terminate();
-      worker.current = null;
-      setResults({ id, timeout: true });
-    }, TIMEOUT);
-    return () => clearTimeout(t);
-  }, [compiled, texts, perLine, anchor]);
+  }, [runner, compiled, texts, perLine, anchor]);
 
-  useEffect(() => () => worker.current?.terminate(), []);
+  useEffect(() => () => runner.dispose(), [runner]);
 
   const switchHost = (h: Host) => {
     // Keep a predefined pattern pointing at the same Match enum member in the other host.

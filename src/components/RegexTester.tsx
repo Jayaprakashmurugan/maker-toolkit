@@ -10,7 +10,14 @@ import {
   type Host,
   type RegexOptions,
 } from '../lib/powerFxRegex';
-import { MATCH_WORKER, createMatchRunner, type Hit, type MatchReply, type MatchResult } from '../lib/regexRunner';
+import {
+  MATCH_WORKER,
+  createMatchRunner,
+  type Hit,
+  type LineResult,
+  type MatchReply,
+  type MatchResult,
+} from '../lib/regexRunner';
 import { CodeLine } from './FormulaDetail';
 
 // Matching runs in a worker so a runaway pattern can be stopped instead of freezing the page.
@@ -40,6 +47,17 @@ function marked(text: string, hits: Hit[]): ReactNode[] {
   });
   out.push(text.slice(at));
   return out;
+}
+
+/** The results in one short sentence, for screen readers. */
+function summary(lines: LineResult[], perLine: boolean): string {
+  if (!perLine) {
+    const n = lines[0].all.length;
+    return `${n}${lines[0].more ? '+' : ''} ${n === 1 ? 'match' : 'matches'}`;
+  }
+  const matched = lines.filter((l) => l.first).length;
+  if (lines.length === 1) return matched ? 'The line matches' : 'The line doesn’t match';
+  return `${matched} of ${lines.length} lines match`;
 }
 
 function Parts({ hit, opts }: { hit: Hit; opts: RegexOptions }) {
@@ -123,6 +141,24 @@ export default function RegexTester() {
   const names = [...pattern.matchAll(/\(\?<([^>=!]+)>/g)].map((m) => m[1]);
   const v1 = host === 'v1';
   const issues = compiled && !compiled.ok ? compiled.issues : [];
+
+  // Screen readers hear a short summary, not the whole results pane, which changes on every keystroke.
+  // null while a test is running, so the summary isn't cleared and repeated each time.
+  const status = !compiled?.ok
+    ? ''
+    : results && 'timeout' in results
+      ? 'This pattern took too long and was stopped.'
+      : ready
+        ? summary(ready, perLine)
+        : null;
+  const said = useRef<string | null>(null);
+  useEffect(() => {
+    if (status === null || status === said.current) return;
+    const first = said.current === null; // the results shown on load aren't news
+    said.current = status;
+    const el = document.getElementById('sr-status');
+    if (el && !first) el.textContent = status;
+  }, [status]);
 
   return (
     <div className="rx">
@@ -275,7 +311,7 @@ export default function RegexTester() {
               </p>
             )}
           </div>
-          <div className="rx-results" aria-live="polite">
+          <div className="rx-results">
             {results && 'timeout' in results ? (
               <p className="lc-warn">
                 This pattern took too long and was stopped. Nested repeats such as (a+)+ can take forever on some text;
@@ -289,8 +325,9 @@ export default function RegexTester() {
               <ul className="rx-lines">
                 {ready.map((l, k) => (
                   <li key={k} className={l.first ? 'is-yes' : 'is-no'}>
-                    <span className="rx-mark" aria-label={l.first ? 'Matches' : 'No match'}>
-                      {l.first ? '✓' : '✗'}
+                    <span className="rx-mark">
+                      <span aria-hidden="true">{l.first ? '✓' : '✗'}</span>
+                      <span className="visually-hidden">{l.first ? 'Matches:' : 'No match:'}</span>
                     </span>
                     <span className="rx-line">
                       <code>

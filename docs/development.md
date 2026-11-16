@@ -15,13 +15,24 @@
 | `npm run typecheck`    | `astro check`: TypeScript (strict) across `.ts`, `.tsx` and `.astro`.           |
 | `npm run lint`         | ESLint: recommended JS/TS/Astro rules and the Rules of Hooks for React islands. |
 | `npm run format:check` | Prettier. Fix with `npm run format`.                                            |
-| `npm run check`        | All three. Run it before you push.                                              |
+| `npm test`             | Unit tests (Vitest). `npm run test:watch` re-runs them as you save.             |
+| `npm run check`        | All four. Run it before you push.                                               |
 | `npm run build`        | The full build. Also validates every UI Kit snippet; a bad one fails the build. |
 
 CI (`.github/workflows/ci.yml`) runs all of them, plus the build, on every push to `main` and every pull request.
 
-There are no unit tests yet. The engines in `src/lib/` are pure functions, so they are the natural place to start
-(Vitest works with Astro's Vite setup).
+### Unit tests
+
+Tests sit next to the code they test as `*.test.ts` (for example `src/lib/beautify.test.ts`) and run through
+Astro's Vite config (`vitest.config.ts`), so imports resolve as they do in the site. The engines in `src/lib/` and
+`src/uikit/` are pure functions, which makes them easy to test: call the function, check the result.
+
+When you fix a bug, first add a test that fails because of it, then make it pass.
+
+`npm test` starts Vitest through `scripts/run-vitest.mjs`, which switches to the folder's true-case path first. On
+Windows, a terminal opened at `c:\…` (lower-case drive, as VS Code does) otherwise makes Node load Vitest twice and
+every test file fails with "Cannot read properties of undefined (reading 'config')". If you run `npx vitest`
+directly and see that error, that's the cause.
 
 ### Lint choices worth knowing
 

@@ -16,15 +16,16 @@ npm install
 npm run dev        # http://localhost:4321, reloads as you save
 ```
 
-| Script              | What it does                                                                   |
-| ------------------- | ------------------------------------------------------------------------------ |
-| `npm run dev`       | Local dev server. Drafts and the UI Kit's checks show here too.                |
-| `npm run build`     | Production build into `dist/` (about 575 pages plus share images, ~2 minutes). |
-| `npm run preview`   | Serve `dist/` to check the production build.                                   |
-| `npm run typecheck` | TypeScript and Astro type check (`astro check`).                               |
-| `npm run lint`      | ESLint.                                                                        |
-| `npm run format`    | Format everything with Prettier (`format:check` only checks).                  |
-| `npm run check`     | Typecheck + lint + format check: the same checks CI runs, minus the build.     |
+| Script              | What it does                                                                       |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| `npm run dev`       | Local dev server. Drafts and the UI Kit's checks show here too.                    |
+| `npm run build`     | Production build into `dist/` (about 575 pages plus share images, ~2 minutes).     |
+| `npm run preview`   | Serve `dist/` to check the production build.                                       |
+| `npm run typecheck` | TypeScript and Astro type check (`astro check`).                                   |
+| `npm run lint`      | ESLint.                                                                            |
+| `npm run format`    | Format everything with Prettier (`format:check` only checks).                      |
+| `npm test`          | Unit tests (Vitest); `npm run test:watch` re-runs them as you save.                |
+| `npm run check`     | Typecheck + lint + format check + tests: the same checks CI runs, minus the build. |
 
 ## Project layout
 

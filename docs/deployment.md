@@ -23,10 +23,11 @@ deploying: `npx wrangler deploy --dry-run`.
 
 ## Safety net
 
-- **CI** (`.github/workflows/ci.yml`) runs typecheck, lint, format check and the full build on every push and pull
-  request. Work on a branch and merge only when CI is green; a direct push to `main` deploys before anyone can look.
+- **CI** (`.github/workflows/ci.yml`) runs typecheck, lint, format check, unit tests and the full build on every push
+  and pull request. Work on a branch and merge only when CI is green; a direct push to `main` deploys before anyone
+  can look.
 - **Recommended GitHub setting:** protect `main` (Settings → Branches → Add rule) and require the "Typecheck, lint,
-  format, build" check to pass before merging.
+  format, test, build" check to pass before merging.
 - **Dependabot** (`.github/dependabot.yml`) opens weekly dependency PRs. They go through CI like any other change.
 - **Rolling back:** revert the bad commit on `main` (`git revert <sha>` and push), or pick an earlier deployment in the
   Cloudflare dashboard (Workers & Pages → maker-toolkit → Deployments).

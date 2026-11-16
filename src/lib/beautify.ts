@@ -73,22 +73,48 @@ export function tokenize(
   const quote = lang === 'wdl' ? "'" : '"';
   let i = 0;
 
-  const readQuoted = (q: string, what: string) => {
-    let j = i + 1;
-    for (;;) {
-      if (j >= src.length) {
-        report?.(`This ${what} is never closed.`, i, 'strings');
-        return src.length;
-      }
-      if (src[j] === q) {
-        if (src[j + 1] === q) {
-          j += 2;
-          continue;
-        }
-        return j + 1;
-      }
-      j++;
+  // Where the string opening at `from` ends (just past its closing quote), or -1 if it never does. A doubled quote is
+  // an escaped one.
+  const skipQuoted = (q: string, from: number): number => {
+    let j = from + 1;
+    while (j < src.length) {
+      if (src[j] === q && src[j + 1] !== q) return j + 1;
+      j += src[j] === q ? 2 : 1;
     }
+    return -1;
+  };
+
+  // The same for a Power Fx interpolated string, $"Hi {User().FullName}". In its text, "" is a quote and {{ and }} are
+  // braces. A {…} hole holds an expression, where braces nest and strings are skipped whole, so a quote or brace in
+  // there doesn't end anything.
+  const skipInterpolated = (from: number): number => {
+    let depth = 0; // braces open in the current hole; 0 means we're in the text
+    let j = from + 2;
+    while (j >= 0 && j < src.length) {
+      const ch = src[j];
+      if (depth === 0) {
+        if ((ch === '"' || ch === '{' || ch === '}') && src[j + 1] === ch) j += 2;
+        else if (ch === '"') return j + 1;
+        else {
+          if (ch === '{') depth = 1;
+          j++;
+        }
+      } else if (src.startsWith('$"', j)) j = skipInterpolated(j);
+      else if (ch === '"' || ch === "'") j = skipQuoted(ch, j);
+      else {
+        if (ch === '{') depth++;
+        if (ch === '}') depth--;
+        j++;
+      }
+    }
+    return -1;
+  };
+
+  const readQuoted = (q: string, what: string) => {
+    const end = q === '$"' ? skipInterpolated(i) : skipQuoted(q, i);
+    if (end >= 0) return end;
+    report?.(`This ${what} is never closed.`, i, 'strings');
+    return src.length;
   };
 
   while (i < src.length) {
@@ -96,6 +122,13 @@ export function tokenize(
     const rest = src.slice(i);
     if (/\s/.test(c)) {
       i++;
+      continue;
+    }
+    if (lang === 'powerfx' && rest.startsWith('$"')) {
+      // One token, holes and all, so nothing inside the string is reformatted.
+      const end = readQuoted('$"', 'string');
+      toks.push({ t: 'str', v: src.slice(i, end), pos: i });
+      i = end;
       continue;
     }
     if (c === quote) {

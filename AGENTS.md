@@ -12,7 +12,8 @@ formula/expression references, a canvas-app UI Kit and a blog for Power Platform
 
 ```sh
 npm run dev          # dev server on :4321 (in agent sessions prefer `astro dev --background`; stop with `astro dev stop`)
-npm run check        # typecheck + lint + format check: run before every commit
+npm run check        # typecheck + lint + format check + unit tests: run before every commit
+npm test             # unit tests only (Vitest); put tests next to the code as *.test.ts
 npm run build        # full build, ~2 min; also validates every UI Kit snippet
 npm run format       # apply Prettier
 ```

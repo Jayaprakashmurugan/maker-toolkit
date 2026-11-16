@@ -126,7 +126,7 @@ runs, so content can't stay hidden.
 - **Content schema:** `src/content.config.ts` validates every blog post's front matter.
 - **UI Kit:** every kit item (and its variants and canvas-component form) is validated while its page is generated; a
   bad snippet fails the build. See [UI Kit](ui-kit.md).
-- **Types, lint, formatting:** `npm run check`, and CI on every push and PR. See [Development](development.md).
+- **Types, lint, formatting, unit tests:** `npm run check`, and CI on every push and PR. See [Development](development.md).
 
 ## Known quirks
 

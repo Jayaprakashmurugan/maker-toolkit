@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   check:
-    name: Typecheck, lint, format, build
+    name: Typecheck, lint, format, test, build
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -39,6 +39,9 @@ jobs:
 
       - name: Formatting
         run: npm run format:check
+
+      - name: Unit tests
+        run: npm test
 
       # Also validates every UI Kit snippet: a bad one fails the build.
       - name: Build

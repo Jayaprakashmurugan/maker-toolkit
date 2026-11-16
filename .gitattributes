@@ -1,0 +1,18 @@
+# Store text with LF line endings and check it out with LF on every OS,
+# whatever core.autocrlf says on the machine.
+* text=auto eol=lf
+
+# Binary files: never convert or diff as text.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.webp  binary
+*.gif   binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.pdf   binary
+
+# Generated: collapse in GitHub diffs.
+package-lock.json linguist-generated=true -diff

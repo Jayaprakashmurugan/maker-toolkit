@@ -15,7 +15,8 @@ pnpm-debug.log*
 
 # environment variables
 .env
-.env.production
+.env.*
+!.env.example
 
 # macOS-specific files
 .DS_Store
@@ -25,3 +26,9 @@ pnpm-debug.log*
 
 # wrangler local state
 .wrangler/
+
+# Windows
+Thumbs.db
+
+# Screenshots and logs from the Playwright MCP browser tool
+.playwright-mcp/

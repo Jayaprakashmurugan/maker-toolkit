@@ -6,7 +6,6 @@ import { addMedia, att, btn, circle, fx, gal, hCon, img, lbl, nCon, rect, str, t
 import { reader, type KitItem } from '../types';
 import { icon, textWidth } from './shared';
 
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const WEEKDAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
 /** 42 days (6 weeks, Monday first) around a month, for the preview. */

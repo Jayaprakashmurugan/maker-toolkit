@@ -465,8 +465,8 @@ interface Ctx {
   open: Extract<Node, { t: 'group' }>[];
 }
 
-function validate(p: Parser, n: Node, ctx: Ctx, lookGroups: Set<Node>) {
-  const rec = (c: Node, patch: Partial<Ctx> = {}) => validate(p, c, { ...ctx, ...patch }, lookGroups);
+function validate(p: Parser, n: Node, ctx: Ctx, lookGroups: Set<Node>): void {
+  const rec = (c: Node, patch: Partial<Ctx> = {}): void => validate(p, c, { ...ctx, ...patch }, lookGroups);
   switch (n.t) {
     case 'seq':
       return n.items.forEach((c) => rec(c));

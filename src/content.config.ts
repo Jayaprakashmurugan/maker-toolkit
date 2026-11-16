@@ -19,7 +19,7 @@ const blog = defineCollection({
     /** A header image next to the post, e.g. ./images/my-post/cover.jpg. */
     cover: image().optional(),
     /** Where the post first appeared, for posts brought over from Medium or LinkedIn. */
-    source: z.object({ name: z.string(), url: z.string().url() }).optional(),
+    source: z.object({ name: z.string(), url: z.url() }).optional(),
   }),
 });
 

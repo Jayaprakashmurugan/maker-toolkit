@@ -11,6 +11,13 @@ static build. The Worker is connected to this GitHub repo: **every push to `main
 3. `dist/` is uploaded as the Worker's static assets. Unknown URLs get `dist/404.html`
    (`"not_found_handling": "404-page"`), and `public/_redirects` applies permanent redirects.
 
+### Branch previews
+
+Branches other than `main` are built too, then deployed as a **Preview** (`npx wrangler preview`, open beta) with
+its own URL; the Workers Builds check on a pull request links to it. This needs the `"previews": {}` block in
+`wrangler.jsonc` (without it the preview step fails with "missing a `previews` block"). Previews never touch the
+production site.
+
 `wrangler.jsonc`'s `name` must match the Worker's name in the Cloudflare dashboard. To check the deploy config without
 deploying: `npx wrangler deploy --dry-run`.
 

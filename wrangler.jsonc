@@ -12,4 +12,7 @@
     // Serve dist/404.html for unknown URLs.
     "not_found_handling": "404-page",
   },
+  // Branches other than main deploy as Previews (`wrangler preview`), each with its own URL.
+  // The block can stay empty: assets and compatibility settings above apply to Previews too.
+  "previews": {},
 }

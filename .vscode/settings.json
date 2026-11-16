@@ -1,0 +1,14 @@
+{
+  // Format with the repo's Prettier config on save, so code matches `npm run format:check` in CI.
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.documentSelectors": ["**/*.astro"],
+  "[astro]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+
+  // Lint Astro components as well as TS/TSX.
+  "eslint.validate": ["javascript", "typescript", "typescriptreact", "astro"],
+
+  "files.eol": "\n",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "search.exclude": { "dist": true, ".astro": true, "package-lock.json": true }
+}

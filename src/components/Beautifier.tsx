@@ -20,7 +20,7 @@ function render(code: string, lang: Lang): ReactNode[] {
   let depth = 0;
   toks.forEach((t, k) => {
     if (t.pos > last) out.push(code.slice(last, t.pos));
-    let cls = '';
+    let cls: string;
     if (t.t === 'str') cls = 'tk-str';
     else if (t.t === 'num') cls = 'tk-num';
     else if (t.t === 'cmt') cls = 'tk-cmt';

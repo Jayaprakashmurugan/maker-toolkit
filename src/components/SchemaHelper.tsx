@@ -112,9 +112,9 @@ export default function SchemaHelper() {
   const hasInput = src.trim().length > 0;
   const parsed = useMemo(() => (hasInput ? parseSample(src) : null), [src, hasInput]);
   const shape = useMemo(() => (parsed?.ok ? inferShape(parsed.value) : null), [parsed]);
-  const opts = { nullable, required: !optional, integers: !anyNumber };
-  const schema = useMemo(() => (shape ? prettyJson(toSchema(shape, opts)) : ''), [shape, nullable, optional, anyNumber]);
-  const rows = useMemo(() => (shape ? fieldRows(shape, actionName, opts) : []), [shape, actionName, nullable, optional, anyNumber]);
+  const opts = useMemo(() => ({ nullable, required: !optional, integers: !anyNumber }), [nullable, optional, anyNumber]);
+  const schema = useMemo(() => (shape ? prettyJson(toSchema(shape, opts)) : ''), [shape, opts]);
+  const rows = useMemo(() => (shape ? fieldRows(shape, actionName, opts) : []), [shape, actionName, opts]);
   const stats = useMemo(() => (shape ? shapeStats(shape) : null), [shape]);
   const q = filter.trim().toLowerCase();
   const shown = q ? rows.filter((r) => r.path.toLowerCase().includes(q)) : rows;

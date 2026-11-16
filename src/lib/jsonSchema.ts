@@ -258,7 +258,7 @@ function locateError(text: string): { message: string; pos: number } | null {
 
 export function parseSample(text: string): ParseResult {
   try {
-    return { ok: true, value: JSON.parse(text.replace(/^﻿/, '')) };
+    return { ok: true, value: JSON.parse(text.replace(/^\uFEFF/, '')) };
   } catch (e) {
     const found = locateError(text);
     if (!found) return { ok: false, message: e instanceof Error ? e.message : String(e) };

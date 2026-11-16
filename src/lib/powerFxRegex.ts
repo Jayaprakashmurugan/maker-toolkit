@@ -97,6 +97,8 @@ class Parser {
       const c = this.src[this.i];
       if (/\s/.test(c)) this.i++;
       else if (c === '#') {
+        // A # comment runs to the next line terminator, vertical tab (\x0b) included.
+        // eslint-disable-next-line no-control-regex
         while (this.i < this.src.length && !/[\n\x0b\f\r\x85\u2028\u2029]/.test(this.src[this.i])) this.i++;
       } else break;
     }
@@ -144,7 +146,10 @@ class Parser {
     if (!q) return atom;
     if (q.max < q.min) this.err('In {n,m}, n can’t be larger than m.', qs, this.i);
     let lazy = false;
-    if (this.src[this.i] === '?') (lazy = true), this.i++;
+    if (this.src[this.i] === '?') {
+      lazy = true;
+      this.i++;
+    }
     else if (this.src[this.i] === '+') {
       this.err('Possessive quantifiers such as *+ or ++ aren’t supported.', qs, this.i + 1);
       this.i++;
@@ -198,9 +203,20 @@ class Parser {
     this.i = s + 1;
     if (rest.startsWith('?')) {
       let m: RegExpExecArray | null;
-      if (rest.startsWith('?:')) (kind = 'non'), (this.i += 2);
-      else if (/^\?[=!]/.test(rest)) (kind = 'look'), (look = rest[1]), (this.i += 2);
-      else if (/^\?<[=!]/.test(rest)) (kind = 'look'), (look = rest.slice(1, 3)), (this.i += 3);
+      if (rest.startsWith('?:')) {
+        kind = 'non';
+        this.i += 2;
+      }
+      else if (/^\?[=!]/.test(rest)) {
+        kind = 'look';
+        look = rest[1];
+        this.i += 2;
+      }
+      else if (/^\?<[=!]/.test(rest)) {
+        kind = 'look';
+        look = rest.slice(1, 3);
+        this.i += 3;
+      }
       else if ((m = /^\?<([^>]*)>/.exec(rest))) {
         kind = 'named';
         name = m[1];
@@ -416,7 +432,10 @@ class Parser {
             continue;
           }
           this.err('A range must go between two characters, as in a-z.', p, this.i);
-          if (next) items.push(next), parts.push(next.js);
+          if (next) {
+        items.push(next);
+        parts.push(next.js);
+      }
           continue;
         }
         this.err('Inside [ ], escape a literal hyphen as \\-.', p);

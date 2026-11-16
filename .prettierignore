@@ -1,0 +1,8 @@
+dist/
+.astro/
+.wrangler/
+node_modules/
+package-lock.json
+
+# Blog posts are authored prose, some imported from Medium and LinkedIn. Keep them exactly as written.
+src/content/blog/

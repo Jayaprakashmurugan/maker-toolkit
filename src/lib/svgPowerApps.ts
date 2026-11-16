@@ -294,6 +294,8 @@ export function renderSvg(a: Analysis, replacements: Record<string, Replacement>
   const previewSvg = build(true);
   exprs.length = 0;
   const svg = build(false);
+  // \u0001 marks where each Power Fx expression goes; it can't appear in a real SVG.
+  // eslint-disable-next-line no-control-regex
   const body = svg.replace(/"/g, '""').replace(/\u0001(\d+)\u0001/g, (_, i) => `" & ${exprs[Number(i)]} & "`);
   return {
     previewSvg,

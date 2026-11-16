@@ -79,8 +79,11 @@ export default function RegexTester() {
   const job = useRef(0);
   const done = useRef(0);
 
-  const opts: RegexOptions = { host, anchor, ...flags, ...(host === 'classic' ? { dotAll: false, freeSpacing: false, numbered: true } : {}) };
-  const compiled = useMemo(() => (pattern ? compile(pattern, opts) : null), [pattern, host, anchor, flags]);
+  const opts: RegexOptions = useMemo(
+    () => ({ host, anchor, ...flags, ...(host === 'classic' ? { dotAll: false, freeSpacing: false, numbered: true } : {}) }),
+    [host, anchor, flags],
+  );
+  const compiled = useMemo(() => (pattern ? compile(pattern, opts) : null), [pattern, opts]);
   const texts = useMemo(() => (perLine ? text.split(/\r?\n/) : [text]), [text, perLine]);
 
   useEffect(() => {

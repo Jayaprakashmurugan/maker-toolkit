@@ -10,28 +10,24 @@ import {
   type Host,
   type RegexOptions,
 } from '../lib/powerFxRegex';
+import {
+  MATCH_WORKER,
+  createMatchRunner,
+  type Hit,
+  type LineResult,
+  type MatchReply,
+  type MatchResult,
+} from '../lib/regexRunner';
 import { CodeLine } from './FormulaDetail';
 
-interface Hit {
-  full: string;
-  index: number;
-  subs: (string | null)[];
-  groups: Record<string, string | null> | null;
-}
-interface LineResult {
-  first: Hit | null;
-  all: Hit[];
-}
-type Results = { id: number; lines: LineResult[] } | { id: number; timeout: true };
-
 // Matching runs in a worker so a runaway pattern can be stopped instead of freezing the page.
-const WORKER = `onmessage = (e) => {
-  const { id, source, flags, texts, all } = e.data;
-  const re = new RegExp(source, flags), reG = new RegExp(source, flags + 'g');
-  const hit = (m) => m && { full: m[0], index: m.index, subs: m.slice(1).map((s) => s ?? null), groups: m.groups ? Object.fromEntries(Object.entries(m.groups).map(([k, v]) => [k, v ?? null])) : null };
-  postMessage({ id, lines: texts.map((t) => ({ first: hit(re.exec(t)), all: all ? [...t.matchAll(reG)].slice(0, 500).map(hit) : [] })) });
-};`;
-const TIMEOUT = 1500;
+function startWorker(onReply: (reply: MatchReply) => void) {
+  const url = URL.createObjectURL(new Blob([MATCH_WORKER], { type: 'text/javascript' }));
+  const w = new Worker(url);
+  URL.revokeObjectURL(url);
+  w.onmessage = (e) => onReply(e.data);
+  return w;
+}
 
 const ANCHORS: [Anchor, string][] = [
   ['Complete', 'Whole text'],
@@ -51,6 +47,17 @@ function marked(text: string, hits: Hit[]): ReactNode[] {
   });
   out.push(text.slice(at));
   return out;
+}
+
+/** The results in one short sentence, for screen readers. */
+function summary(lines: LineResult[], perLine: boolean): string {
+  if (!perLine) {
+    const n = lines[0].all.length;
+    return `${n}${lines[0].more ? '+' : ''} ${n === 1 ? 'match' : 'matches'}`;
+  }
+  const matched = lines.filter((l) => l.first).length;
+  if (lines.length === 1) return matched ? 'The line matches' : 'The line doesn’t match';
+  return `${matched} of ${lines.length} lines match`;
 }
 
 function Parts({ hit, opts }: { hit: Hit; opts: RegexOptions }) {
@@ -90,10 +97,9 @@ export default function RegexTester() {
   const [perLine, setPerLine] = useState(true);
   const [ref, setRef] = useState('TextInput1.Text');
   const [preset, setPreset] = useState(PRESETS[0].label);
-  const [results, setResults] = useState<Results | null>(null);
-  const worker = useRef<Worker | null>(null);
+  const [results, setResults] = useState<MatchResult | null>(null);
+  const [runner] = useState(() => createMatchRunner({ createWorker: startWorker, onResult: setResults }));
   const job = useRef(0);
-  const done = useRef(0);
 
   const opts: RegexOptions = useMemo(
     () => ({
@@ -108,37 +114,19 @@ export default function RegexTester() {
   const texts = useMemo(() => (perLine ? text.split(/\r?\n/) : [text]), [text, perLine]);
 
   useEffect(() => {
-    if (!compiled?.ok) return setResults(null);
-    const id = ++job.current;
-    const start = () => {
-      const url = URL.createObjectURL(new Blob([WORKER], { type: 'text/javascript' }));
-      const w = new Worker(url);
-      URL.revokeObjectURL(url);
-      w.onmessage = (e) => {
-        if (e.data.id !== job.current) return;
-        done.current = e.data.id;
-        setResults(e.data);
-      };
-      return w;
-    };
-    worker.current ??= start();
-    worker.current.postMessage({
-      id,
+    if (!compiled?.ok) {
+      runner.cancel();
+      return setResults(null);
+    }
+    job.current = runner.run({
       source: compiled.source,
       flags: compiled.flags,
       texts,
       all: !perLine || anchor === 'Contains',
     });
-    const t = setTimeout(() => {
-      if (job.current !== id || done.current === id) return;
-      worker.current?.terminate();
-      worker.current = null;
-      setResults({ id, timeout: true });
-    }, TIMEOUT);
-    return () => clearTimeout(t);
-  }, [compiled, texts, perLine, anchor]);
+  }, [runner, compiled, texts, perLine, anchor]);
 
-  useEffect(() => () => worker.current?.terminate(), []);
+  useEffect(() => () => runner.dispose(), [runner]);
 
   const switchHost = (h: Host) => {
     // Keep a predefined pattern pointing at the same Match enum member in the other host.
@@ -153,6 +141,24 @@ export default function RegexTester() {
   const names = [...pattern.matchAll(/\(\?<([^>=!]+)>/g)].map((m) => m[1]);
   const v1 = host === 'v1';
   const issues = compiled && !compiled.ok ? compiled.issues : [];
+
+  // Screen readers hear a short summary, not the whole results pane, which changes on every keystroke.
+  // null while a test is running, so the summary isn't cleared and repeated each time.
+  const status = !compiled?.ok
+    ? ''
+    : results && 'timeout' in results
+      ? 'This pattern took too long and was stopped.'
+      : ready
+        ? summary(ready, perLine)
+        : null;
+  const said = useRef<string | null>(null);
+  useEffect(() => {
+    if (status === null || status === said.current) return;
+    const first = said.current === null; // the results shown on load aren't news
+    said.current = status;
+    const el = document.getElementById('sr-status');
+    if (el && !first) el.textContent = status;
+  }, [status]);
 
   return (
     <div className="rx">
@@ -295,13 +301,17 @@ export default function RegexTester() {
                   </>
                 ) : (
                   <>
-                    <b>{ready[0].all.length}</b> {ready[0].all.length === 1 ? 'match' : 'matches'}
+                    <b>
+                      {ready[0].all.length}
+                      {ready[0].more && '+'}
+                    </b>{' '}
+                    {ready[0].all.length === 1 ? 'match' : 'matches'}
                   </>
                 )}
               </p>
             )}
           </div>
-          <div className="rx-results" aria-live="polite">
+          <div className="rx-results">
             {results && 'timeout' in results ? (
               <p className="lc-warn">
                 This pattern took too long and was stopped. Nested repeats such as (a+)+ can take forever on some text;
@@ -315,8 +325,9 @@ export default function RegexTester() {
               <ul className="rx-lines">
                 {ready.map((l, k) => (
                   <li key={k} className={l.first ? 'is-yes' : 'is-no'}>
-                    <span className="rx-mark" aria-label={l.first ? 'Matches' : 'No match'}>
-                      {l.first ? '✓' : '✗'}
+                    <span className="rx-mark">
+                      <span aria-hidden="true">{l.first ? '✓' : '✗'}</span>
+                      <span className="visually-hidden">{l.first ? 'Matches:' : 'No match:'}</span>
                     </span>
                     <span className="rx-line">
                       <code>
@@ -329,7 +340,13 @@ export default function RegexTester() {
                       {l.first && (
                         <span className="rx-meta">
                           StartMatch {l.first.index + 1}
-                          {anchor === 'Contains' && l.all.length > 1 && <> · MatchAll finds {l.all.length}</>}
+                          {anchor === 'Contains' && l.all.length > 1 && (
+                            <>
+                              {' '}
+                              · MatchAll finds {l.all.length}
+                              {l.more && '+'}
+                            </>
+                          )}
                         </span>
                       )}
                       {l.first && <Parts hit={l.first} opts={opts} />}

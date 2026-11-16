@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import ProfileCard from '../components/ProfileCard.astro';
 import SectionHead from '../components/SectionHead.astro';
 import ToolBrowser from '../components/ToolBrowser.astro';
 import PostList from '../components/PostList.astro';
@@ -12,12 +11,10 @@ import { desktopReference, powerAppsReference, powerAutomateReference } from '..
 import { getPosts } from '../lib/posts';
 import { fxHtml } from '../lib/fxHtml';
 import { siteConfig } from '../site.config';
-import { current } from '../data/experience';
 
 const posts = (await getPosts()).filter((p) => !p.data.draft);
 const entries = powerAppsReference.items.length + powerAutomateReference.items.length + desktopReference.items.length;
 const toolCount = tools.filter((t) => t.kind === 'tool').length;
-const firstName = siteConfig.author.split(' ')[0];
 const tryThese = ['remove duplicates', 'format date', 'Patch', 'trigger condition', 'regex'];
 
 // The formula bar types these one after another.
@@ -144,13 +141,6 @@ const faqs = [
         </div>
       </div>
 
-      <div class="tile tile--me">
-        <ProfileCard eager />
-        <a class="tile__link" href="/about/">
-          About me <Icon name="arrow" />
-        </a>
-      </div>
-
       <div class="tile tile--formula" data-typer>
         <div class="console__bar">
           <span class="console__dots" aria-hidden="true">
@@ -244,27 +234,6 @@ const faqs = [
       <VideoGrid videos={videos.slice(0, 3)} />
     </section>
   )}
-
-  <section class="wrap home-section" aria-labelledby="h-whoami">
-    <div class="band" data-reveal>
-      <p class="band__idx" id="h-whoami">
-        // whoami
-      </p>
-      <p class="band__text">
-        I'm <b>{firstName}</b>,{' '}
-        {current ? `${current.title} at ${current.company}` : `a ${siteConfig.authorRole.replace(/^Microsoft /, '')}`},
-        based in {siteConfig.authorLocation.split(',')[0]}. {siteConfig.authorBio}
-      </p>
-      <p class="band__actions">
-        <a class="btn btn--outline" href="/about/" data-magnetic>
-          More about me <Icon name="arrow" />
-        </a>
-        <a class="btn btn--outline" href="/contact/" data-magnetic>
-          Get in touch
-        </a>
-      </p>
-    </div>
-  </section>
 
   <section class="wrap home-section" aria-labelledby="faq-title">
     <SectionHead index="04 · faq" title="Questions" id="faq-title" />

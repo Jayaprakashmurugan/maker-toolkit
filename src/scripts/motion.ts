@@ -113,7 +113,7 @@ function pointerEffects() {
   document.addEventListener(
     'pointermove',
     perFrame((e: PointerEvent) => {
-      const el = (e.target as Element).closest<HTMLElement>('.tcard > a, .tile, .ways a, .catcards a, .band');
+      const el = (e.target as Element).closest<HTMLElement>('.tcard > a, .tile, .ways a, .catcards a');
       if (!el) return;
       const r = el.getBoundingClientRect();
       el.style.setProperty('--mx', `${e.clientX - r.left}px`);

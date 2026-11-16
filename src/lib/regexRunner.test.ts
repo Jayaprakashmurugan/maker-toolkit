@@ -1,5 +1,14 @@
-import { describe, expect, it } from 'vitest';
-import { createMatchRunner, TIMEOUT, type MatchJob, type MatchReply, type MatchResult } from './regexRunner';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  MATCH_WORKER,
+  MAX_MATCHES,
+  createMatchRunner,
+  TIMEOUT,
+  type LineResult,
+  type MatchJob,
+  type MatchReply,
+  type MatchResult,
+} from './regexRunner';
 
 /** A stand-in for the Web Worker: it keeps the jobs it was sent and replies only when told to. */
 class FakeWorker {
@@ -166,5 +175,48 @@ describe('match runner', () => {
       { id: a, timeout: true },
       { id: b, lines: [] },
     ]);
+  });
+});
+
+/** Runs the worker's source in this thread and returns its reply. */
+function work(job: MatchJob): MatchReply {
+  let reply: MatchReply | undefined;
+  const handler = new Function(
+    'postMessage',
+    `let onmessage;
+${MATCH_WORKER}
+return onmessage;`,
+  )((r: MatchReply) => (reply = r));
+  handler({ data: { id: 1, ...job } });
+  return reply!;
+}
+
+describe('match worker', () => {
+  it('lists every match when there are no more than the cap', () => {
+    const [line] = work({ source: 'a', flags: 'u', texts: ['a'.repeat(MAX_MATCHES)], all: true }).lines;
+    expect(line.all).toHaveLength(MAX_MATCHES);
+    expect(line.more).toBe(false);
+    expect(line.first).toEqual({ full: 'a', index: 0, subs: [], groups: null });
+  });
+
+  it('stops looking at the cap, and says there were more', () => {
+    const exec = vi.spyOn(RegExp.prototype, 'exec');
+    let line: LineResult, searches: number;
+    try {
+      [line] = work({ source: 'a', flags: 'u', texts: ['a'.repeat(20 * MAX_MATCHES)], all: true }).lines;
+      searches = exec.mock.calls.length;
+    } finally {
+      exec.mockRestore();
+    }
+    expect(line.all).toHaveLength(MAX_MATCHES);
+    expect(line.all[MAX_MATCHES - 1].index).toBe(MAX_MATCHES - 1);
+    expect(line.more).toBe(true);
+    // One search for Match, then MatchAll's searches up to one past the cap: not all 10,000.
+    expect(searches).toBe(1 + MAX_MATCHES + 1);
+  });
+
+  it('lists no matches when only the first one is needed', () => {
+    const [line] = work({ source: 'a', flags: 'u', texts: ['aaa'], all: false }).lines;
+    expect(line).toEqual({ first: { full: 'a', index: 0, subs: [], groups: null }, all: [], more: false });
   });
 });

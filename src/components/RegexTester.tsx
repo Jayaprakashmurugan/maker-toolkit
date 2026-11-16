@@ -265,7 +265,11 @@ export default function RegexTester() {
                   </>
                 ) : (
                   <>
-                    <b>{ready[0].all.length}</b> {ready[0].all.length === 1 ? 'match' : 'matches'}
+                    <b>
+                      {ready[0].all.length}
+                      {ready[0].more && '+'}
+                    </b>{' '}
+                    {ready[0].all.length === 1 ? 'match' : 'matches'}
                   </>
                 )}
               </p>
@@ -299,7 +303,13 @@ export default function RegexTester() {
                       {l.first && (
                         <span className="rx-meta">
                           StartMatch {l.first.index + 1}
-                          {anchor === 'Contains' && l.all.length > 1 && <> · MatchAll finds {l.all.length}</>}
+                          {anchor === 'Contains' && l.all.length > 1 && (
+                            <>
+                              {' '}
+                              · MatchAll finds {l.all.length}
+                              {l.more && '+'}
+                            </>
+                          )}
                         </span>
                       )}
                       {l.first && <Parts hit={l.first} opts={opts} />}

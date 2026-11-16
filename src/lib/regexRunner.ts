@@ -11,6 +11,8 @@ export interface Hit {
 export interface LineResult {
   first: Hit | null;
   all: Hit[];
+  /** There were more than MAX_MATCHES matches; `all` has the first MAX_MATCHES. */
+  more: boolean;
 }
 export interface MatchJob {
   source: string;
@@ -26,13 +28,23 @@ export interface MatchReply {
 export type MatchResult = MatchReply | { id: number; timeout: true };
 
 export const TIMEOUT = 1500;
+export const MAX_MATCHES = 500;
 
 /** The worker's source, run from a Blob URL. It answers each job with a MatchReply. */
 export const MATCH_WORKER = `onmessage = (e) => {
   const { id, source, flags, texts, all } = e.data;
   const re = new RegExp(source, flags), reG = new RegExp(source, flags + 'g');
   const hit = (m) => m && { full: m[0], index: m.index, subs: m.slice(1).map((s) => s ?? null), groups: m.groups ? Object.fromEntries(Object.entries(m.groups).map(([k, v]) => [k, v ?? null])) : null };
-  postMessage({ id, lines: texts.map((t) => ({ first: hit(re.exec(t)), all: all ? [...t.matchAll(reG)].slice(0, 500).map(hit) : [] })) });
+  // Stop at the cap rather than collecting every match first; finding one more means the list was cut.
+  const every = (t) => {
+    const out = [];
+    for (const m of t.matchAll(reG)) {
+      if (out.length === ${MAX_MATCHES}) return { all: out, more: true };
+      out.push(hit(m));
+    }
+    return { all: out, more: false };
+  };
+  postMessage({ id, lines: texts.map((t) => ({ first: hit(re.exec(t)), ...(all ? every(t) : { all: [], more: false }) })) });
 };`;
 
 export interface MatchWorker {

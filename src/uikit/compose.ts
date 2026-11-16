@@ -9,7 +9,12 @@ function names(n: Node, out: string[] = []): string[] {
   out.push(n.name);
   if ('children' in n) n.children.forEach((c) => names(c, out));
   if (n.kind === 'gallery') {
-    const row = { f: (field: string) => ({ fx: `ThisItem.${field}` }), selected: { fx: 'ThisItem.IsSelected' }, index: 0, sample: n.sample[0] ?? {} };
+    const row = {
+      f: (field: string) => ({ fx: `ThisItem.${field}` }),
+      selected: { fx: 'ThisItem.IsSelected' },
+      index: 0,
+      sample: n.sample[0] ?? {},
+    };
     n.template(row).forEach((c) => names(c, out));
   }
   return out;
@@ -56,7 +61,10 @@ export function merge(root: Node, parts: Snippet[], notes: string[] = []): Snipp
     root,
     formulas: formulas.length ? formulas.join('\n\n') : undefined,
     onVisible: onVisible.length ? onVisible.join(';\n') : undefined,
-    uses: uniq(parts.flatMap((p) => p.uses ?? []), (u) => u.name),
+    uses: uniq(
+      parts.flatMap((p) => p.uses ?? []),
+      (u) => u.name,
+    ),
     notes,
   };
 }

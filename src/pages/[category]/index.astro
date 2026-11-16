@@ -16,33 +16,38 @@ const also = alsoIn(cat.id);
 const others = categories.filter((c) => c.id !== cat.id);
 ---
 
-<Base title={`${cat.name} tools`} description={`${cat.summary} Free, in your browser, no sign-up.`} image={`/og/${cat.id}.png`}>
+<Base
+  title={`${cat.name} tools`}
+  description={`${cat.summary} Free, in your browser, no sign-up.`}
+  image={`/og/${cat.id}.png`}
+>
   <div class="wrap" style={`--cat:${cat.color}`}>
-    <PageHead path={`~/tools/${cat.id}`} title={cat.name} lede={cat.intro} icon={cat.product && PRODUCTS[cat.product].icon} />
+    <PageHead
+      path={`~/tools/${cat.id}`}
+      title={cat.name}
+      lede={cat.intro}
+      icon={cat.product && PRODUCTS[cat.product].icon}
+    />
 
     <ToolGrid tools={own} level={2} />
 
-    {
-      also.length > 0 && (
-        <section class="home-section" aria-labelledby="also-title">
-          <SectionHead index="from other groups" title={`Also useful for ${cat.name}`} id="also-title" />
-          <ToolGrid tools={also} />
-        </section>
-      )
-    }
+    {also.length > 0 && (
+      <section class="home-section" aria-labelledby="also-title">
+        <SectionHead index="from other groups" title={`Also useful for ${cat.name}`} id="also-title" />
+        <ToolGrid tools={also} />
+      </section>
+    )}
 
     <nav class="home-section" aria-label="Other groups">
       <p class="kicker">More tools</p>
       <div class="cat-jump" style="margin-top: 0.9rem">
-        {
-          others.map((c) => (
-            <a href={`/${c.id}/`} style={`--cat:${c.color}`}>
-              <span class="tcard__dot" aria-hidden="true" />
-              {c.name}
-              <span class="cat-jump__n">{toolsIn(c.id).length + alsoIn(c.id).length}</span>
-            </a>
-          ))
-        }
+        {others.map((c) => (
+          <a href={`/${c.id}/`} style={`--cat:${c.color}`}>
+            <span class="tcard__dot" aria-hidden="true" />
+            {c.name}
+            <span class="cat-jump__n">{toolsIn(c.id).length + alsoIn(c.id).length}</span>
+          </a>
+        ))}
       </div>
     </nav>
   </div>

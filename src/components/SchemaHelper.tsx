@@ -8,7 +8,13 @@ const SAMPLES: Record<string, string> = {
   'SharePoint items': JSON.stringify(
     {
       value: [
-        { ID: 1, Title: 'Laptop request', Status: { Value: 'Approved' }, Amount: 1250.5, Approver: { Email: 'ben@contoso.com', DisplayName: 'Ben Ortiz' } },
+        {
+          ID: 1,
+          Title: 'Laptop request',
+          Status: { Value: 'Approved' },
+          Amount: 1250.5,
+          Approver: { Email: 'ben@contoso.com', DisplayName: 'Ben Ortiz' },
+        },
         { ID: 2, Title: 'Monitor', Status: { Value: 'Pending' }, Amount: 180, Approver: null, Notes: 'Urgent' },
       ],
     },
@@ -16,7 +22,13 @@ const SAMPLES: Record<string, string> = {
     2,
   ),
   'Forms response': JSON.stringify(
-    { responder: 'ada@contoso.com', submitDate: '2026-10-23T09:15:00Z', rating: 4, comments: null, topics: ['Billing', 'Support'] },
+    {
+      responder: 'ada@contoso.com',
+      submitDate: '2026-10-23T09:15:00Z',
+      rating: 4,
+      comments: null,
+      topics: ['Billing', 'Support'],
+    },
     null,
     2,
   ),
@@ -37,7 +49,10 @@ const SAMPLES: Record<string, string> = {
 
 /** Pretty-prints JSON but keeps arrays of plain values, like ["string", "null"], on one line. */
 const prettyJson = (value: unknown) =>
-  JSON.stringify(value, null, 2).replace(/\[([^[\]{}]*)\]/g, (_, inner: string) => `[${inner.trim().replace(/\s*\n\s*/g, ' ')}]`);
+  JSON.stringify(value, null, 2).replace(
+    /\[([^[\]{}]*)\]/g,
+    (_, inner: string) => `[${inner.trim().replace(/\s*\n\s*/g, ' ')}]`,
+  );
 
 /** Colours JSON: keys, strings, numbers, true/false/null and punctuation. */
 function highlightJson(json: string): ReactNode[] {
@@ -68,7 +83,17 @@ function highlightJson(json: string): ReactNode[] {
   return out;
 }
 
-function Toggle({ label, value, options, onChange }: { label: string; value: boolean; options: [string, string]; onChange: (v: boolean) => void }) {
+function Toggle({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: boolean;
+  options: [string, string];
+  onChange: (v: boolean) => void;
+}) {
   return (
     <div className="bf-control">
       <span className="bf-control__label">{label}</span>
@@ -112,9 +137,12 @@ export default function SchemaHelper() {
   const hasInput = src.trim().length > 0;
   const parsed = useMemo(() => (hasInput ? parseSample(src) : null), [src, hasInput]);
   const shape = useMemo(() => (parsed?.ok ? inferShape(parsed.value) : null), [parsed]);
-  const opts = { nullable, required: !optional, integers: !anyNumber };
-  const schema = useMemo(() => (shape ? prettyJson(toSchema(shape, opts)) : ''), [shape, nullable, optional, anyNumber]);
-  const rows = useMemo(() => (shape ? fieldRows(shape, actionName, opts) : []), [shape, actionName, nullable, optional, anyNumber]);
+  const opts = useMemo(
+    () => ({ nullable, required: !optional, integers: !anyNumber }),
+    [nullable, optional, anyNumber],
+  );
+  const schema = useMemo(() => (shape ? prettyJson(toSchema(shape, opts)) : ''), [shape, opts]);
+  const rows = useMemo(() => (shape ? fieldRows(shape, actionName, opts) : []), [shape, actionName, opts]);
   const stats = useMemo(() => (shape ? shapeStats(shape) : null), [shape]);
   const q = filter.trim().toLowerCase();
   const shown = q ? rows.filter((r) => r.path.toLowerCase().includes(q)) : rows;
@@ -130,9 +158,24 @@ export default function SchemaHelper() {
   return (
     <div className="bf sh">
       <div className="bf-toolbar">
-        <Toggle label="Nulls" value={nullable} onChange={withBump(setNullable)} options={['Allow everywhere', 'Only where seen']} />
-        <Toggle label="Properties" value={optional} onChange={withBump(setOptional)} options={['All optional', 'Required if in sample']} />
-        <Toggle label="Numbers" value={anyNumber} onChange={withBump(setAnyNumber)} options={['number', 'integer when whole']} />
+        <Toggle
+          label="Nulls"
+          value={nullable}
+          onChange={withBump(setNullable)}
+          options={['Allow everywhere', 'Only where seen']}
+        />
+        <Toggle
+          label="Properties"
+          value={optional}
+          onChange={withBump(setOptional)}
+          options={['All optional', 'Required if in sample']}
+        />
+        <Toggle
+          label="Numbers"
+          value={anyNumber}
+          onChange={withBump(setAnyNumber)}
+          options={['number', 'integer when whole']}
+        />
         <label className="bf-control sh-action">
           <span className="bf-control__label">Action name</span>
           <input value={actionName} onChange={(e) => setActionName(e.target.value)} spellCheck={false} />
@@ -145,10 +188,15 @@ export default function SchemaHelper() {
             <h2 id="sh-in-title">Sample JSON</h2>
             <div className="bf-pane__actions">
               {Object.keys(SAMPLES).map((name) => (
-                <button key={name} type="button" className="link-btn" onClick={() => {
+                <button
+                  key={name}
+                  type="button"
+                  className="link-btn"
+                  onClick={() => {
                     setSrc(SAMPLES[name]);
                     bump();
-                  }}>
+                  }}
+                >
                   {name}
                 </button>
               ))}
@@ -165,7 +213,9 @@ export default function SchemaHelper() {
             value={src}
             onChange={(e) => setSrc(e.target.value)}
             onPaste={bump}
-            placeholder={'Paste a sample of the JSON your flow receives:\na run’s output, an HTTP response or a Compose result.'}
+            placeholder={
+              'Paste a sample of the JSON your flow receives:\na run’s output, an HTTP response or a Compose result.'
+            }
             spellCheck={false}
             autoCapitalize="off"
             autoComplete="off"
@@ -222,7 +272,9 @@ export default function SchemaHelper() {
               </button>
             </li>
           </ol>
-          <p className="bf-checks__note">Copy the JSON straight from a run’s outputs (Show raw outputs) to avoid typing mistakes.</p>
+          <p className="bf-checks__note">
+            Copy the JSON straight from a run’s outputs (Show raw outputs) to avoid typing mistakes.
+          </p>
         </section>
       )}
 
@@ -295,7 +347,9 @@ export default function SchemaHelper() {
               </table>
             </div>
           ) : (
-            <p className="bf-checks__note">{rows.length ? 'No fields match that filter.' : 'This JSON has no named fields to list.'}</p>
+            <p className="bf-checks__note">
+              {rows.length ? 'No fields match that filter.' : 'This JSON has no named fields to list.'}
+            </p>
           )}
         </section>
       )}

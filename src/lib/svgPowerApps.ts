@@ -8,14 +8,45 @@ const XML_NS = 'http://www.w3.org/XML/1998/namespace';
 const XMLNS_NS = 'http://www.w3.org/2000/xmlns/';
 
 const COLOR_PROPS = ['fill', 'stroke', 'stop-color', 'flood-color', 'lighting-color', 'color'];
-const NOT_COLORS = new Set(['', 'none', 'inherit', 'transparent', 'initial', 'unset', 'context-fill', 'context-stroke']);
+const NOT_COLORS = new Set([
+  '',
+  'none',
+  'inherit',
+  'transparent',
+  'initial',
+  'unset',
+  'context-fill',
+  'context-stroke',
+]);
 const DROP_TAGS = new Set(['script', 'foreignObject', 'metadata', 'title', 'desc']);
 const TEXT_TAGS = new Set(['text', 'tspan', 'textPath']);
 const SHAPES = 'path, rect, circle, ellipse, polygon, polyline, text';
 const NUMERIC_ATTRS = new Set([
-  'd', 'points', 'transform', 'gradientTransform', 'patternTransform', 'viewBox',
-  'x', 'y', 'x1', 'y1', 'x2', 'y2', 'cx', 'cy', 'r', 'rx', 'ry', 'fx', 'fy', 'dx', 'dy',
-  'width', 'height', 'stroke-width', 'font-size',
+  'd',
+  'points',
+  'transform',
+  'gradientTransform',
+  'patternTransform',
+  'viewBox',
+  'x',
+  'y',
+  'x1',
+  'y1',
+  'x2',
+  'y2',
+  'cx',
+  'cy',
+  'r',
+  'rx',
+  'ry',
+  'fx',
+  'fy',
+  'dx',
+  'dy',
+  'width',
+  'height',
+  'stroke-width',
+  'font-size',
 ]);
 
 /** Key used when the SVG sets no fill at all, so shapes draw in the default black. */
@@ -53,12 +84,15 @@ export const byteLength = (s: string) => new TextEncoder().encode(s).length;
 
 /** Calls fn for every color-bearing declaration in a style attribute or <style> block. */
 function eachStyleColor(css: string, fn: (value: string) => string): string {
-  return css.replace(/(^|[;{\s])(fill|stroke|stop-color|flood-color|lighting-color|color)(\s*:\s*)([^;}!]+)/gi, (m, pre, prop, sep, value) => {
-    const v = value.trim();
-    if (!isColor(v)) return m;
-    const next = fn(v);
-    return `${pre}${prop}${sep}${next}${value.slice(value.trimEnd().length)}`;
-  });
+  return css.replace(
+    /(^|[;{\s])(fill|stroke|stop-color|flood-color|lighting-color|color)(\s*:\s*)([^;}!]+)/gi,
+    (m, pre, prop, sep, value) => {
+      const v = value.trim();
+      if (!isColor(v)) return m;
+      const next = fn(v);
+      return `${pre}${prop}${sep}${next}${value.slice(value.trimEnd().length)}`;
+    },
+  );
 }
 
 function prepare(src: string): string {
@@ -71,7 +105,8 @@ function prepare(src: string): string {
 
 export function analyzeSvg(src: string): Analysis | AnalysisError {
   if (!src.trim()) return { ok: false, error: 'Paste an SVG to start.' };
-  if (!/<svg\b/i.test(src)) return { ok: false, error: 'This doesn’t look like an SVG. It should contain an <svg> tag.' };
+  if (!/<svg\b/i.test(src))
+    return { ok: false, error: 'This doesn’t look like an SVG. It should contain an <svg> tag.' };
   const doc = new DOMParser().parseFromString(prepare(src), 'image/svg+xml');
   const err = doc.querySelector('parsererror');
   if (err) {
@@ -82,7 +117,10 @@ export function analyzeSvg(src: string): Analysis | AnalysisError {
     const f = text.match(/XML Parsing Error:\s*([^\n]+)[\s\S]*?Line Number (\d+)/i);
     const [reason, line] = c ? [c[2], c[1]] : f ? [f[1], f[2]] : ['', ''];
     const where = line ? ` on line ${Number(line) + lead}` : '';
-    return { ok: false, error: `The SVG couldn’t be read${reason ? ` (${reason.trim()}${where})` : where}. Check that every tag is closed and every attribute is quoted.` };
+    return {
+      ok: false,
+      error: `The SVG couldn’t be read${reason ? ` (${reason.trim()}${where})` : where}. Check that every tag is closed and every attribute is quoted.`,
+    };
   }
   const root = doc.documentElement;
   if (root.localName !== 'svg') return { ok: false, error: 'The outermost tag must be <svg>.' };
@@ -145,13 +183,29 @@ export function analyzeSvg(src: string): Analysis | AnalysisError {
       report.push('There’s no viewBox, so the image may not scale. Add one, such as viewBox="0 0 24 24".');
     }
   }
-  if (counts.script) report.push(`Removed ${counts.script} script${counts.script > 1 ? 's' : ''}. Scripts never run in an Image control.`);
-  if (counts.events) report.push(`Removed ${counts.events} event handler${counts.events > 1 ? 's' : ''} (onclick and similar).`);
-  if (counts.external) report.push(`Removed ${counts.external} link${counts.external > 1 ? 's' : ''} to outside files or HTML, which an Image control can’t load.`);
-  if (counts.editor) report.push(`Removed ${counts.editor} leftover${counts.editor > 1 ? 's' : ''} from the design tool.`);
-  const unseen = [comments && `${comments} comment${comments > 1 ? 's' : ''}`, counts.title && 'the title', counts.desc && 'the description'].filter(Boolean);
-  if (unseen.length) report.push(`Removed ${unseen.join(', ').replace(/, ([^,]*)$/, ' and $1')}, which don’t show in an image.`);
-  if (root.querySelector('text')) report.push('This SVG has text. It draws in a font from the user’s device, so it can look different there; convert text to outlines in your design tool if that matters.');
+  if (counts.script)
+    report.push(
+      `Removed ${counts.script} script${counts.script > 1 ? 's' : ''}. Scripts never run in an Image control.`,
+    );
+  if (counts.events)
+    report.push(`Removed ${counts.events} event handler${counts.events > 1 ? 's' : ''} (onclick and similar).`);
+  if (counts.external)
+    report.push(
+      `Removed ${counts.external} link${counts.external > 1 ? 's' : ''} to outside files or HTML, which an Image control can’t load.`,
+    );
+  if (counts.editor)
+    report.push(`Removed ${counts.editor} leftover${counts.editor > 1 ? 's' : ''} from the design tool.`);
+  const unseen = [
+    comments && `${comments} comment${comments > 1 ? 's' : ''}`,
+    counts.title && 'the title',
+    counts.desc && 'the description',
+  ].filter(Boolean);
+  if (unseen.length)
+    report.push(`Removed ${unseen.join(', ').replace(/, ([^,]*)$/, ' and $1')}, which don’t show in an image.`);
+  if (root.querySelector('text'))
+    report.push(
+      'This SVG has text. It draws in a font from the user’s device, so it can look different there; convert text to outlines in your design tool if that matters.',
+    );
 
   return { ok: true, root, colors: findColors(root), report, inputBytes: byteLength(src) };
 }
@@ -193,7 +247,9 @@ const escAttr = (s: string) => escText(s).replace(/'/g, '&apos;');
 function roundNumbers(v: string, digits: number): string {
   return v.replace(/\d*\.\d+(e[-+]?\d+)?/gi, (m, exp, offset: number, all: string) => {
     if (exp) return m;
-    let out = Number(m).toFixed(digits).replace(/\.?0+$/, '');
+    let out = Number(m)
+      .toFixed(digits)
+      .replace(/\.?0+$/, '');
     if (out === '' || out === '-0') out = '0';
     // ".5" written right after another number is a separate number; keep the two apart.
     if (m.startsWith('.') && /[\d.]/.test(all[offset - 1] || '') && !out.includes('.')) out = ` ${out}`;
@@ -294,6 +350,8 @@ export function renderSvg(a: Analysis, replacements: Record<string, Replacement>
   const previewSvg = build(true);
   exprs.length = 0;
   const svg = build(false);
+  // \u0001 marks where each Power Fx expression goes; it can't appear in a real SVG.
+  // eslint-disable-next-line no-control-regex
   const body = svg.replace(/"/g, '""').replace(/\u0001(\d+)\u0001/g, (_, i) => `" & ${exprs[Number(i)]} & "`);
   return {
     previewSvg,

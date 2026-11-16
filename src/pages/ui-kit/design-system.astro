@@ -38,7 +38,9 @@ const t = defaultTheme;
 <Base title={`${title} · UI Kit`} description={description} image="/og/ui-kit/design-system.png">
   <KitThemeHead slot="head" />
   <div class="wrap wrap--wide">
-    <a class="post__back" href="/ui-kit/">← UI Kit</a>
+    <a class="post__back" href="/ui-kit/">
+      ← UI Kit
+    </a>
     <PageHead path="~/ui-kit/design-system" title={title} lede={description} />
 
     <section class="home-section ds-intro" aria-labelledby="ds-how">
@@ -47,20 +49,24 @@ const t = defaultTheme;
         <div>
           <h3>fxConfig holds everything</h3>
           <p>
-            <code>ColorConfigs</code> has the colors, <code>TextConfigs</code> the font, sizes, borders, corners and spacing. Two shortcuts,
+            <code>ColorConfigs</code> has the colors, <code>TextConfigs</code> the font, sizes, borders, corners and
+            spacing. Two shortcuts,
             <code>fxColorConfigs</code> and <code>fxTextConfigs</code>, keep formulas short.
           </p>
         </div>
         <div>
           <h3>Components only read it</h3>
           <p>
-            A button’s Fill is <code>fxColorConfigs.Primary1</code>, its Size <code>fxTextConfigs.Size.Small</code>. Change Primary1 once and every button
-            in the app follows.
+            A button’s Fill is <code>fxColorConfigs.Primary1</code>, its Size <code>fxTextConfigs.Size.Small</code>.
+            Change Primary1 once and every button in the app follows.
           </p>
         </div>
         <div>
           <h3>Paste once per app</h3>
-          <p>Open App, select <b>Formulas</b>, and paste the code below at the end. Named formulas don’t need OnStart, and they recalculate on their own.</p>
+          <p>
+            Open App, select <b>Formulas</b>, and paste the code below at the end. Named formulas don’t need OnStart,
+            and they recalculate on their own.
+          </p>
         </div>
       </div>
     </section>
@@ -73,42 +79,55 @@ const t = defaultTheme;
     <section class="home-section" aria-labelledby="ds-names">
       <SectionHead index="03 · names" title="Naming conventions" id="ds-names" />
       <p class="ds-lede">
-        Every control in the kit is named this way, and the site checks it before a snippet is published. A name starts with its prefix, then a capital letter.
-        To apply the same rules to your own app, paste its YAML into the <a href="/naming-checker/">Naming Checker</a>.
+        Every control in the kit is named this way, and the site checks it before a snippet is published. A name starts
+        with its prefix, then a capital letter. To apply the same rules to your own app, paste its YAML into the{' '}
+        <a href="/naming-checker/">Naming Checker</a>.
       </p>
       <div class="ds-tables">
         <table class="ds-table">
           <caption>Controls</caption>
           <thead>
-            <tr><th>Prefix</th><th>Control</th><th>Example</th></tr>
+            <tr>
+              <th>Prefix</th>
+              <th>Control</th>
+              <th>Example</th>
+            </tr>
           </thead>
           <tbody>
-            {
-              prefixes.map((p) => (
-                <tr>
-                  <td><code>{p.prefix}</code></td>
-                  <td>{p.what}</td>
-                  <td><code>{examples[p.prefix] ?? '-'}</code></td>
-                </tr>
-              ))
-            }
+            {prefixes.map((p) => (
+              <tr>
+                <td>
+                  <code>{p.prefix}</code>
+                </td>
+                <td>{p.what}</td>
+                <td>
+                  <code>{examples[p.prefix] ?? '-'}</code>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         <table class="ds-table">
           <caption>Formulas, variables and more</caption>
           <thead>
-            <tr><th>Prefix</th><th>What</th><th>Example</th></tr>
+            <tr>
+              <th>Prefix</th>
+              <th>What</th>
+              <th>Example</th>
+            </tr>
           </thead>
           <tbody>
-            {
-              variables.map((v) => (
-                <tr>
-                  <td><code>{v.prefix}</code></td>
-                  <td>{v.what}</td>
-                  <td><code>{v.example}</code></td>
-                </tr>
-              ))
-            }
+            {variables.map((v) => (
+              <tr>
+                <td>
+                  <code>{v.prefix}</code>
+                </td>
+                <td>{v.what}</td>
+                <td>
+                  <code>{v.example}</code>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -119,23 +138,56 @@ const t = defaultTheme;
       <div class="ds-tokens">
         <div>
           <h3>fxTextConfigs.Size</h3>
-          <ul>{SIZE_KEYS.map((k) => <li><code>{k}</code><span style={`font-size:${Math.min(t.size[k], 24)}pt`}>Aa</span><b>{t.size[k]}</b></li>)}</ul>
+          <ul>
+            {SIZE_KEYS.map((k) => (
+              <li>
+                <code>{k}</code>
+                <span style={`font-size:${Math.min(t.size[k], 24)}pt`}>Aa</span>
+                <b>{t.size[k]}</b>
+              </li>
+            ))}
+          </ul>
         </div>
         <div>
           <h3>fxTextConfigs.Padding</h3>
-          <ul>{PADDING_KEYS.map((k) => <li><code>{k}</code><span class="ds-bar" style={`width:${t.padding[k] * 2}px`} /><b>{t.padding[k]}</b></li>)}</ul>
+          <ul>
+            {PADDING_KEYS.map((k) => (
+              <li>
+                <code>{k}</code>
+                <span class="ds-bar" style={`width:${t.padding[k] * 2}px`} />
+                <b>{t.padding[k]}</b>
+              </li>
+            ))}
+          </ul>
         </div>
         <div>
           <h3>fxTextConfigs.BorderRadius</h3>
-          <ul>{RADIUS_KEYS.map((k) => <li><code>{k}</code><span class="ds-corner" style={`border-top-left-radius:${t.radius[k]}px`} /><b>{t.radius[k]}</b></li>)}</ul>
+          <ul>
+            {RADIUS_KEYS.map((k) => (
+              <li>
+                <code>{k}</code>
+                <span class="ds-corner" style={`border-top-left-radius:${t.radius[k]}px`} />
+                <b>{t.radius[k]}</b>
+              </li>
+            ))}
+          </ul>
         </div>
         <div>
           <h3>fxTextConfigs.BorderThickness</h3>
-          <ul>{THICKNESS_KEYS.map((k) => <li><code>{k}</code><span class="ds-line" style={`height:${Math.max(t.thickness[k], 0)}px`} /><b>{t.thickness[k]}</b></li>)}</ul>
+          <ul>
+            {THICKNESS_KEYS.map((k) => (
+              <li>
+                <code>{k}</code>
+                <span class="ds-line" style={`height:${Math.max(t.thickness[k], 0)}px`} />
+                <b>{t.thickness[k]}</b>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       <p class="ds-lede">
-        Also <code>fxTextConfigs.Font</code> (“{t.font}”) and <code>fxTextConfigs.Height.Singleline</code> ({t.height.Singleline}) and <code>Multiline</code> ({t.height.Multiline}) for inputs.
+        Also <code>fxTextConfigs.Font</code> (“{t.font}”) and <code>fxTextConfigs.Height.Singleline</code> (
+        {t.height.Singleline}) and <code>Multiline</code> ({t.height.Multiline}) for inputs.
       </p>
     </section>
   </div>

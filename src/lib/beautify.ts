@@ -21,7 +21,8 @@ export interface BeautifyResult {
   functions: number;
 }
 
-type TokType = 'str' | 'num' | 'word' | 'open' | 'close' | 'comma' | 'semi' | 'colon' | 'op' | 'dot' | 'q' | 'at' | 'cmt';
+type TokType =
+  'str' | 'num' | 'word' | 'open' | 'close' | 'comma' | 'semi' | 'colon' | 'op' | 'dot' | 'q' | 'at' | 'cmt';
 
 export interface Tok {
   t: TokType;
@@ -63,7 +64,11 @@ function lineCol(src: string, pos: number) {
   return { line, col: pos - before.lastIndexOf('\n') };
 }
 
-export function tokenize(src: string, lang: Lang, report?: (message: string, pos: number, kind: IssueKind) => void): Tok[] {
+export function tokenize(
+  src: string,
+  lang: Lang,
+  report?: (message: string, pos: number, kind: IssueKind) => void,
+): Tok[] {
   const toks: Tok[] = [];
   const quote = lang === 'wdl' ? "'" : '"';
   let i = 0;
@@ -162,8 +167,7 @@ export function tokenize(src: string, lang: Lang, report?: (message: string, pos
     const v = op ? op[0] : c;
     const prev = toks[toks.length - 1];
     const unary =
-      (v === '-' || v === '+' || v === '!') &&
-      (!prev || ['op', 'open', 'comma', 'semi', 'colon'].includes(prev.t));
+      (v === '-' || v === '+' || v === '!') && (!prev || ['op', 'open', 'comma', 'semi', 'colon'].includes(prev.t));
     toks.push({ t: 'op', v, pos: i, unary });
     i += v.length;
   }
@@ -192,13 +196,19 @@ function parse(toks: Tok[], report: (message: string, pos: number, kind: IssueKi
         continue;
       }
       if (PAIRS[g.open.v] !== tok.v) {
-        report(`Expected '${PAIRS[g.open.v]}' to close '${g.open.v}' from ${where(g.open)}, but found '${tok.v}'.`, tok.pos, 'brackets');
+        report(
+          `Expected '${PAIRS[g.open.v]}' to close '${g.open.v}' from ${where(g.open)}, but found '${tok.v}'.`,
+          tok.pos,
+          'brackets',
+        );
       }
-      if (g.items.length > 1 && item.length === 0) report('Trailing comma before the closing bracket.', tok.pos, 'args');
+      if (g.items.length > 1 && item.length === 0)
+        report('Trailing comma before the closing bracket.', tok.pos, 'args');
       g.close = tok;
       stack.pop();
     } else if (tok.t === 'comma' || tok.t === 'semi') {
-      if (item.length === 0 && !(tok.t === 'semi' && !g.open)) report('Empty argument before this separator.', tok.pos, 'args');
+      if (item.length === 0 && !(tok.t === 'semi' && !g.open))
+        report('Empty argument before this separator.', tok.pos, 'args');
       if (tok.t === 'comma' && !g.open) report('Comma outside of any brackets.', tok.pos, 'args');
       g.seps.push(tok);
       g.items.push([]);
@@ -206,7 +216,8 @@ function parse(toks: Tok[], report: (message: string, pos: number, kind: IssueKi
       item.push(tok);
     }
   }
-  for (const g of stack.slice(1)) report(`'${g.open!.v}' opened at ${where(g.open!)} is never closed.`, g.open!.pos, 'brackets');
+  for (const g of stack.slice(1))
+    report(`'${g.open!.v}' opened at ${where(g.open!)} is never closed.`, g.open!.pos, 'brackets');
   return root;
 }
 
@@ -233,11 +244,13 @@ function space(prev: Part | null, next: Part): string {
 const hasLineComment = (parts: Part[]): boolean =>
   parts.some((p) => (isGroup(p) ? p.items.some(hasLineComment) : p.t === 'cmt' && p.v.startsWith('//')));
 
-const isSimple = (g: Group): boolean => g.items.length <= 1 && g.items.every((it) => it.every((p) => !isGroup(p) || isSimple(p)));
+const isSimple = (g: Group): boolean =>
+  g.items.length <= 1 && g.items.every((it) => it.every((p) => !isGroup(p) || isSimple(p)));
 
 export function beautify(src: string, opts: { lang: Lang; mode: Mode; indent: number }): BeautifyResult {
   const issues: Issue[] = [];
-  const report = (message: string, pos: number, kind: IssueKind) => issues.push({ kind, message, pos, ...lineCol(src, pos) });
+  const report = (message: string, pos: number, kind: IssueKind) =>
+    issues.push({ kind, message, pos, ...lineCol(src, pos) });
   const toks = tokenize(src, opts.lang, report);
   const root = parse(toks, report, src);
   const { mode, indent: step, lang } = opts;
@@ -327,7 +340,10 @@ export function beautify(src: string, opts: { lang: Lang; mode: Mode; indent: nu
     if (t.t === 'word' && toks[k + 1]?.v === '(') functions++;
   });
 
-  const output = lines.map((l) => l.trimEnd()).join('\n').trim();
+  const output = lines
+    .map((l) => l.trimEnd())
+    .join('\n')
+    .trim();
   issues.sort((a, b) => a.pos - b.pos);
   return { output, issues, depth, functions };
 }

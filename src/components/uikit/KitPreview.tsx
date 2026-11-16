@@ -2,16 +2,35 @@
 // Sizes follow canvas apps: control sizes in pixels, font sizes in points.
 
 import type { CSSProperties, ReactNode } from 'react';
-import { isFx, type ContainerNode, type Dim, type GalleryNode, type Node, type Row, type Text } from '../../uikit/model';
+import {
+  isFx,
+  type ContainerNode,
+  type Dim,
+  type GalleryNode,
+  type Node,
+  type Row,
+  type Text,
+} from '../../uikit/model';
 import { colorCss, padCss, radiusPx, sizePx, spacePx, thicknessPx } from '../../uikit/resolve';
 import type { KitTheme } from '../../uikit/theme';
 
-type Place = { kind: 'auto'; dir: 'Vertical' | 'Horizontal'; parent: ContainerNode } | { kind: 'manual' } | { kind: 'template' } | { kind: 'root' };
+type Place =
+  | { kind: 'auto'; dir: 'Vertical' | 'Horizontal'; parent: ContainerNode }
+  | { kind: 'manual' }
+  | { kind: 'template' }
+  | { kind: 'root' };
 
-const FLEX: Record<string, string> = { Start: 'flex-start', Center: 'center', End: 'flex-end', Stretch: 'stretch', SpaceBetween: 'space-between' };
+const FLEX: Record<string, string> = {
+  Start: 'flex-start',
+  Center: 'center',
+  End: 'flex-end',
+  Stretch: 'stretch',
+  SpaceBetween: 'space-between',
+};
 const WEIGHT = { Normal: 400, Semibold: 600, Bold: 700, Lighter: 300 } as const;
 
-const textOf = (t: Text | undefined) => (t === undefined ? '' : typeof t === 'string' ? t : t.v === undefined ? '' : String(t.v));
+const textOf = (t: Text | undefined) =>
+  t === undefined ? '' : typeof t === 'string' ? t : t.v === undefined ? '' : String(t.v);
 
 /**
  * Simple size formulas over the parent (Parent.TemplateWidth - 48, (Parent.Width - Self.Width) / 2 is not one)
@@ -37,7 +56,8 @@ function dimPx(d: Dim | undefined): number | string | undefined {
   return d;
 }
 
-const posPx = (p: Node['x']) => (p === undefined ? 0 : isFx(p) ? (calcOf(p.fx) ?? (typeof p.v === 'number' ? p.v : 0)) : p);
+const posPx = (p: Node['x']) =>
+  p === undefined ? 0 : isFx(p) ? (calcOf(p.fx) ?? (typeof p.v === 'number' ? p.v : 0)) : p;
 
 function boxStyle(n: Node, place: Place, t: KitTheme): CSSProperties {
   const s: CSSProperties = { boxSizing: 'border-box', position: 'relative', flexShrink: 0 };
@@ -77,7 +97,8 @@ function boxStyle(n: Node, place: Place, t: KitTheme): CSSProperties {
     const w = thicknessPx(n.border.thickness ?? 'Thin', t);
     if (w > 0) s.border = `${w}px ${n.border.dashed ? 'dashed' : 'solid'} ${colorCss(n.border.color)}`;
   }
-  if (n.radius !== undefined && !['label', 'rect', 'icon', 'gallery'].includes(n.kind)) s.borderRadius = radiusPx(n.radius, t);
+  if (n.radius !== undefined && !['label', 'rect', 'icon', 'gallery'].includes(n.kind))
+    s.borderRadius = radiusPx(n.radius, t);
   return s;
 }
 
@@ -162,7 +183,9 @@ function render(n: Node, place: Place, t: KitTheme, key?: number): ReactNode {
       }
       return (
         <div key={key} style={s} data-k={n.name} title={title}>
-          <span style={n.wrap === false ? { overflow: 'hidden', textOverflow: 'ellipsis' } : undefined}>{textOf(n.text)}</span>
+          <span style={n.wrap === false ? { overflow: 'hidden', textOverflow: 'ellipsis' } : undefined}>
+            {textOf(n.text)}
+          </span>
         </div>
       );
     case 'button': {
@@ -193,9 +216,29 @@ function render(n: Node, place: Place, t: KitTheme, key?: number): ReactNode {
       return <div key={key} style={{ ...s, borderRadius: '50%' }} data-k={n.name} />;
     case 'icon':
       return (
-        <div key={key} style={{ ...s, padding: padCss(n.pad, t), color: colorCss(n.color ?? 'Primary3') }} data-k={n.name}>
-          <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d={n.icon === 'Add' ? 'M12 5v14M5 12h14' : n.icon === 'Cancel' ? 'M6.5 6.5l11 11M17.5 6.5l-11 11' : 'M9.5 5.5L16 12l-6.5 6.5'} />
+        <div
+          key={key}
+          style={{ ...s, padding: padCss(n.pad, t), color: colorCss(n.color ?? 'Primary3') }}
+          data-k={n.name}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="100%"
+            height="100%"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          >
+            <path
+              d={
+                n.icon === 'Add'
+                  ? 'M12 5v14M5 12h14'
+                  : n.icon === 'Cancel'
+                    ? 'M6.5 6.5l11 11M17.5 6.5l-11 11'
+                    : 'M9.5 5.5L16 12l-6.5 6.5'
+              }
+            />
           </svg>
         </div>
       );
@@ -205,7 +248,14 @@ function render(n: Node, place: Place, t: KitTheme, key?: number): ReactNode {
         .svg((k) => `__HEX_${k}__`, 'preview')
         .replace(/(stroke|fill)='__HEX_(\w+)__'/g, "style='$1:var(--k-hex-$2)'")
         .replace('<svg ', "<svg width='100%' height='100%' ");
-      return <div key={key} style={{ ...s, padding: padCss(n.pad, t), display: 'flex', overflow: 'hidden' }} data-k={n.name} dangerouslySetInnerHTML={{ __html: svg }} />;
+      return (
+        <div
+          key={key}
+          style={{ ...s, padding: padCss(n.pad, t), display: 'flex', overflow: 'hidden' }}
+          data-k={n.name}
+          dangerouslySetInnerHTML={{ __html: svg }}
+        />
+      );
     }
     case 'input': {
       const value = textOf(n.value);
@@ -263,7 +313,10 @@ function render(n: Node, place: Place, t: KitTheme, key?: number): ReactNode {
           {n.sample.map((_, i) => {
             const nodes = n.template(rowFor(n, i));
             // Flexible-height rows grow to fit what's visible in them.
-            const height = n.dir === 'VariableHeight' ? Math.max(n.templateSize, ...nodes.map((c) => bottomOf(c, t))) : n.templateSize;
+            const height =
+              n.dir === 'VariableHeight'
+                ? Math.max(n.templateSize, ...nodes.map((c) => bottomOf(c, t)))
+                : n.templateSize;
             const size: CSSProperties = wrap
               ? { width: `calc((100% - ${pad * (wrap - 1)}px) / ${wrap})`, height }
               : vertical

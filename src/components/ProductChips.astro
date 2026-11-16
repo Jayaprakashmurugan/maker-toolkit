@@ -11,15 +11,13 @@ const { products, size = 'sm' } = Astro.props;
 ---
 
 <ul class:list={['pchips', `pchips--${size}`]}>
-  {
-    products.map((id) => {
-      const p = PRODUCTS[id];
-      return (
-        <li class:list={['pchip', { 'pchip--text': !p.icon }]}>
-          {p.icon && <img src={p.icon} alt="" width="96" height="96" loading="lazy" decoding="async" />}
-          <span>{p.name}</span>
-        </li>
-      );
-    })
-  }
+  {products.map((id) => {
+    const p = PRODUCTS[id];
+    return (
+      <li class:list={['pchip', { 'pchip--text': !p.icon }]}>
+        {p.icon && <img src={p.icon} alt="" width="96" height="96" loading="lazy" decoding="async" />}
+        <span>{p.name}</span>
+      </li>
+    );
+  })}
 </ul>

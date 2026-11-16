@@ -4,8 +4,12 @@ import { iconSvg, type IconName } from '../icons';
 import { img, type ImageNode } from '../model';
 
 /** An icon as an Image control with an SVG, colored from HexColors (our apps' icon pattern). */
-export const icon = (name: string, shape: IconName, colorKey: string, o: Omit<ImageNode, 'kind' | 'name' | 'svg'> = {}) =>
-  img(name, { w: 20, h: 20, label: '', ...o, svg: (hex) => iconSvg(shape, hex(colorKey)) });
+export const icon = (
+  name: string,
+  shape: IconName,
+  colorKey: string,
+  o: Omit<ImageNode, 'kind' | 'name' | 'svg'> = {},
+) => img(name, { w: 20, h: 20, label: '', ...o, svg: (hex) => iconSvg(shape, hex(colorKey)) });
 
 /** Status names mapped to the design system's status slots. */
 export const STATUSES: [string, 1 | 2 | 3 | 4 | 5 | 6 | 7][] = [

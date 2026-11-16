@@ -15,8 +15,23 @@ export interface Condition {
 }
 
 export const TYPE_LABELS: Record<Target, Partial<Record<ColType, string>>> = {
-  sharepoint: { text: 'Text', number: 'Number', date: 'Date', bool: 'Yes/No', choice: 'Choice', person: 'Person (by email)', lookup: 'Lookup (by ID)' },
-  dataverse: { text: 'Text', number: 'Number', date: 'Date', bool: 'Yes/No', choice: 'Choice (number)', lookup: 'Lookup (GUID)' },
+  sharepoint: {
+    text: 'Text',
+    number: 'Number',
+    date: 'Date',
+    bool: 'Yes/No',
+    choice: 'Choice',
+    person: 'Person (by email)',
+    lookup: 'Lookup (by ID)',
+  },
+  dataverse: {
+    text: 'Text',
+    number: 'Number',
+    date: 'Date',
+    bool: 'Yes/No',
+    choice: 'Choice (number)',
+    lookup: 'Lookup (GUID)',
+  },
 };
 
 export const OP_LABELS: Record<Op, string> = {
@@ -37,7 +52,14 @@ export function opsFor(target: Target, type: ColType): Op[] {
   const empty: Op[] = ['null', 'notnull'];
   switch (type) {
     case 'text':
-      return ['eq', 'ne', 'contains', 'startswith', ...(target === 'dataverse' ? (['endswith'] as Op[]) : []), ...empty];
+      return [
+        'eq',
+        'ne',
+        'contains',
+        'startswith',
+        ...(target === 'dataverse' ? (['endswith'] as Op[]) : []),
+        ...empty,
+      ];
     case 'number':
     case 'date':
       return ['eq', 'ne', 'gt', 'ge', 'lt', 'le', ...empty];
@@ -118,13 +140,22 @@ export function buildFilter(target: Target, join: 'and' | 'or', conditions: Cond
 export function tips(target: Target, conditions: Condition[]): string[] {
   const t: string[] = [];
   if (target === 'sharepoint') {
-    t.push('Use internal column names, not display names. Find one in List settings → click the column → the end of the URL (Field=…).');
-    if (conditions.some((c) => c.op === 'contains')) t.push('substringof() can be slow on big lists and is not supported on every column type. Prefer eq or startswith on large lists.');
-    t.push('On lists over 5,000 items, the first column you filter on should be indexed (List settings → Indexed columns).');
+    t.push(
+      'Use internal column names, not display names. Find one in List settings → click the column → the end of the URL (Field=…).',
+    );
+    if (conditions.some((c) => c.op === 'contains'))
+      t.push(
+        'substringof() can be slow on big lists and is not supported on every column type. Prefer eq or startswith on large lists.',
+      );
+    t.push(
+      'On lists over 5,000 items, the first column you filter on should be indexed (List settings → Indexed columns).',
+    );
   } else {
     t.push('Use logical names (lowercase, with the publisher prefix, such as cr123_status), not display names.');
-    if (conditions.some((c) => c.type === 'choice')) t.push('Choice columns filter on the number behind each option. Find it in the column’s settings in Power Apps.');
-    if (conditions.some((c) => c.type === 'lookup')) t.push('Lookups filter on the related row’s GUID through the _name_value column.');
+    if (conditions.some((c) => c.type === 'choice'))
+      t.push('Choice columns filter on the number behind each option. Find it in the column’s settings in Power Apps.');
+    if (conditions.some((c) => c.type === 'lookup'))
+      t.push('Lookups filter on the related row’s GUID through the _name_value column.');
   }
   if (conditions.some((c) => c.dynamic && c.type === 'text'))
     t.push("If dynamic text can contain an apostrophe (O'Brien), escape it: replace(your value, '''', '''''').");

@@ -1,5 +1,17 @@
 import { useState } from 'react';
-import { DATE_SHORTCUTS, OP_LABELS, TYPE_LABELS, buildFilter, opsFor, spInternalName, tips, type ColType, type Condition, type Op, type Target } from '../lib/odata';
+import {
+  DATE_SHORTCUTS,
+  OP_LABELS,
+  TYPE_LABELS,
+  buildFilter,
+  opsFor,
+  spInternalName,
+  tips,
+  type ColType,
+  type Condition,
+  type Op,
+  type Target,
+} from '../lib/odata';
 import { CodeLine } from './FormulaDetail';
 
 const START: Record<Target, Condition[]> = {
@@ -87,15 +99,32 @@ export default function ODataBuilder() {
         {conds.map((c, i) => (
           <div className="od-row" key={i}>
             {i > 0 && <span className="od-join">{join}</span>}
-            <input className="cb-input" value={c.column} onChange={(e) => update(i, { column: e.target.value })} placeholder="Column" aria-label="Column name" spellCheck={false} />
-            <select className="cb-input" value={c.type} onChange={(e) => update(i, { type: e.target.value as ColType })} aria-label="Column type">
+            <input
+              className="cb-input"
+              value={c.column}
+              onChange={(e) => update(i, { column: e.target.value })}
+              placeholder="Column"
+              aria-label="Column name"
+              spellCheck={false}
+            />
+            <select
+              className="cb-input"
+              value={c.type}
+              onChange={(e) => update(i, { type: e.target.value as ColType })}
+              aria-label="Column type"
+            >
               {typeOptions.map(([t, label]) => (
                 <option key={t} value={t}>
                   {label}
                 </option>
               ))}
             </select>
-            <select className="cb-input" value={c.op} onChange={(e) => update(i, { op: e.target.value as Op })} aria-label="Condition">
+            <select
+              className="cb-input"
+              value={c.op}
+              onChange={(e) => update(i, { op: e.target.value as Op })}
+              aria-label="Condition"
+            >
               {opsFor(target, c.type).map((op) => (
                 <option key={op} value={op}>
                   {OP_LABELS[op]}
@@ -106,7 +135,12 @@ export default function ODataBuilder() {
               {c.op !== 'null' && c.op !== 'notnull' && (
                 <>
                   {c.type === 'bool' && !c.dynamic ? (
-                    <select className="cb-input" value={/^(true|yes|1)$/i.test(c.value) ? 'Yes' : 'No'} onChange={(e) => update(i, { value: e.target.value })} aria-label="Value">
+                    <select
+                      className="cb-input"
+                      value={/^(true|yes|1)$/i.test(c.value) ? 'Yes' : 'No'}
+                      onChange={(e) => update(i, { value: e.target.value })}
+                      aria-label="Value"
+                    >
                       <option>Yes</option>
                       <option>No</option>
                     </select>
@@ -121,19 +155,38 @@ export default function ODataBuilder() {
                       spellCheck={false}
                     />
                   )}
-                  <label className="ts-check od-dyn" title="Use a Power Automate expression or dynamic content as the value">
-                    <input type="checkbox" checked={c.dynamic} onChange={(e) => update(i, { dynamic: e.target.checked, value: '' })} /> fx
+                  <label
+                    className="ts-check od-dyn"
+                    title="Use a Power Automate expression or dynamic content as the value"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={c.dynamic}
+                      onChange={(e) => update(i, { dynamic: e.target.checked, value: '' })}
+                    />{' '}
+                    fx
                   </label>
                 </>
               )}
-              <button type="button" className="icon-btn cb-x" aria-label="Remove condition" onClick={() => setConds((cs) => cs.filter((_, k) => k !== i))}>
+              <button
+                type="button"
+                className="icon-btn cb-x"
+                aria-label="Remove condition"
+                onClick={() => setConds((cs) => cs.filter((_, k) => k !== i))}
+              >
                 ×
               </button>
             </div>
             {c.type === 'date' && c.dynamic && (
               <div className="od-shortcuts">
                 {DATE_SHORTCUTS.map(([label, expr]) => (
-                  <button key={label} type="button" className="related__item" aria-pressed={c.value === expr} onClick={() => update(i, { value: expr })}>
+                  <button
+                    key={label}
+                    type="button"
+                    className="related__item"
+                    aria-pressed={c.value === expr}
+                    onClick={() => update(i, { value: expr })}
+                  >
                     {label}
                   </button>
                 ))}
@@ -155,7 +208,13 @@ export default function ODataBuilder() {
           <h2 id="od-out">Filter query</h2>
         </div>
         <p className="sh-intro">
-          Paste into <b>{target === 'sharepoint' ? 'Get items → Advanced parameters → Filter Query' : 'List rows → Advanced parameters → Filter rows'}</b>.
+          Paste into{' '}
+          <b>
+            {target === 'sharepoint'
+              ? 'Get items → Advanced parameters → Filter Query'
+              : 'List rows → Advanced parameters → Filter rows'}
+          </b>
+          .
         </p>
         <CodeLine code={filter || '(add a condition)'} label="filter query" lang="wdl" />
         <ul className="notes od-tips">
@@ -171,8 +230,8 @@ export default function ODataBuilder() {
             <h2 id="od-name">Display name → internal name</h2>
           </div>
           <p className="sh-intro">
-            SharePoint encodes spaces and symbols when a column is created. This shows the name it most likely got. If the column was
-            renamed later, its internal name is still the original one.
+            SharePoint encodes spaces and symbols when a column is created. This shows the name it most likely got. If
+            the column was renamed later, its internal name is still the original one.
           </p>
           <div className="lc-inputs">
             <label className="bf-control sh-action">

@@ -21,13 +21,104 @@ export interface TableStyle {
 }
 
 export const PRESETS: Record<string, TableStyle> = {
-  Clean: { headerBg: '#f3f4f6', headerText: '#111827', text: '#1f2937', border: '#d1d5db', borders: 'grid', font: 'Segoe UI, Arial, sans-serif', fontSize: 14, padding: 8, zebra: false, zebraBg: '#f9fafb', fullWidth: true, align: 'left' },
-  Corporate: { headerBg: '#1f4e79', headerText: '#ffffff', text: '#1f2937', border: '#c7d3e0', borders: 'grid', font: 'Segoe UI, Arial, sans-serif', fontSize: 14, padding: 8, zebra: false, zebraBg: '#eef3f8', fullWidth: true, align: 'left' },
-  'Dark header': { headerBg: '#1b1a17', headerText: '#f3efe6', text: '#1b1a17', border: '#d8d0bf', borders: 'rows', font: 'Arial, sans-serif', fontSize: 14, padding: 9, zebra: false, zebraBg: '#f6f3ec', fullWidth: true, align: 'left' },
-  Minimal: { headerBg: '#ffffff', headerText: '#111827', text: '#374151', border: '#e5e7eb', borders: 'rows', font: 'Calibri, Arial, sans-serif', fontSize: 14, padding: 7, zebra: false, zebraBg: '#f9fafb', fullWidth: false, align: 'left' },
-  Warm: { headerBg: '#e8461a', headerText: '#ffffff', text: '#1b1a17', border: '#f1c8b8', borders: 'grid', font: 'Verdana, Arial, sans-serif', fontSize: 13, padding: 8, zebra: false, zebraBg: '#fdf1ec', fullWidth: true, align: 'left' },
-  Striped: { headerBg: '#334155', headerText: '#ffffff', text: '#1f2937', border: '#e2e8f0', borders: 'rows', font: 'Segoe UI, Arial, sans-serif', fontSize: 14, padding: 8, zebra: true, zebraBg: '#f1f5f9', fullWidth: true, align: 'left' },
-  Compact: { headerBg: '#e5e7eb', headerText: '#111827', text: '#111827', border: '#cbd5e1', borders: 'grid', font: 'Arial, sans-serif', fontSize: 12, padding: 4, zebra: false, zebraBg: '#f8fafc', fullWidth: false, align: 'left' },
+  Clean: {
+    headerBg: '#f3f4f6',
+    headerText: '#111827',
+    text: '#1f2937',
+    border: '#d1d5db',
+    borders: 'grid',
+    font: 'Segoe UI, Arial, sans-serif',
+    fontSize: 14,
+    padding: 8,
+    zebra: false,
+    zebraBg: '#f9fafb',
+    fullWidth: true,
+    align: 'left',
+  },
+  Corporate: {
+    headerBg: '#1f4e79',
+    headerText: '#ffffff',
+    text: '#1f2937',
+    border: '#c7d3e0',
+    borders: 'grid',
+    font: 'Segoe UI, Arial, sans-serif',
+    fontSize: 14,
+    padding: 8,
+    zebra: false,
+    zebraBg: '#eef3f8',
+    fullWidth: true,
+    align: 'left',
+  },
+  'Dark header': {
+    headerBg: '#1b1a17',
+    headerText: '#f3efe6',
+    text: '#1b1a17',
+    border: '#d8d0bf',
+    borders: 'rows',
+    font: 'Arial, sans-serif',
+    fontSize: 14,
+    padding: 9,
+    zebra: false,
+    zebraBg: '#f6f3ec',
+    fullWidth: true,
+    align: 'left',
+  },
+  Minimal: {
+    headerBg: '#ffffff',
+    headerText: '#111827',
+    text: '#374151',
+    border: '#e5e7eb',
+    borders: 'rows',
+    font: 'Calibri, Arial, sans-serif',
+    fontSize: 14,
+    padding: 7,
+    zebra: false,
+    zebraBg: '#f9fafb',
+    fullWidth: false,
+    align: 'left',
+  },
+  Warm: {
+    headerBg: '#e8461a',
+    headerText: '#ffffff',
+    text: '#1b1a17',
+    border: '#f1c8b8',
+    borders: 'grid',
+    font: 'Verdana, Arial, sans-serif',
+    fontSize: 13,
+    padding: 8,
+    zebra: false,
+    zebraBg: '#fdf1ec',
+    fullWidth: true,
+    align: 'left',
+  },
+  Striped: {
+    headerBg: '#334155',
+    headerText: '#ffffff',
+    text: '#1f2937',
+    border: '#e2e8f0',
+    borders: 'rows',
+    font: 'Segoe UI, Arial, sans-serif',
+    fontSize: 14,
+    padding: 8,
+    zebra: true,
+    zebraBg: '#f1f5f9',
+    fullWidth: true,
+    align: 'left',
+  },
+  Compact: {
+    headerBg: '#e5e7eb',
+    headerText: '#111827',
+    text: '#111827',
+    border: '#cbd5e1',
+    borders: 'grid',
+    font: 'Arial, sans-serif',
+    fontSize: 12,
+    padding: 4,
+    zebra: false,
+    zebraBg: '#f8fafc',
+    fullWidth: false,
+    align: 'left',
+  },
 };
 
 const cssOf = (s: TableStyle) => {
@@ -38,7 +129,13 @@ const cssOf = (s: TableStyle) => {
     s.borders === 'grid' ? `border:${line}` : s.borders === 'rows' ? `border-bottom:${line}` : '',
   ].filter(Boolean);
   return {
-    table: [`border-collapse:collapse`, s.fullWidth ? 'width:100%' : '', `font-family:${s.font}`, `font-size:${s.fontSize}px`, `color:${s.text}`]
+    table: [
+      `border-collapse:collapse`,
+      s.fullWidth ? 'width:100%' : '',
+      `font-family:${s.font}`,
+      `font-size:${s.fontSize}px`,
+      `color:${s.text}`,
+    ]
       .filter(Boolean)
       .join(';'),
     th: [...cell, `background-color:${s.headerBg}`, `color:${s.headerText}`, 'font-weight:bold'].join(';'),
@@ -79,14 +176,28 @@ export interface StyledOutput {
 
 const q = (s: string) => `'${s.replace(/'/g, "''")}'`;
 
-export function styleTable(tableHtml: string, s: TableStyle, method: Method, actionName: string, decodeHtml: boolean): StyledOutput {
+export function styleTable(
+  tableHtml: string,
+  s: TableStyle,
+  method: Method,
+  actionName: string,
+  decodeHtml: boolean,
+): StyledOutput {
   const css = cssOf(s);
   const name = (actionName.trim() || 'Create HTML table').replace(/\s+/g, '_');
   const source = `body(${q(name)})`;
   const decode = (expr: string) =>
-    decodeHtml ? `replace(replace(replace(replace(${expr}, '&lt;', '<'), '&gt;', '>'), '&quot;', '"'), '&amp;', '&')` : expr;
+    decodeHtml
+      ? `replace(replace(replace(replace(${expr}, '&lt;', '<'), '&gt;', '>'), '&quot;', '"'), '&amp;', '&')`
+      : expr;
   const decodeJs = (html: string) =>
-    decodeHtml ? html.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&') : html;
+    decodeHtml
+      ? html
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"')
+          .replace(/&amp;/g, '&')
+      : html;
 
   if (method === 'inline') {
     const pairs: [string, string][] = [

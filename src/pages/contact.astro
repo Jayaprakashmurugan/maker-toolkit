@@ -36,29 +36,36 @@ const ways = [
     href: siteConfig.youtubeUrl,
     cta: 'Open YouTube',
   },
-].filter(Boolean) as { icon: 'linkedin' | 'chat' | 'github' | 'youtube'; title: string; text: string; href: string; cta: string }[];
+].filter(Boolean) as {
+  icon: 'linkedin' | 'chat' | 'github' | 'youtube';
+  title: string;
+  text: string;
+  href: string;
+  cta: string;
+}[];
 ---
 
-<Base title="Contact" description={`Get in touch with ${siteConfig.author}: LinkedIn for work and ideas, GitHub for bugs and tool suggestions.`}>
+<Base
+  title="Contact"
+  description={`Get in touch with ${siteConfig.author}: LinkedIn for work and ideas, GitHub for bugs and tool suggestions.`}
+>
   <div class="wrap">
     <PageHead path="~/contact" title="Contact" lede="Questions, ideas or work? Here's how to reach me." />
     <ul class="ways" data-reveal-group>
-      {
-        ways.map((w) => (
-          <li>
-            <a href={w.href} rel="noopener">
-              <span class="ways__icon">
-                <Icon name={w.icon} />
-              </span>
-              <span class="ways__title">{w.title}</span>
-              <span class="ways__text">{w.text}</span>
-              <span class="ways__cta">
-                {w.cta} <Icon name="external" />
-              </span>
-            </a>
-          </li>
-        ))
-      }
+      {ways.map((w) => (
+        <li>
+          <a href={w.href} rel="noopener">
+            <span class="ways__icon">
+              <Icon name={w.icon} />
+            </span>
+            <span class="ways__title">{w.title}</span>
+            <span class="ways__text">{w.text}</span>
+            <span class="ways__cta">
+              {w.cta} <Icon name="external" />
+            </span>
+          </a>
+        </li>
+      ))}
     </ul>
   </div>
 </Base>

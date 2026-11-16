@@ -38,7 +38,9 @@ const faqs = [
 <Base title={title} description={description} image="/og/list-copier.png">
   <div class="wrap wrap--wide">
     <header class="page-head">
-      <p class="kicker"><b>Tool</b> · SharePoint · Microsoft Lists</p>
+      <p class="kicker">
+        <b>Tool</b> · SharePoint · Microsoft Lists
+      </p>
       <h1>{title}</h1>
       <p class="page-head__lede">{description}</p>
       <WorksWith href="/list-copier/" />
@@ -55,14 +57,12 @@ const faqs = [
       </div>
     </div>
     <div class="faq" data-reveal-group>
-      {
-        faqs.map((f) => (
-          <details>
-            <summary>{f.q}</summary>
-            <div>{f.a}</div>
-          </details>
-        ))
-      }
+      {faqs.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <div>{f.a}</div>
+        </details>
+      ))}
     </div>
   </section>
 </Base>

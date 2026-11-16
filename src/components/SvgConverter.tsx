@@ -1,5 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { DEFAULT_FILL, SAMPLE_SVG, analyzeSvg, pickerValue, previewUri, renderSvg, type Replacement } from '../lib/svgPowerApps';
+import {
+  DEFAULT_FILL,
+  SAMPLE_SVG,
+  analyzeSvg,
+  pickerValue,
+  previewUri,
+  renderSvg,
+  type Replacement,
+} from '../lib/svgPowerApps';
 import { CodeLine, CopyButton } from './FormulaDetail';
 
 type Digits = 'exact' | '2' | '1';
@@ -85,7 +93,13 @@ export default function SvgConverter() {
                   Clear
                 </button>
               )}
-              <input ref={fileRef} type="file" accept=".svg,image/svg+xml" hidden onChange={(e) => (load(e.target.files?.[0]), (e.target.value = ''))} />
+              <input
+                ref={fileRef}
+                type="file"
+                accept=".svg,image/svg+xml"
+                hidden
+                onChange={(e) => (load(e.target.files?.[0]), (e.target.value = ''))}
+              />
             </div>
           </div>
           <textarea
@@ -114,7 +128,9 @@ export default function SvgConverter() {
             {result && analysis?.ok && (
               <p className="sv-stats">
                 {kb(analysis.inputBytes)} → <b>{kb(result.svgBytes)}</b>
-                {result.svgBytes < analysis.inputBytes && <> · {Math.round((1 - result.svgBytes / analysis.inputBytes) * 100)}% smaller</>}
+                {result.svgBytes < analysis.inputBytes && (
+                  <> · {Math.round((1 - result.svgBytes / analysis.inputBytes) * 100)}% smaller</>
+                )}
               </p>
             )}
           </div>
@@ -122,7 +138,9 @@ export default function SvgConverter() {
             {result ? (
               <img src={previewUri(result.previewSvg)} alt="Preview of the converted SVG" />
             ) : (
-              <p className="bf-output__empty">{analysis && !analysis.ok ? analysis.error : 'Paste an SVG to see it here.'}</p>
+              <p className="bf-output__empty">
+                {analysis && !analysis.ok ? analysis.error : 'Paste an SVG to see it here.'}
+              </p>
             )}
           </div>
         </section>
@@ -132,7 +150,9 @@ export default function SvgConverter() {
         <section className="bf-checks" aria-labelledby="sv-colors">
           <div className="bf-checks__head">
             <h2 id="sv-colors">Colors</h2>
-            <p className="bf-checks__note">Change a color, or drive it from Power Fx so it follows a variable, theme or state.</p>
+            <p className="bf-checks__note">
+              Change a color, or drive it from Power Fx so it follows a variable, theme or state.
+            </p>
           </div>
           <ul className="sv-colors">
             {colors.map((c) => {
@@ -140,7 +160,11 @@ export default function SvgConverter() {
               const shown = c.key === 'currentcolor' ? '#000000' : c.value;
               return (
                 <li key={c.key} className="sv-color">
-                  <span className="sv-swatch" style={{ background: r.kind === 'color' ? r.value : shown }} aria-hidden="true" />
+                  <span
+                    className="sv-swatch"
+                    style={{ background: r.kind === 'color' ? r.value : shown }}
+                    aria-hidden="true"
+                  />
                   <span className="sv-color__name">
                     <code>{c.key === DEFAULT_FILL ? 'No fill set (black)' : c.value}</code>
                     {c.key === 'currentcolor' && <small>Draws black in an image</small>}
@@ -152,7 +176,14 @@ export default function SvgConverter() {
                     aria-label={`What to do with ${c.value}`}
                     onChange={(e) => {
                       const k = e.target.value as Replacement['kind'];
-                      setRep(c.key, k === 'color' ? { kind: 'color', value: pickerValue(shown) } : k === 'fx' ? { kind: 'fx', expr: '' } : { kind: 'keep' });
+                      setRep(
+                        c.key,
+                        k === 'color'
+                          ? { kind: 'color', value: pickerValue(shown) }
+                          : k === 'fx'
+                            ? { kind: 'fx', expr: '' }
+                            : { kind: 'keep' },
+                      );
                     }}
                   >
                     <option value="keep">Keep</option>
@@ -160,7 +191,13 @@ export default function SvgConverter() {
                     <option value="fx">From Power Fx</option>
                   </select>
                   {r.kind === 'color' && (
-                    <input type="color" className="sv-picker" value={r.value} onChange={(e) => setRep(c.key, { kind: 'color', value: e.target.value })} aria-label={`New color for ${c.value}`} />
+                    <input
+                      type="color"
+                      className="sv-picker"
+                      value={r.value}
+                      onChange={(e) => setRep(c.key, { kind: 'color', value: e.target.value })}
+                      aria-label={`New color for ${c.value}`}
+                    />
                   )}
                   {r.kind === 'fx' && (
                     <input
@@ -178,7 +215,8 @@ export default function SvgConverter() {
           </ul>
           {Object.values(reps).some((r) => r.kind === 'fx') && (
             <p className="sv-hint">
-              The expression must give text such as <code>"#0F6CBD"</code>. For a color value, use <code>Mid(JSON(Color.Red), 2, 7)</code>, which turns it into its #RRGGBB text.
+              The expression must give text such as <code>"#0F6CBD"</code>. For a color value, use{' '}
+              <code>Mid(JSON(Color.Red), 2, 7)</code>, which turns it into its #RRGGBB text.
             </p>
           )}
         </section>
@@ -199,13 +237,22 @@ export default function SvgConverter() {
           <div className="sv-out">
             <CodeLine code={output} label="Image formula" />
           </div>
-          {format === 'base64' && !result.base64 && <p className="lc-warn">Base64 can’t include Power Fx colors, so this is the editable text version.</p>}
+          {format === 'base64' && !result.base64 && (
+            <p className="lc-warn">Base64 can’t include Power Fx colors, so this is the editable text version.</p>
+          )}
           {output.length > BIG && (
-            <p className="lc-warn">This is a big formula and can slow down Power Apps Studio. Try fewer decimals, or for large illustrations upload the file under Media instead.</p>
+            <p className="lc-warn">
+              This is a big formula and can slow down Power Apps Studio. Try fewer decimals, or for large illustrations
+              upload the file under Media instead.
+            </p>
           )}
           <ul className="notes od-tips">
             {analysis?.ok && analysis.report.map((r) => <li key={r}>{r}</li>)}
-            <li>{format === 'text' ? 'Editable text keeps the SVG readable, so you can tweak it or add Power Fx later.' : 'Base64 is opaque but works anywhere a data URI does, and is handy when you won’t edit it.'}</li>
+            <li>
+              {format === 'text'
+                ? 'Editable text keeps the SVG readable, so you can tweak it or add Power Fx later.'
+                : 'Base64 is opaque but works anywhere a data URI does, and is handy when you won’t edit it.'}
+            </li>
           </ul>
           <p className="sv-svgcopy">
             Need the cleaned SVG itself? <CopyButton text={result.previewSvg} label="cleaned SVG" />

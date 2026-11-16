@@ -3,7 +3,8 @@
 
 export type Source = 'sharepoint' | 'dataverse' | 'outlook' | 'other';
 export type FieldType = 'text' | 'number' | 'date' | 'bool' | 'choice' | 'person' | 'lookup';
-export type Op = 'eq' | 'ne' | 'gt' | 'ge' | 'lt' | 'le' | 'contains' | 'startswith' | 'endswith' | 'empty' | 'notempty';
+export type Op =
+  'eq' | 'ne' | 'gt' | 'ge' | 'lt' | 'le' | 'contains' | 'startswith' | 'endswith' | 'empty' | 'notempty';
 
 export interface Rule {
   field: string;
@@ -30,8 +31,23 @@ export const OP_LABELS: Record<Op, string> = {
 };
 
 export const TYPE_LABELS: Record<Source, Partial<Record<FieldType, string>>> = {
-  sharepoint: { text: 'Text', number: 'Number', date: 'Date', bool: 'Yes/No', choice: 'Choice', person: 'Person (email)', lookup: 'Lookup (value)' },
-  dataverse: { text: 'Text', number: 'Number', date: 'Date', bool: 'Yes/No', choice: 'Choice (number)', lookup: 'Lookup (GUID)' },
+  sharepoint: {
+    text: 'Text',
+    number: 'Number',
+    date: 'Date',
+    bool: 'Yes/No',
+    choice: 'Choice',
+    person: 'Person (email)',
+    lookup: 'Lookup (value)',
+  },
+  dataverse: {
+    text: 'Text',
+    number: 'Number',
+    date: 'Date',
+    bool: 'Yes/No',
+    choice: 'Choice (number)',
+    lookup: 'Lookup (GUID)',
+  },
   outlook: { text: 'Text', bool: 'Yes/No' },
   other: { text: 'Text', number: 'Number', date: 'Date', bool: 'Yes/No' },
 };
@@ -83,7 +99,9 @@ export function ruleExpr(source: Source, r: Rule): string {
   if (r.op === 'empty') return `empty(${a})`;
   if (r.op === 'notempty') return `not(empty(${a}))`;
   let b = valueExpr(source, r);
-  const text = (r.type === 'text' || r.type === 'choice' || r.type === 'person') && !(source === 'dataverse' && r.type === 'choice');
+  const text =
+    (r.type === 'text' || r.type === 'choice' || r.type === 'person') &&
+    !(source === 'dataverse' && r.type === 'choice');
   const textOp = ['contains', 'startswith', 'endswith'].includes(r.op);
   // Text functions fail on null, so treat a missing value as empty text first.
   if (text && (textOp || r.ignoreCase)) a = `coalesce(${a}, '')`;
@@ -128,12 +146,44 @@ export interface Preset {
   rules: Rule[];
 }
 
-const rule = (field: string, type: FieldType, op: Op, value = '', dynamic = false): Rule => ({ field, type, op, value, dynamic, ignoreCase: false });
+const rule = (field: string, type: FieldType, op: Op, value = '', dynamic = false): Rule => ({
+  field,
+  type,
+  op,
+  value,
+  dynamic,
+  ignoreCase: false,
+});
 
 export const PRESETS: Preset[] = [
-  { label: 'Only when Status is Approved', source: 'sharepoint', join: 'and', rules: [rule('Status', 'choice', 'eq', 'Approved')] },
-  { label: 'Only new items, not edits', source: 'sharepoint', join: 'and', rules: [rule('Created', 'date', 'eq', "triggerOutputs()?['body/Modified']", true)] },
-  { label: 'Ignore edits made by the flow’s account', source: 'sharepoint', join: 'and', rules: [{ ...rule('Editor', 'person', 'ne', 'flow-account@contoso.com'), ignoreCase: true }] },
-  { label: 'Emails whose subject contains “invoice”', source: 'outlook', join: 'and', rules: [{ ...rule('subject', 'text', 'contains', 'invoice'), ignoreCase: true }] },
-  { label: 'Dataverse rows that are active', source: 'dataverse', join: 'and', rules: [rule('statecode', 'choice', 'eq', '0')] },
+  {
+    label: 'Only when Status is Approved',
+    source: 'sharepoint',
+    join: 'and',
+    rules: [rule('Status', 'choice', 'eq', 'Approved')],
+  },
+  {
+    label: 'Only new items, not edits',
+    source: 'sharepoint',
+    join: 'and',
+    rules: [rule('Created', 'date', 'eq', "triggerOutputs()?['body/Modified']", true)],
+  },
+  {
+    label: 'Ignore edits made by the flow’s account',
+    source: 'sharepoint',
+    join: 'and',
+    rules: [{ ...rule('Editor', 'person', 'ne', 'flow-account@contoso.com'), ignoreCase: true }],
+  },
+  {
+    label: 'Emails whose subject contains “invoice”',
+    source: 'outlook',
+    join: 'and',
+    rules: [{ ...rule('subject', 'text', 'contains', 'invoice'), ignoreCase: true }],
+  },
+  {
+    label: 'Dataverse rows that are active',
+    source: 'dataverse',
+    join: 'and',
+    rules: [rule('statecode', 'choice', 'eq', '0')],
+  },
 ];

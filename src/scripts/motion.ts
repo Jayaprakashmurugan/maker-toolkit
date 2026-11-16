@@ -258,7 +258,9 @@ function init() {
     { rootMargin: '0px 0px -8% 0px' },
   );
 
-  document.querySelectorAll<HTMLElement>('[data-reveal], [data-count], [data-scramble]').forEach((el) => once.observe(el));
+  document
+    .querySelectorAll<HTMLElement>('[data-reveal], [data-count], [data-scramble]')
+    .forEach((el) => once.observe(el));
 }
 
 init();

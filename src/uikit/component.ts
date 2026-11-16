@@ -52,7 +52,13 @@ export interface ComponentSpec {
    * Events. Each listed control property calls CMP.<name>() and the screen gets the formula it had.
    * `keep` keeps the control's own formula first (internal state), and `host` gives the screen's formula instead.
    */
-  events?: { name: string; description: string; on: [control: string, prop?: string][]; keep?: boolean; host?: string }[];
+  events?: {
+    name: string;
+    description: string;
+    on: [control: string, prop?: string][];
+    keep?: boolean;
+    host?: string;
+  }[];
   /** Named formulas worked out inside the component (internal outputs, like the user's _Theme) instead of inputs. */
   internal?: string[];
   /** Option ids that stay fixed in the component instead of becoming inputs. */
@@ -166,10 +172,12 @@ function pieces(f: string): { lit: boolean; s: string }[] {
 const join = (parts: { lit: boolean; s: string }[]) => parts.map((p) => (p.lit ? `"${p.s}"` : p.s)).join('');
 
 /** Runs `fn` over the code of a formula, leaving string literals alone. */
-const mapCode = (f: string, fn: (code: string) => string) => join(pieces(f).map((p) => (p.lit ? p : { lit: false, s: fn(p.s) })));
+const mapCode = (f: string, fn: (code: string) => string) =>
+  join(pieces(f).map((p) => (p.lit ? p : { lit: false, s: fn(p.s) })));
 
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-const replaceName = (f: string, name: string, to: string) => mapCode(f, (c) => c.replace(new RegExp(`\\b${escapeRe(name)}\\b`, 'g'), to));
+const replaceName = (f: string, name: string, to: string) =>
+  mapCode(f, (c) => c.replace(new RegExp(`\\b${escapeRe(name)}\\b`, 'g'), to));
 
 /** The formula's code with comments and string contents taken out, for checking which names it uses. */
 const codeOnly = (f: string) =>
@@ -268,7 +276,12 @@ export function rowsLiteral(rows: Record<string, unknown>[], indent = ''): strin
 function findGallery(n: Node, name: string): GalleryNode | undefined {
   if (n.kind === 'gallery') {
     if (n.name === name) return n;
-    const row = { f: (field: string) => ({ fx: `ThisItem.${field}` }), selected: { fx: 'ThisItem.IsSelected' }, index: 0, sample: n.sample[0] ?? {} };
+    const row = {
+      f: (field: string) => ({ fx: `ThisItem.${field}` }),
+      selected: { fx: 'ThisItem.IsSelected' },
+      index: 0,
+      sample: n.sample[0] ?? {},
+    };
     for (const c of n.template(row)) {
       const g = findGallery(c, name);
       if (g) return g;
@@ -392,13 +405,27 @@ export function componentize(item: KitItem, values: KitValues, theme: KitTheme =
   const formulaInputs = (spec.inputs ?? []).filter((i) => i.option);
   const all: Candidate[] = [
     ...item.options
-      .filter((o) => o.type === 'text' && !/preview/i.test(o.label) && !spec.fixed?.includes(o.id) && !formulaInputs.some((i) => i.option === o.id))
+      .filter(
+        (o) =>
+          o.type === 'text' &&
+          !/preview/i.test(o.label) &&
+          !spec.fixed?.includes(o.id) &&
+          !formulaInputs.some((i) => i.option === o.id),
+      )
       .map((o) => {
         const given = spec.names?.[o.id];
-        return { id: o.id, name: (Array.isArray(given) ? given[0] : given) ?? TEXT_NAMES[o.id] ?? pascal(o.id), kind: 'text' as const };
+        return {
+          id: o.id,
+          name: (Array.isArray(given) ? given[0] : given) ?? TEXT_NAMES[o.id] ?? pascal(o.id),
+          kind: 'text' as const,
+        };
       }),
     ...formulaInputs.map((i) => ({ id: i.option!, name: i.name, kind: 'formula' as const })),
-  ].map((c, k) => ({ ...c, char: String.fromCharCode(0xe000 + k), len: Math.max(1, String(values[c.id] ?? '').length) }));
+  ].map((c, k) => ({
+    ...c,
+    char: String.fromCharCode(0xe000 + k),
+    len: Math.max(1, String(values[c.id] ?? '').length),
+  }));
 
   const tryBuild = (cands: Candidate[]) => {
     const v = { ...values };
@@ -418,7 +445,8 @@ export function componentize(item: KitItem, values: KitValues, theme: KitTheme =
     }
   }
   for (const c of formulaInputs)
-    if (!cands.some((k) => k.id === c.option)) problems.push(`${item.slug}: option ${c.option} changes the controls, so it can't be an input`);
+    if (!cands.some((k) => k.id === c.option))
+      problems.push(`${item.slug}: option ${c.option} changes the controls, so it can't be an input`);
 
   const byChar = new Map(cands.map((c) => [c.char, c]));
   const used = new Set<string>();
@@ -432,7 +460,8 @@ export function componentize(item: KitItem, values: KitValues, theme: KitTheme =
     }
   });
   let onReset = spec.screen ? '' : (base.onVisible ?? '');
-  if (!spec.screen && marked.s.onVisible && hasSentinel(marked.s.onVisible)) onReset = placeInputs(marked.s.onVisible, byChar, used) ?? onReset;
+  if (!spec.screen && marked.s.onVisible && hasSentinel(marked.s.onVisible))
+    onReset = placeInputs(marked.s.onVisible, byChar, used) ?? onReset;
 
   // Every formula inside the component, so each step below can run over all of them.
   const outputs = (spec.outputs ?? []).map((o) => ({ ...o }));
@@ -454,7 +483,8 @@ export function componentize(item: KitItem, values: KitValues, theme: KitTheme =
   for (const m of [...onReset.matchAll(/ClearCollect\(\s*(col\w+)\s*,\s*(fx\w+)\s*\)\s*;?[ \t]*\n?/g)]) {
     const [stmt, col, fxName] = m;
     const rest = allCode().replace(codeOnly(stmt), '');
-    if (new RegExp(`\\b(Collect|ClearCollect|Clear|Remove|RemoveIf|Patch|UpdateIf|Update)\\(\\s*${col}\\b`).test(rest)) continue;
+    if (new RegExp(`\\b(Collect|ClearCollect|Clear|Remove|RemoveIf|Patch|UpdateIf|Update)\\(\\s*${col}\\b`).test(rest))
+      continue;
     onReset = onReset.replace(stmt, '');
     each((f) => replaceName(f, col, fxName));
   }
@@ -462,7 +492,13 @@ export function componentize(item: KitItem, values: KitValues, theme: KitTheme =
 
   // 3. Named formulas the component still reads become table (or record) inputs.
   const props: CustomProp[] = [
-    { name: 'ConfigProperties', kind: 'Input', type: 'Record', default: configRecord(theme), description: 'The design system. Pass fxConfig from App.Formulas.' },
+    {
+      name: 'ConfigProperties',
+      kind: 'Input',
+      type: 'Record',
+      default: configRecord(theme),
+      description: 'The design system. Pass fxConfig from App.Formulas.',
+    },
   ];
   const host: Record<string, string> = { ConfigProperties: 'fxConfig' };
   for (const d of defs) {
@@ -473,7 +509,12 @@ export function componentize(item: KitItem, values: KitValues, theme: KitTheme =
     const body = asTable(d.body);
     each((f) => replaceName(f, d.name, `CMP.${input}`));
     if (internal) {
-      outputs.push({ name: input, type: 'Table', value: body, description: `Internal: ${d.note || `what ${d.name} is in the Controls version`}` });
+      outputs.push({
+        name: input,
+        type: 'Table',
+        value: body,
+        description: `Internal: ${d.note || `what ${d.name} is in the Controls version`}`,
+      });
       continue;
     }
     props.push({
@@ -506,14 +547,19 @@ export function componentize(item: KitItem, values: KitValues, theme: KitTheme =
     if (c.kind === 'text') {
       const given = spec.names?.[c.id];
       const label = opt.label.toLowerCase();
-      const description = Array.isArray(given) ? given[1] : /text$/.test(label) ? `The ${label}.` : `Text for the ${label}.`;
+      const description = Array.isArray(given)
+        ? given[1]
+        : /text$/.test(label)
+          ? `The ${label}.`
+          : `Text for the ${label}.`;
       props.push({ name: c.name, kind: 'Input', type: 'Text', default: str(String(values[c.id] ?? '')), description });
       host[c.name] = str(String(values[c.id] ?? ''));
     }
   }
   for (const i of spec.inputs ?? []) {
     if (i.option && !used.has(i.option)) {
-      if (cands.some((c) => c.id === i.option)) problems.push(`${item.slug}: option ${i.option} isn't used in any formula`);
+      if (cands.some((c) => c.id === i.option))
+        problems.push(`${item.slug}: option ${i.option} isn't used in any formula`);
       continue;
     }
     if (i.from) each((f) => replaceName(f, i.from!, `CMP.${i.name}`));
@@ -601,7 +647,13 @@ export function componentize(item: KitItem, values: KitValues, theme: KitTheme =
   for (const k of Object.keys(properties)) properties[k] = inside(properties[k]);
   for (const p of props) if (p.default !== undefined) p.default = inside(p.default);
 
-  const instanceProps: Record<string, string> = { ...host, Width: w.host, Height: h.host, X: baseRoot.props.X ?? '0', Y: baseRoot.props.Y ?? '0' };
+  const instanceProps: Record<string, string> = {
+    ...host,
+    Width: w.host,
+    Height: h.host,
+    X: baseRoot.props.X ?? '0',
+    Y: baseRoot.props.Y ?? '0',
+  };
   if (visible) instanceProps.Visible = visible;
   Object.assign(instanceProps, spec.instance);
   for (const k of Object.keys(instanceProps)) {
@@ -610,14 +662,22 @@ export function componentize(item: KitItem, values: KitValues, theme: KitTheme =
   }
 
   props.sort((a, b) => a.name.localeCompare(b.name));
-  const screen = [spec.screen ? base.onVisible : '', onReset ? `// Starts the component (runs its OnReset)\nReset(${instanceName})` : ''].filter(Boolean).join(';\n');
+  const screen = [
+    spec.screen ? base.onVisible : '',
+    onReset ? `// Starts the component (runs its OnReset)\nReset(${instanceName})` : '',
+  ]
+    .filter(Boolean)
+    .join(';\n');
   const outside = (f: string) => f.replace(/\bCMP\b/g, instanceName);
 
   return {
     name,
     instanceName,
     definition: writeDefinition(name, item.summary, props, properties, tree),
-    instance: writeControl({ name: instanceName, control: 'CanvasComponent', component: name, props: instanceProps }, '').join('\n') + '\n',
+    instance:
+      writeControl({ name: instanceName, control: 'CanvasComponent', component: name, props: instanceProps }, '').join(
+        '\n',
+      ) + '\n',
     props,
     properties,
     children: tree,
@@ -632,8 +692,20 @@ export function componentize(item: KitItem, values: KitValues, theme: KitTheme =
 /** A plain YAML scalar when it's safe, single-quoted when not. */
 const scalar = (s: string) => (/^[A-Za-z0-9(][^:#'"\n]*$/.test(s) && !/\s$/.test(s) ? s : `'${s.replace(/'/g, "''")}'`);
 
-function writeDefinition(name: string, summary: string, props: CustomProp[], properties: Record<string, string>, root: YamlControl): string {
-  const out = ['ComponentDefinitions:', `  ${name}:`, '    DefinitionType: CanvasComponent', `    Description: ${scalar(summary)}`, '    CustomProperties:'];
+function writeDefinition(
+  name: string,
+  summary: string,
+  props: CustomProp[],
+  properties: Record<string, string>,
+  root: YamlControl,
+): string {
+  const out = [
+    'ComponentDefinitions:',
+    `  ${name}:`,
+    '    DefinitionType: CanvasComponent',
+    `    Description: ${scalar(summary)}`,
+    '    CustomProperties:',
+  ];
   for (const p of props) {
     out.push(`      ${p.name}:`, `        PropertyKind: ${p.kind}`, `        Description: ${scalar(p.description)}`);
     if (p.kind === 'Event') out.push('        ReturnType: None', '        Default: =');
@@ -641,14 +713,27 @@ function writeDefinition(name: string, summary: string, props: CustomProp[], pro
     if (p.kind === 'Input') out.push(...writeValue('Default', p.default ?? '', '        '));
   }
   out.push('    Properties:');
-  for (const k of Object.keys(properties).sort((a, b) => a.localeCompare(b))) out.push(...writeValue(k, properties[k], '      '));
+  for (const k of Object.keys(properties).sort((a, b) => a.localeCompare(b)))
+    out.push(...writeValue(k, properties[k], '      '));
   out.push('    Children:', ...writeControl(root, '      '));
   return out.join('\n') + '\n';
 }
 
 // ── Checks ───────────────────────────────────────────────
 
-export const DATA_TYPES = ['Text', 'Number', 'Boolean', 'DateAndTime', 'Screen', 'Record', 'Table', 'Image', 'VideoOrAudio', 'Color', 'Currency'];
+export const DATA_TYPES = [
+  'Text',
+  'Number',
+  'Boolean',
+  'DateAndTime',
+  'Screen',
+  'Record',
+  'Table',
+  'Image',
+  'VideoOrAudio',
+  'Color',
+  'Currency',
+];
 
 /** What the component reads that nothing inside it provides: the things that would break once it's pasted. */
 export function componentGaps(comp: KitComponent): string[] {
@@ -660,7 +745,8 @@ export function componentGaps(comp: KitComponent): string[] {
 
   // Set makes a component variable; With and record fields name values too.
   const setVars = new Set([...names(/\bSet\(\s*((?:lcl|gbl)\w+)/g), ...names(/\b((?:lcl|gbl)\w+)\s*:/g)]);
-  for (const v of names(/\b((?:lcl|gbl)[A-Z]\w*)/g)) if (!setVars.has(v)) errors.push(`reads ${v}, which nothing inside the component sets`);
+  for (const v of names(/\b((?:lcl|gbl)[A-Z]\w*)/g))
+    if (!setVars.has(v)) errors.push(`reads ${v}, which nothing inside the component sets`);
   const made = names(/\b(?:Collect|ClearCollect)\(\s*(col\w+)/g);
   for (const v of names(/\b(col[A-Z]\w*)/g)) if (!made.has(v)) errors.push(`reads ${v}, which only the screen has`);
   for (const v of names(/\b(fx[A-Z]\w*)/g)) errors.push(`reads ${v} from App.Formulas`);
@@ -669,7 +755,10 @@ export function componentGaps(comp: KitComponent): string[] {
   if (/\bNavigate\(/.test(code)) errors.push('navigates, which a component can’t do without app scope');
   if (/\bCMP\b/.test(code)) errors.push('has an unreplaced CMP');
   const declared = new Set(comp.props.map((p) => p.name));
-  for (const v of names(new RegExp(`\\b${comp.name}\\.(\\w+)`, 'g'))) if (!declared.has(v)) errors.push(`reads ${comp.name}.${v}, which isn't a custom property`);
-  for (const p of comp.props) if (p.kind !== 'Output' && !new RegExp(`\\b${comp.name}\\.${p.name}\\b`).test(code)) errors.push(`never uses its ${p.name} property`);
+  for (const v of names(new RegExp(`\\b${comp.name}\\.(\\w+)`, 'g')))
+    if (!declared.has(v)) errors.push(`reads ${comp.name}.${v}, which isn't a custom property`);
+  for (const p of comp.props)
+    if (p.kind !== 'Output' && !new RegExp(`\\b${comp.name}\\.${p.name}\\b`).test(code))
+      errors.push(`never uses its ${p.name} property`);
   return errors;
 }

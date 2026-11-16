@@ -24,5 +24,5 @@ const hexMap = hexSources();
       for (const [i, v] of Object.entries(st.statusFont || {})) if (ok(v)) vars['--k-sf' + i] = v;
       for (const [k, v] of Object.entries(vars)) document.documentElement.style.setProperty(k, v);
     }
-  } catch (e) {}
+  } catch {}
 </script>

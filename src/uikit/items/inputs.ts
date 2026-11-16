@@ -92,8 +92,25 @@ export const textField: KitItem = {
     return {
       root: vCon('vConField', { w: 320, h: 92, gap: 'Tiny', alignItems: 'Stretch' }, [
         hCon('hConFieldLabel', { w: 'fill', h: 24, gap: 2, alignItems: 'Center' }, [
-          lbl('lblFieldLabel', { text: r.s('label'), w: textWidth(r.s('label'), 12), h: 'fill', size: 'Small', weight: 'Semibold', pad: 0, wrap: false }),
-          lbl('lblFieldRequired', { text: '*', w: 12, h: 'fill', size: 'Small', color: 'ErrorColor', weight: 'Bold', pad: 0, visible: fx(String(required), required) }),
+          lbl('lblFieldLabel', {
+            text: r.s('label'),
+            w: textWidth(r.s('label'), 12),
+            h: 'fill',
+            size: 'Small',
+            weight: 'Semibold',
+            pad: 0,
+            wrap: false,
+          }),
+          lbl('lblFieldRequired', {
+            text: '*',
+            w: 12,
+            h: 'fill',
+            size: 'Small',
+            color: 'ErrorColor',
+            weight: 'Bold',
+            pad: 0,
+            visible: fx(String(required), required),
+          }),
         ]),
         txt('txtField', {
           w: 'fill',
@@ -102,7 +119,11 @@ export const textField: KitItem = {
           size: 'Small',
           radius: 'Small',
           border: {
-            color: { if: fx('lclShowErrors && IsBlank(Self.Text)', r.b('showError')), then: 'ErrorColor', else: 'BorderColor' },
+            color: {
+              if: fx('lclShowErrors && IsBlank(Self.Text)', r.b('showError')),
+              then: 'ErrorColor',
+              else: 'BorderColor',
+            },
             thickness: 'Thin',
           },
           pad: { x: 'Small' },
@@ -143,7 +164,16 @@ export const searchBox: KitItem = {
     return {
       root: hCon(
         'hConSearch',
-        { w: 320, h: 40, fill: 'Fill', border: { color: 'BorderColor', thickness: 'Thin' }, radius: 'Medium', pad: { x: 'Small' }, gap: 'Tiny', alignItems: 'Center' },
+        {
+          w: 320,
+          h: 40,
+          fill: 'Fill',
+          border: { color: 'BorderColor', thickness: 'Thin' },
+          radius: 'Medium',
+          pad: { x: 'Small' },
+          gap: 'Tiny',
+          alignItems: 'Center',
+        },
         [
           icon('imgSearchIcon', 'search', 'Primary3', { w: 20, h: 20 }),
           txt('txtSearch', {
@@ -157,7 +187,12 @@ export const searchBox: KitItem = {
             pad: { x: 'Tiny' },
             extra: { DelayOutput: 'true' },
           }),
-          icon('imgSearchClear', 'close', 'Primary3', { w: 18, h: 18, visible: fx('!IsBlank(txtSearch.Text)', hasText), onSelect: 'Reset(txtSearch)' }),
+          icon('imgSearchClear', 'close', 'Primary3', {
+            w: 18,
+            h: 18,
+            visible: fx('!IsBlank(txtSearch.Text)', hasText),
+            onSelect: 'Reset(txtSearch)',
+          }),
         ],
       ),
       notes: [
@@ -176,7 +211,12 @@ export const filterChips: KitItem = {
   keywords: ['chips', 'filter', 'toggle', 'tags', 'pills', 'multi select'],
   canvas: { w: 600, h: 100 },
   options: [
-    { id: 'chips', label: 'Chips (one per line)', type: 'lines', default: ['Open', 'Waiting', 'Approved', 'Rejected', 'Mine'] },
+    {
+      id: 'chips',
+      label: 'Chips (one per line)',
+      type: 'lines',
+      default: ['Open', 'Waiting', 'Approved', 'Rejected', 'Mine'],
+    },
     { id: 'selected', label: 'Selected in the preview (one per line)', type: 'lines', default: ['Open', 'Mine'] },
   ],
   build(o) {

@@ -31,7 +31,14 @@ export interface Shape {
   arrayItems: number;
 }
 
-const newShape = (): Shape => ({ types: new Set(), props: new Map(), seen: new Map(), objects: 0, items: null, arrayItems: 0 });
+const newShape = (): Shape => ({
+  types: new Set(),
+  props: new Map(),
+  seen: new Map(),
+  objects: 0,
+  items: null,
+  arrayItems: 0,
+});
 
 const typeOf = (v: unknown): JsonType => {
   if (v === null) return 'null';
@@ -153,7 +160,12 @@ export interface ShapeStats {
 }
 
 export function shapeStats(shape: Shape, depth = 0): ShapeStats {
-  const total: ShapeStats = { properties: shape.props.size, depth, arrays: shape.items ? 1 : 0, arrayItems: shape.arrayItems };
+  const total: ShapeStats = {
+    properties: shape.props.size,
+    depth,
+    arrays: shape.items ? 1 : 0,
+    arrayItems: shape.arrayItems,
+  };
   const children = [...shape.props.values(), ...(shape.items ? [shape.items] : [])];
   for (const c of children) {
     const s = shapeStats(c, depth + 1);
@@ -167,7 +179,8 @@ export function shapeStats(shape: Shape, depth = 0): ShapeStats {
 
 // ── Parsing with friendly error positions ────────────────────
 
-export type ParseResult = { ok: true; value: unknown } | { ok: false; message: string; line?: number; col?: number; pos?: number };
+export type ParseResult =
+  { ok: true; value: unknown } | { ok: false; message: string; line?: number; col?: number; pos?: number };
 
 /** Walks invalid JSON to find where it breaks, with a plain-English reason. */
 function locateError(text: string): { message: string; pos: number } | null {
@@ -208,7 +221,11 @@ function locateError(text: string): { message: string; pos: number } | null {
       if (text[i] === close) fail(`Trailing comma before ${close}. Remove the last comma.`);
       if (close === '}') {
         if (text[i] !== '"')
-          fail(text[i] === "'" ? 'Property names must use double quotes (") in JSON.' : 'Expected a property name in double quotes.');
+          fail(
+            text[i] === "'"
+              ? 'Property names must use double quotes (") in JSON.'
+              : 'Expected a property name in double quotes.',
+          );
         str();
         ws();
         if (text[i] !== ':') fail('Expected a colon (:) after the property name.');
@@ -224,7 +241,11 @@ function locateError(text: string): { message: string; pos: number } | null {
         i++;
         return;
       }
-      fail(text[i] === undefined ? `The JSON ends before this is closed with ${close}.` : `Expected a comma (,) or ${close} here.`);
+      fail(
+        text[i] === undefined
+          ? `The JSON ends before this is closed with ${close}.`
+          : `Expected a comma (,) or ${close} here.`,
+      );
     }
   };
   const value = () => {
@@ -243,7 +264,8 @@ function locateError(text: string): { message: string; pos: number } | null {
     }
     if (c === undefined) return fail('The JSON ends too early: a value is missing.');
     if (c === '}' || c === ']' || c === ',') return fail('A value is missing here.');
-    if (/[A-Za-z]/.test(c)) return fail('Unexpected word. Text needs double quotes, and true, false and null must be lowercase.');
+    if (/[A-Za-z]/.test(c))
+      return fail('Unexpected word. Text needs double quotes, and true, false and null must be lowercase.');
     return fail(`Unexpected character "${c}".`);
   };
   try {
@@ -258,7 +280,7 @@ function locateError(text: string): { message: string; pos: number } | null {
 
 export function parseSample(text: string): ParseResult {
   try {
-    return { ok: true, value: JSON.parse(text.replace(/^﻿/, '')) };
+    return { ok: true, value: JSON.parse(text.replace(/^\uFEFF/, '')) };
   } catch (e) {
     const found = locateError(text);
     if (!found) return { ok: false, message: e instanceof Error ? e.message : String(e) };

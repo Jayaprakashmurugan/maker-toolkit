@@ -23,15 +23,23 @@ const tabs = [
 
 <div class="tbrowser" data-tool-browser>
   <div class="tbrowser__tabs" role="group" aria-label="Show tools for">
-    {
-      tabs.map((t) => (
-        <button type="button" class="tbrowser__tab" data-filter={t.id} aria-pressed={t.id === 'all' ? 'true' : 'false'} style={t.color ? `--cat:${t.color}` : undefined}>
-          {t.icon ? <img src={t.icon} alt="" width="96" height="96" /> : t.color && <span class="tcard__dot" aria-hidden="true" />}
-          {t.label}
-          <span class="tbrowser__n">{t.n}</span>
-        </button>
-      ))
-    }
+    {tabs.map((t) => (
+      <button
+        type="button"
+        class="tbrowser__tab"
+        data-filter={t.id}
+        aria-pressed={t.id === 'all' ? 'true' : 'false'}
+        style={t.color ? `--cat:${t.color}` : undefined}
+      >
+        {t.icon ? (
+          <img src={t.icon} alt="" width="96" height="96" />
+        ) : (
+          t.color && <span class="tcard__dot" aria-hidden="true" />
+        )}
+        {t.label}
+        <span class="tbrowser__n">{t.n}</span>
+      </button>
+    ))}
   </div>
   <p class="visually-hidden" aria-live="polite" data-tool-status></p>
   <ToolGrid tools={tools} level={level} />

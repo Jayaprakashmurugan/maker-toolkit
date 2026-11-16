@@ -26,7 +26,11 @@ const firstMonth = experience.map((j) => jobSpan(j).start).sort()[0];
 const firstYear = Number(firstMonth.slice(0, 4));
 const thisYear = new Date().getFullYear();
 const work = experience.flatMap((j) =>
-  j.roles.map((r) => ({ ...barSpan(firstMonth, r.start, r.end), color: r.color, label: `${r.title}, ${j.company}: ${monthLabel(r.start)} - ${monthLabel(r.end)}` })),
+  j.roles.map((r) => ({
+    ...barSpan(firstMonth, r.start, r.end),
+    color: r.color,
+    label: `${r.title}, ${j.company}: ${monthLabel(r.start)} - ${monthLabel(r.end)}`,
+  })),
 );
 const years = Array.from({ length: thisYear - firstYear }, (_, i) => firstYear + 1 + i);
 // Every year fits on a short bar; a long one shows every other year.
@@ -41,30 +45,34 @@ const initialsOf = (name: string) =>
     .slice(0, 2)
     .map((w) => w[0])
     .join('');
-
 ---
 
-<Base title="About" description={`${siteConfig.author}, ${current ? `${current.title} at ${current.company}` : siteConfig.authorRole} in ${siteConfig.authorLocation}. ${siteConfig.authorBio}`} image="/og/about.png">
+<Base
+  title="About"
+  description={`${siteConfig.author}, ${current ? `${current.title} at ${current.company}` : siteConfig.authorRole} in ${siteConfig.authorLocation}. ${siteConfig.authorBio}`}
+  image="/og/about.png"
+>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(personLd)} />
   <div class="wrap about3">
     <aside class="about3__side">
       <div class="about3__card">
         <ProfileCard eager />
         <p class="about3__links">
-          {
-            siteConfig.authorLinks.map((l) => (
-              <a class="btn btn--outline" href={l.href} rel="noopener me" data-magnetic>
-                <Icon name={l.icon as 'linkedin' | 'github'} /> {l.label}
-              </a>
-            ))
-          }
+          {siteConfig.authorLinks.map((l) => (
+            <a class="btn btn--outline" href={l.href} rel="noopener me" data-magnetic>
+              <Icon name={l.icon as 'linkedin' | 'github'} /> {l.label}
+            </a>
+          ))}
         </p>
       </div>
     </aside>
 
     <div class="about3__main">
       <header class="phead">
-        <p class="phead__path"><span>~/about</span><span class="caret" aria-hidden="true"></span></p>
+        <p class="phead__path">
+          <span>~/about</span>
+          <span class="caret" aria-hidden="true"></span>
+        </p>
         <h1 class="phead__title">Hi, I'm {firstName}.</h1>
         <p class="phead__lede">{siteConfig.authorBio}</p>
       </header>
@@ -72,64 +80,66 @@ const initialsOf = (name: string) =>
       <section class="home-section" aria-labelledby="what">
         <SectionHead index="01 · about" title="What I do" id="what" />
         <div class="whatido" data-reveal-group>
-          {
-            about.map((p) => (
-              <Fragment>
-                <p>
-                  {p.text
-                    .split(/(LinkedIn)/)
-                    .map((part) => (part === 'LinkedIn' && linkedIn ? <a href={linkedIn} rel="noopener me">LinkedIn</a> : part))}
-                </p>
-                {p.focus && (
-                  <p class="focus">
-                    <span class="focus__tag">
-                      <span class="focus__dot" aria-hidden="true" />
-                      Now
-                    </span>
-                    <span>{p.focus}</span>
-                  </p>
+          {about.map((p) => (
+            <Fragment>
+              <p>
+                {p.text.split(/(LinkedIn)/).map((part) =>
+                  part === 'LinkedIn' && linkedIn ? (
+                    <a href={linkedIn} rel="noopener me">
+                      LinkedIn
+                    </a>
+                  ) : (
+                    part
+                  ),
                 )}
-              </Fragment>
-            ))
-          }
+              </p>
+              {p.focus && (
+                <p class="focus">
+                  <span class="focus__tag">
+                    <span class="focus__dot" aria-hidden="true" />
+                    Now
+                  </span>
+                  <span>{p.focus}</span>
+                </p>
+              )}
+            </Fragment>
+          ))}
         </div>
       </section>
 
       <section class="home-section" aria-labelledby="expertise">
         <SectionHead index="02 · expertise" title="Core expertise" id="expertise" />
         <ul class="expertise" data-reveal-group>
-          {
-            expertise.map((e, i) => (
-              <li style={`--c:${e.color}`}>
-                <span class="expertise__icon">
-                  <Icon name={e.icon} />
-                </span>
-                <span class="expertise__n" aria-hidden="true">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <p class="expertise__title">{e.title}</p>
-                <p class="expertise__detail">{e.detail}</p>
-              </li>
-            ))
-          }
+          {expertise.map((e, i) => (
+            <li style={`--c:${e.color}`}>
+              <span class="expertise__icon">
+                <Icon name={e.icon} />
+              </span>
+              <span class="expertise__n" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <p class="expertise__title">{e.title}</p>
+              <p class="expertise__detail">{e.detail}</p>
+            </li>
+          ))}
         </ul>
 
-        <h3 class="toolbox__head" id="tools">Methods &amp; tools</h3>
+        <h3 class="toolbox__head" id="tools">
+          Methods &amp; tools
+        </h3>
         <dl class="toolbox" aria-labelledby="tools" data-reveal>
-          {
-            toolbox.map((g) => (
-              <div>
-                <dt>{g.group}</dt>
-                <dd>
-                  <ul>
-                    {g.items.map((item) => (
-                      <li>{item}</li>
-                    ))}
-                  </ul>
-                </dd>
-              </div>
-            ))
-          }
+          {toolbox.map((g) => (
+            <div>
+              <dt>{g.group}</dt>
+              <dd>
+                <ul>
+                  {g.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          ))}
         </dl>
       </section>
 
@@ -146,100 +156,108 @@ const initialsOf = (name: string) =>
           <div class="career__row">
             <span class="career__lbl">work</span>
             <div class="career__lane">
-              {
-                work.map((s, i) => (
-                  <i style={`--l:${s.left.toFixed(2)}%;--w:${s.width.toFixed(2)}%;--c:${s.color};--d:${i}`} title={s.label} />
-                ))
-              }
+              {work.map((s, i) => (
+                <i
+                  style={`--l:${s.left.toFixed(2)}%;--w:${s.width.toFixed(2)}%;--c:${s.color};--d:${i}`}
+                  title={s.label}
+                />
+              ))}
             </div>
           </div>
           <div class="career__ticks" aria-hidden="true">
             <span></span>
-            <div>{ticks.map((y) => <span style={`--l:${tickPos(y).toFixed(2)}%`}>{y}</span>)}</div>
+            <div>
+              {ticks.map((y) => (
+                <span style={`--l:${tickPos(y).toFixed(2)}%`}>{y}</span>
+              ))}
+            </div>
           </div>
         </figure>
 
         <ol class="xp" data-reveal-group>
-          {
-            experience.map((job) => {
-              const span = jobSpan(job);
-              return (
-                <li class="xp__job">
-                  <header class="xp__head">
-                    <span class="xp__mono" aria-hidden="true">
-                      {initialsOf(job.company)}
-                    </span>
-                    <div>
-                      <p class="xp__company">
-                        {job.url ? (
-                          <a href={job.url} rel="noopener">
-                            {job.company}
-                          </a>
-                        ) : (
-                          job.company
-                        )}
+          {experience.map((job) => {
+            const span = jobSpan(job);
+            return (
+              <li class="xp__job">
+                <header class="xp__head">
+                  <span class="xp__mono" aria-hidden="true">
+                    {initialsOf(job.company)}
+                  </span>
+                  <div>
+                    <p class="xp__company">
+                      {job.url ? (
+                        <a href={job.url} rel="noopener">
+                          {job.company}
+                        </a>
+                      ) : (
+                        job.company
+                      )}
+                    </p>
+                    <p class="xp__meta">
+                      {job.terms} · {duration(span.start, span.end)}
+                    </p>
+                  </div>
+                  {!span.end && <span class="xp__now">Now</span>}
+                </header>
+                {job.about && <p class="xp__about">{job.about}</p>}
+                <ol class="xp__roles">
+                  {job.roles.map((r, i) => (
+                    <li class:list={['xp__role', { 'is-current': !r.end }]} style={`--c:${r.color}`}>
+                      <p class="xp__title">{r.title}</p>
+                      <p class="xp__when">
+                        {monthLabel(r.start)} - {monthLabel(r.end)} · {duration(r.start, r.end)}
+                        {i < job.roles.length - 1 && <span class="xp__up">↑ promoted</span>}
                       </p>
-                      <p class="xp__meta">
-                        {job.terms} · {duration(span.start, span.end)}
-                      </p>
-                    </div>
-                    {!span.end && <span class="xp__now">Now</span>}
-                  </header>
-                  {job.about && <p class="xp__about">{job.about}</p>}
-                  <ol class="xp__roles">
-                    {job.roles.map((r, i) => (
-                      <li class:list={['xp__role', { 'is-current': !r.end }]} style={`--c:${r.color}`}>
-                        <p class="xp__title">{r.title}</p>
-                        <p class="xp__when">
-                          {monthLabel(r.start)} - {monthLabel(r.end)} · {duration(r.start, r.end)}
-                          {i < job.roles.length - 1 && <span class="xp__up">↑ promoted</span>}
-                        </p>
-                        <ul class="xp__skills" aria-label="Skills">
-                          {r.skills.map((s) => <li>{s}</li>)}
-                        </ul>
-                      </li>
-                    ))}
-                  </ol>
-                </li>
-              );
-            })
-          }
+                      <ul class="xp__skills" aria-label="Skills">
+                        {r.skills.map((s) => (
+                          <li>{s}</li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ol>
+              </li>
+            );
+          })}
         </ol>
       </section>
 
       <section class="home-section" aria-labelledby="certs">
         <SectionHead index="04 · certified" title="Certifications" id="certs" />
         <ul class="certs" data-reveal-group>
-          {
-            siteConfig.authorCerts.map((c) => (
-              <li>
-                <span class="certs__code">{c.code}</span>
-                <span class="certs__name">
-                  <small>Microsoft Certified</small>
-                  {c.name}
-                </span>
-              </li>
-            ))
-          }
+          {siteConfig.authorCerts.map((c) => (
+            <li>
+              <span class="certs__code">{c.code}</span>
+              <span class="certs__name">
+                <small>Microsoft Certified</small>
+                {c.name}
+              </span>
+            </li>
+          ))}
         </ul>
       </section>
 
       <section class="home-section about3__story" aria-labelledby="why">
         <SectionHead index="05 · why" title="Why Maker Toolkit exists" id="why" />
         <div class="prose-post">
-        <p>
-          Power Fx and Power Automate expressions are powerful, but the answers are spread across many pages, and the
-          answer to “how do I…?” is often a formula you've never heard of. {siteConfig.name} puts those answers in one
-          place: every formula with an example you can paste straight in, and tools for the jobs that usually take trial
-          and error.
-        </p>
-        <p>
-          It's built with Astro and published as static files on Cloudflare. There's no database, no account and no
-          tracking of what you type. The <a href="https://github.com/Jayaprakashmurugan/maker-toolkit" rel="noopener"
-            >source code is on GitHub</a
-          >, and corrections are always welcome: <a href={siteConfig.feedbackUrl} rel="noopener">open an issue</a> or{' '}
-          <a href="/contact/">get in touch</a>.
-        </p>
+          <p>
+            Power Fx and Power Automate expressions are powerful, but the answers are spread across many pages, and the
+            answer to “how do I…?” is often a formula you've never heard of. {siteConfig.name} puts those answers in one
+            place: every formula with an example you can paste straight in, and tools for the jobs that usually take
+            trial and error.
+          </p>
+          <p>
+            It's built with Astro and published as static files on Cloudflare. There's no database, no account and no
+            tracking of what you type. The{' '}
+            <a href="https://github.com/Jayaprakashmurugan/maker-toolkit" rel="noopener">
+              source code is on GitHub
+            </a>
+            , and corrections are always welcome:{' '}
+            <a href={siteConfig.feedbackUrl} rel="noopener">
+              open an issue
+            </a>{' '}
+            or <a href="/contact/">get in touch</a>.
+          </p>
         </div>
       </section>
     </div>

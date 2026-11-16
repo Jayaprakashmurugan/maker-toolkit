@@ -38,7 +38,9 @@ const faqs = [
 <Base title={title} description={description} image="/og/regex-tester.png">
   <div class="wrap wrap--wide">
     <header class="page-head">
-      <p class="kicker"><b>Tool</b> · Power Apps · Power Fx</p>
+      <p class="kicker">
+        <b>Tool</b> · Power Apps · Power Fx
+      </p>
       <h1>{title}</h1>
       <p class="page-head__lede">{description}</p>
       <WorksWith href="/regex-tester/" />
@@ -55,14 +57,12 @@ const faqs = [
       </div>
     </div>
     <div class="faq" data-reveal-group>
-      {
-        faqs.map((f) => (
-          <details>
-            <summary>{f.q}</summary>
-            <div>{f.a}</div>
-          </details>
-        ))
-      }
+      {faqs.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <div>{f.a}</div>
+        </details>
+      ))}
     </div>
   </section>
 </Base>

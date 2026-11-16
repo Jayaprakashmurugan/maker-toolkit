@@ -190,9 +190,24 @@ export type Node =
 
 type Opt<T extends Node> = Omit<T, 'kind' | 'name' | 'children'>;
 
-export const vCon = (name: string, o: Opt<ContainerNode>, children: Node[]): ContainerNode => ({ kind: 'vCon', name, ...o, children });
-export const hCon = (name: string, o: Opt<ContainerNode>, children: Node[]): ContainerNode => ({ kind: 'hCon', name, ...o, children });
-export const nCon = (name: string, o: Opt<ContainerNode>, children: Node[]): ContainerNode => ({ kind: 'nCon', name, ...o, children });
+export const vCon = (name: string, o: Opt<ContainerNode>, children: Node[]): ContainerNode => ({
+  kind: 'vCon',
+  name,
+  ...o,
+  children,
+});
+export const hCon = (name: string, o: Opt<ContainerNode>, children: Node[]): ContainerNode => ({
+  kind: 'hCon',
+  name,
+  ...o,
+  children,
+});
+export const nCon = (name: string, o: Opt<ContainerNode>, children: Node[]): ContainerNode => ({
+  kind: 'nCon',
+  name,
+  ...o,
+  children,
+});
 export const lbl = (name: string, o: Opt<LabelNode>): LabelNode => ({ kind: 'label', name, ...o });
 export const btn = (name: string, o: Opt<ButtonNode>): ButtonNode => ({ kind: 'button', name, ...o });
 export const rect = (name: string, o: Opt<ShapeNode>): ShapeNode => ({ kind: 'rect', name, ...o });

@@ -1,6 +1,14 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { parseSample } from '../lib/jsonSchema';
-import { buildExpression, looksRaw, pathLabel, typeOf, type ArrayMode, type Seg, type Source } from '../lib/jsonExpression';
+import {
+  buildExpression,
+  looksRaw,
+  pathLabel,
+  typeOf,
+  type ArrayMode,
+  type Seg,
+  type Source,
+} from '../lib/jsonExpression';
 import { sendJson, takeJson } from '../lib/handoff';
 import { CodeLine } from './FormulaDetail';
 
@@ -89,7 +97,8 @@ function flatten(value: unknown, open: Set<string>, all: boolean): Row[] {
       children: entries.length,
       search: `${label} ${type === 'string' || type === 'number' || type === 'boolean' ? String(v) : ''}`.toLowerCase(),
     });
-    if (entries.length && (all || open.has(id))) for (const [seg, l, x] of entries) walk(x, [...path, seg], l, depth + 1);
+    if (entries.length && (all || open.has(id)))
+      for (const [seg, l, x] of entries) walk(x, [...path, seg], l, depth + 1);
   };
   walk(value, [], 'root', 0);
   return rows;
@@ -109,7 +118,10 @@ function defaultOpen(value: unknown): Set<string> {
 }
 
 function valueAt(root: unknown, path: Seg[]): unknown {
-  return path.reduce<unknown>((v, s) => ('key' in s ? (v as Record<string, unknown>)?.[s.key] : (v as unknown[])?.[s.index]), root);
+  return path.reduce<unknown>(
+    (v, s) => ('key' in s ? (v as Record<string, unknown>)?.[s.key] : (v as unknown[])?.[s.index]),
+    root,
+  );
 }
 
 export default function ExpressionPicker() {
@@ -206,7 +218,12 @@ export default function ExpressionPicker() {
         {sourceInfo.nameLabel && (
           <label className="bf-control sh-action">
             <span className="bf-control__label">{sourceInfo.nameLabel}</span>
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder={sourceInfo.placeholder} spellCheck={false} />
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={sourceInfo.placeholder}
+              spellCheck={false}
+            />
           </label>
         )}
         {rawApplies && (
@@ -215,7 +232,10 @@ export default function ExpressionPicker() {
             <div className="segmented" role="group" aria-label="What was pasted">
               {(
                 [
-                  ['auto', hasInput && rawPref === 'auto' ? `Auto · ${rawDetected ? 'raw outputs' : 'body'}` : 'Auto-detect'],
+                  [
+                    'auto',
+                    hasInput && rawPref === 'auto' ? `Auto · ${rawDetected ? 'raw outputs' : 'body'}` : 'Auto-detect',
+                  ],
                   ['raw', 'Raw outputs'],
                   ['body', 'Body only'],
                 ] as const
@@ -264,7 +284,11 @@ export default function ExpressionPicker() {
             <h2 id="pk-tree-title">Pick a value</h2>
             {value !== undefined && (
               <div className="bf-pane__actions">
-                <button type="button" className="link-btn" onClick={() => setOpen(new Set(flatten(value, open, true).map((r) => r.id)))}>
+                <button
+                  type="button"
+                  className="link-btn"
+                  onClick={() => setOpen(new Set(flatten(value, open, true).map((r) => r.id)))}
+                >
                   Expand all
                 </button>
                 <button type="button" className="link-btn" onClick={() => setOpen(new Set([idOf([])]))}>
@@ -305,7 +329,12 @@ export default function ExpressionPicker() {
                       ) : (
                         <span className="pk-caret pk-caret--leaf" aria-hidden="true" />
                       )}
-                      <button type="button" className="pk-pick" onClick={() => select(r.id)} aria-pressed={r.id === selectedId}>
+                      <button
+                        type="button"
+                        className="pk-pick"
+                        onClick={() => select(r.id)}
+                        aria-pressed={r.id === selectedId}
+                      >
                         <span className="pk-key">{r.label}</span>
                         <span className={`pk-val pk-val--${r.type}`}>{r.preview}</span>
                       </button>
@@ -326,14 +355,18 @@ export default function ExpressionPicker() {
                     </li>
                   );
                 })}
-                {rows.length >= MAX_ROWS && <li className="pk-more">Showing the first {MAX_ROWS} rows. Use Find to narrow it down.</li>}
+                {rows.length >= MAX_ROWS && (
+                  <li className="pk-more">Showing the first {MAX_ROWS} rows. Use Find to narrow it down.</li>
+                )}
                 {q && rows.length === 0 && <li className="pk-more">Nothing matches “{filter.trim()}”.</li>}
               </ul>
             </>
           ) : (
             <div className="bf-output">
               <p className="bf-output__empty">
-                {parsed && !parsed.ok ? 'Fix the JSON on the left to see its values.' : 'Paste JSON or load a sample, then pick any value.'}
+                {parsed && !parsed.ok
+                  ? 'Fix the JSON on the left to see its values.'
+                  : 'Paste JSON or load a sample, then pick any value.'}
               </p>
             </div>
           )}
@@ -437,7 +470,12 @@ export default function ExpressionPicker() {
                 <div>
                   <h3 className="detail__label">
                     Power Apps · after ParseJSON of
-                    <input className="pk-fxvar" value={fxVar} onChange={(e) => setFxVar(e.target.value)} aria-label="Power Apps variable name" />
+                    <input
+                      className="pk-fxvar"
+                      value={fxVar}
+                      onChange={(e) => setFxVar(e.target.value)}
+                      aria-label="Power Apps variable name"
+                    />
                   </h3>
                   <CodeLine code={built.powerFx} label="Power Fx formula" />
                 </div>

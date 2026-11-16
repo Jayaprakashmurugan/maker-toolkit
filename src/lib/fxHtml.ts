@@ -3,7 +3,8 @@
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-const TOKEN = /("(?:[^"]|"")*"|'(?:[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][\w.]*)(?=\s*\()|(\b(?:true|false|ThisItem|Self|Parent)\b)|(<>|>=|<=|&&|\|\||[=<>&!@?+\-*/])|([()[\]{},;:])/g;
+const TOKEN =
+  /("(?:[^"]|"")*"|'(?:[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][\w.]*)(?=\s*\()|(\b(?:true|false|ThisItem|Self|Parent)\b)|(<>|>=|<=|&&|\|\||[=<>&!@?+\-*/])|([()[\]{},;:])/g;
 
 export function fxHtml(code: string): string {
   let out = '';

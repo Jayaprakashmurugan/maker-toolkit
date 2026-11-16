@@ -10,7 +10,21 @@ const SAMPLES: Record<Lang, string> = {
 };
 
 const LANG_NAME: Record<Lang, string> = { wdl: 'Power Automate', powerfx: 'Power Fx' };
-const KEYWORDS = new Set(['true', 'false', 'null', 'ThisItem', 'ThisRecord', 'Self', 'Parent', 'And', 'Or', 'Not', 'in', 'exactin', 'As']);
+const KEYWORDS = new Set([
+  'true',
+  'false',
+  'null',
+  'ThisItem',
+  'ThisRecord',
+  'Self',
+  'Parent',
+  'And',
+  'Or',
+  'Not',
+  'in',
+  'exactin',
+  'As',
+]);
 
 /** Colours strings, numbers, function names and brackets (one colour per nesting level). */
 function render(code: string, lang: Lang): ReactNode[] {
@@ -20,7 +34,7 @@ function render(code: string, lang: Lang): ReactNode[] {
   let depth = 0;
   toks.forEach((t, k) => {
     if (t.pos > last) out.push(code.slice(last, t.pos));
-    let cls = '';
+    let cls: string;
     if (t.t === 'str') cls = 'tk-str';
     else if (t.t === 'num') cls = 'tk-num';
     else if (t.t === 'cmt') cls = 'tk-cmt';
@@ -235,9 +249,15 @@ export default function Beautifier() {
             </p>
           </div>
           <ul className="bf-checklist">
-            <li key={`b${issueKinds.brackets}`} className={issueKinds.brackets ? 'is-bad' : 'is-ok'}>Brackets are balanced</li>
-            <li key={`s${issueKinds.strings}`} className={issueKinds.strings ? 'is-bad' : 'is-ok'}>Strings and quoted names are closed</li>
-            <li key={`a${issueKinds.args}`} className={issueKinds.args ? 'is-bad' : 'is-ok'}>Arguments are separated correctly</li>
+            <li key={`b${issueKinds.brackets}`} className={issueKinds.brackets ? 'is-bad' : 'is-ok'}>
+              Brackets are balanced
+            </li>
+            <li key={`s${issueKinds.strings}`} className={issueKinds.strings ? 'is-bad' : 'is-ok'}>
+              Strings and quoted names are closed
+            </li>
+            <li key={`a${issueKinds.args}`} className={issueKinds.args ? 'is-bad' : 'is-ok'}>
+              Arguments are separated correctly
+            </li>
           </ul>
           {result.issues.length > 0 && (
             <ol className="bf-issues">

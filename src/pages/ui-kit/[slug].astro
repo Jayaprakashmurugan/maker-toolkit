@@ -37,10 +37,16 @@ if (problems.length) throw new Error(`UI Kit snippet problems:\n${[...new Set(pr
 const related = KIT_ITEMS.filter((i) => i.category === item.category && i.slug !== item.slug).slice(0, 3);
 ---
 
-<Base title={`${item.name} · UI Kit`} description={`${item.summary} Copy-paste YAML for Power Apps canvas apps, themed with fxConfig.`} image={`/og/ui-kit/${item.slug}.png`}>
+<Base
+  title={`${item.name} · UI Kit`}
+  description={`${item.summary} Copy-paste YAML for Power Apps canvas apps, themed with fxConfig.`}
+  image={`/og/ui-kit/${item.slug}.png`}
+>
   <KitThemeHead slot="head" />
   <div class="wrap wrap--wide">
-    <a class="post__back" href="/ui-kit/">← UI Kit</a>
+    <a class="post__back" href="/ui-kit/">
+      ← UI Kit
+    </a>
     <PageHead path={`~/ui-kit/${item.slug}`} title={item.name} lede={item.summary}>
       <div class="works">
         <span class="works__label">{item.category}</span>
@@ -50,18 +56,21 @@ const related = KIT_ITEMS.filter((i) => i.category === item.category && i.slug !
 
     <KitItemView client:load slug={item.slug} />
 
-    {
-      related.length > 0 && (
-        <section class="home-section" aria-labelledby="kit-related">
-          <SectionHead index={item.category.toLowerCase()} title={`More ${item.category.toLowerCase()}`} id="kit-related" more={{ href: '/ui-kit/', label: 'All components' }} />
-          <ul class="kcards kcards--3">
-            {related.map((r) => (
-              <KitCard item={r} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    {related.length > 0 && (
+      <section class="home-section" aria-labelledby="kit-related">
+        <SectionHead
+          index={item.category.toLowerCase()}
+          title={`More ${item.category.toLowerCase()}`}
+          id="kit-related"
+          more={{ href: '/ui-kit/', label: 'All components' }}
+        />
+        <ul class="kcards kcards--3">
+          {related.map((r) => (
+            <KitCard item={r} />
+          ))}
+        </ul>
+      </section>
+    )}
   </div>
 </Base>
 

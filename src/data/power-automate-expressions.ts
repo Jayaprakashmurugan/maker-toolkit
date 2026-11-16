@@ -141,7 +141,10 @@ const list: RefItem[] = [
     syntax: `replace('<text>', '<oldText>', '<newText>')`,
     examples: [
       { code: `replace('the old string', 'old', 'new')`, result: `'the new string'` },
-      { code: `replace(variables('note'), decodeUriComponent('%0A'), '<br>')`, result: 'Line breaks turned into HTML breaks' },
+      {
+        code: `replace(variables('note'), decodeUriComponent('%0A'), '<br>')`,
+        result: 'Line breaks turned into HTML breaks',
+      },
     ],
     tags: ['find and replace', 'substitute', 'remove characters', 'new line'],
   },
@@ -217,7 +220,12 @@ const list: RefItem[] = [
     category: 'String',
     summary: 'Removes a byte order mark (BOM) from the start of text or binary content.',
     syntax: `trimByteOrderMark(<content>)`,
-    examples: [{ code: `json(trimByteOrderMark(body('Get_file_content')))`, result: 'Parses a file that starts with a hidden BOM' }],
+    examples: [
+      {
+        code: `json(trimByteOrderMark(body('Get_file_content')))`,
+        result: 'Parses a file that starts with a hidden BOM',
+      },
+    ],
     notes: ['A BOM is an invisible character that some files start with. It can break json() and xml().'],
     tags: ['bom', 'invalid json', 'file encoding'],
   },
@@ -347,7 +355,12 @@ const list: RefItem[] = [
     category: 'Logical',
     summary: 'Returns true only when every expression is true.',
     syntax: `and(<expression1>, <expression2>, ...)`,
-    examples: [{ code: `and(equals(triggerBody()?['status'], 'Approved'), greater(triggerBody()?['amount'], 0))`, result: 'true when approved and above zero' }],
+    examples: [
+      {
+        code: `and(equals(triggerBody()?['status'], 'Approved'), greater(triggerBody()?['amount'], 0))`,
+        result: 'true when approved and above zero',
+      },
+    ],
     tags: ['all true', 'both conditions'],
   },
   {
@@ -382,7 +395,10 @@ const list: RefItem[] = [
     syntax: `if(<expression>, <valueIfTrue>, <valueIfFalse>)`,
     examples: [
       { code: `if(equals(1, 1), 'yes', 'no')`, result: `'yes'` },
-      { code: `if(empty(triggerBody()?['phone']), 'No phone', triggerBody()?['phone'])`, result: 'A fallback for a blank field' },
+      {
+        code: `if(empty(triggerBody()?['phone']), 'No phone', triggerBody()?['phone'])`,
+        result: 'A fallback for a blank field',
+      },
     ],
     tags: ['condition', 'else', 'ternary', 'branch'],
   },
@@ -415,7 +431,12 @@ const list: RefItem[] = [
     category: 'Logical',
     summary: 'Returns true when at least one expression is true.',
     syntax: `or(<expression1>, <expression2>, ...)`,
-    examples: [{ code: `or(equals(item()?['Status'], 'Closed'), equals(item()?['Status'], 'Cancelled'))`, result: 'true for either status' }],
+    examples: [
+      {
+        code: `or(equals(item()?['Status'], 'Closed'), equals(item()?['Status'], 'Cancelled'))`,
+        result: 'true for either status',
+      },
+    ],
     tags: ['any true', 'either'],
   },
   {
@@ -450,7 +471,9 @@ const list: RefItem[] = [
     category: 'Conversion',
     summary: 'Decodes a base64 string into binary content, such as a file.',
     syntax: `base64ToBinary('<value>')`,
-    examples: [{ code: `base64ToBinary(triggerBody()?['fileContent'])`, result: 'File content you can pass to Create file' }],
+    examples: [
+      { code: `base64ToBinary(triggerBody()?['fileContent'])`, result: 'File content you can pass to Create file' },
+    ],
     tags: ['decode', 'file from base64', 'attachment'],
   },
   {
@@ -509,7 +532,9 @@ const list: RefItem[] = [
     category: 'Conversion',
     summary: 'Converts a data URI to binary content.',
     syntax: `dataUriToBinary('<value>')`,
-    examples: [{ code: `dataUriToBinary(triggerBody()?['signature'])`, result: 'An image file from a pen input or canvas' }],
+    examples: [
+      { code: `dataUriToBinary(triggerBody()?['signature'])`, result: 'An image file from a pen input or canvas' },
+    ],
     tags: ['data url to file', 'image'],
   },
   {
@@ -570,7 +595,12 @@ const list: RefItem[] = [
     category: 'Conversion',
     summary: 'URL-encodes special characters so text is safe to put in a URL.',
     syntax: `encodeUriComponent('<value>')`,
-    examples: [{ code: `concat('https://www.bing.com/search?q=', encodeUriComponent('power automate'))`, result: 'A safe search URL' }],
+    examples: [
+      {
+        code: `concat('https://www.bing.com/search?q=', encodeUriComponent('power automate'))`,
+        result: 'A safe search URL',
+      },
+    ],
     tags: ['url encode', 'query string', 'escape'],
   },
   {
@@ -785,7 +815,9 @@ const list: RefItem[] = [
     category: 'Date & Time',
     summary: 'Converts a UTC timestamp to a target time zone.',
     syntax: `convertFromUtc('<timestamp>', '<destinationTimeZone>', '<format>'?)`,
-    examples: [{ code: `convertFromUtc(utcNow(), 'Pacific Standard Time', 'g')`, result: 'The current time in Seattle' }],
+    examples: [
+      { code: `convertFromUtc(utcNow(), 'Pacific Standard Time', 'g')`, result: 'The current time in Seattle' },
+    ],
     tags: ['local time', 'time zone'],
   },
   {
@@ -793,7 +825,9 @@ const list: RefItem[] = [
     category: 'Date & Time',
     summary: 'Converts a timestamp from a source time zone to UTC.',
     syntax: `convertToUtc('<timestamp>', '<sourceTimeZone>', '<format>'?)`,
-    examples: [{ code: `convertToUtc('2026-10-23 09:00', 'India Standard Time')`, result: `'2026-10-23T03:30:00.0000000Z'` }],
+    examples: [
+      { code: `convertToUtc('2026-10-23 09:00', 'India Standard Time')`, result: `'2026-10-23T03:30:00.0000000Z'` },
+    ],
     tags: ['to utc', 'time zone'],
   },
   {
@@ -1046,7 +1080,8 @@ const list: RefItem[] = [
   {
     name: 'action',
     category: 'Workflow',
-    summary: 'Returns the current action’s own result at runtime. Usable only in a few places, such as tracked properties.',
+    summary:
+      'Returns the current action’s own result at runtime. Usable only in a few places, such as tracked properties.',
     syntax: `action()`,
     examples: [{ code: `action()?['outputs']?['body']`, result: 'The current action’s output body' }],
     tags: ['current action'],
@@ -1198,7 +1233,12 @@ const list: RefItem[] = [
     category: 'JSON & XML',
     summary: 'Returns the first value that is not null.',
     syntax: `coalesce(<object_1>, <object_2>, ...)`,
-    examples: [{ code: `coalesce(triggerBody()?['nickname'], triggerBody()?['name'], 'Guest')`, result: 'The first name that exists' }],
+    examples: [
+      {
+        code: `coalesce(triggerBody()?['nickname'], triggerBody()?['name'], 'Guest')`,
+        result: 'The first name that exists',
+      },
+    ],
     notes: ['Empty strings are not null, so they are returned as they are.'],
     tags: ['default value', 'fallback', 'null'],
   },
@@ -1208,7 +1248,10 @@ const list: RefItem[] = [
     summary: 'Adds a property to an object and returns the updated object.',
     syntax: `addProperty(<object>, '<property>', <value>)`,
     examples: [
-      { code: `addProperty(json('{"firstName":"Ada"}'), 'lastName', 'Lovelace')`, result: '{ "firstName": "Ada", "lastName": "Lovelace" }' },
+      {
+        code: `addProperty(json('{"firstName":"Ada"}'), 'lastName', 'Lovelace')`,
+        result: '{ "firstName": "Ada", "lastName": "Lovelace" }',
+      },
     ],
     notes: ['Fails if the property already exists. Use setProperty() to add or overwrite.'],
     tags: ['add field', 'json', 'object'],
@@ -1243,7 +1286,10 @@ const list: RefItem[] = [
     summary: 'Finds nodes or values in XML using an XPath expression.',
     syntax: `xpath('<xml>', '<xpath>')`,
     examples: [
-      { code: `xpath(xml('<produce><item><name>Gala</name></item></produce>'), 'string(/produce/item/name)')`, result: `'Gala'` },
+      {
+        code: `xpath(xml('<produce><item><name>Gala</name></item></produce>'), 'string(/produce/item/name)')`,
+        result: `'Gala'`,
+      },
     ],
     tags: ['xml query', 'read xml'],
   },

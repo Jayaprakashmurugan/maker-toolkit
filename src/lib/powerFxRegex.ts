@@ -22,8 +22,7 @@ export interface RegexIssue {
 }
 
 export type Compiled =
-  | { ok: true; source: string; flags: string; numbered: boolean; inline: string }
-  | { ok: false; issues: RegexIssue[] };
+  { ok: true; source: string; flags: string; numbered: boolean; inline: string } | { ok: false; issues: RegexIssue[] };
 
 /** The Match enum, from Microsoft's Power Fx source (BuiltInEnums.cs). Power Apps without Power Fx 1.0 differs in two. */
 export const MATCH_ENUM: Record<string, string> = {
@@ -55,7 +54,9 @@ export const matchEnum = (host: Host) => (host === 'v1' ? MATCH_ENUM : MATCH_ENU
 const WORD = '\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Nd}\\p{Pc}\\p{Lm}';
 const SPACE = ' \\t\\n\\x0b\\f\\r\\x85\\u2028\\u2029\\p{Z}';
 const DOT = '[^\\n\\x0b\\f\\r\\x85\\u2028\\u2029]';
-const CATEGORIES = new Set('L Lu Ll Lt Lm Lo M Mn Mc Me N Nd Nl No P Pc Pd Ps Pe Pi Pf Po S Sm Sc Sk So Z Zs Zl Zp Cc Cf'.split(' '));
+const CATEGORIES = new Set(
+  'L Lu Ll Lt Lm Lo M Mn Mc Me N Nd Nl No P Pc Pd Ps Pe Pi Pf Po S Sm Sc Sk So Z Zs Zl Zp Cc Cf'.split(' '),
+);
 const SPECIAL = '\\[]^$.|?*+(){}';
 const DOUBLES = '&!#$%*+,.:;<=>?@^`~';
 
@@ -66,9 +67,19 @@ type Node =
   | { t: 'assert'; js: string; start: number; end: number }
   | { t: 'backref'; name?: string; num?: number; start: number; end: number }
   | { t: 'quant'; body: Node; min: number; max: number; lazy: boolean; start: number; end: number }
-  | { t: 'group'; kind: 'cap' | 'named' | 'non' | 'look'; name?: string; num?: number; look?: string; body: Node; start: number; end: number };
+  | {
+      t: 'group';
+      kind: 'cap' | 'named' | 'non' | 'look';
+      name?: string;
+      num?: number;
+      look?: string;
+      body: Node;
+      start: number;
+      end: number;
+    };
 
-type ClassItem = { kind: 'char'; cp: number; js: string } | { kind: 'set'; js: string; negative: boolean; pulled?: boolean };
+type ClassItem =
+  { kind: 'char'; cp: number; js: string } | { kind: 'set'; js: string; negative: boolean; pulled?: boolean };
 
 const jsChar = (ch: string) => (SPECIAL.includes(ch) || ch === '/' ? `\\${ch}` : ch);
 const jsClassChar = (ch: string) => ('\\]^-['.includes(ch) ? `\\${ch}` : ch);
@@ -97,6 +108,8 @@ class Parser {
       const c = this.src[this.i];
       if (/\s/.test(c)) this.i++;
       else if (c === '#') {
+        // A # comment runs to the next line terminator, vertical tab (\x0b) included.
+        // eslint-disable-next-line no-control-regex
         while (this.i < this.src.length && !/[\n\x0b\f\r\x85\u2028\u2029]/.test(this.src[this.i])) this.i++;
       } else break;
     }
@@ -144,8 +157,10 @@ class Parser {
     if (!q) return atom;
     if (q.max < q.min) this.err('In {n,m}, n can’t be larger than m.', qs, this.i);
     let lazy = false;
-    if (this.src[this.i] === '?') (lazy = true), this.i++;
-    else if (this.src[this.i] === '+') {
+    if (this.src[this.i] === '?') {
+      lazy = true;
+      this.i++;
+    } else if (this.src[this.i] === '+') {
       this.err('Possessive quantifiers such as *+ or ++ aren’t supported.', qs, this.i + 1);
       this.i++;
     }
@@ -154,7 +169,8 @@ class Parser {
     const node: Node = { t: 'quant', body: atom, ...q, lazy, start: atom.start, end: this.i };
     this.skipFree();
     const again = this.i;
-    if (this.readQuant()) this.err('Two quantifiers in a row. Wrap the first part in (?: ) to repeat it again.', again, this.i);
+    if (this.readQuant())
+      this.err('Two quantifiers in a row. Wrap the first part in (?: ) to repeat it again.', again, this.i);
     return node;
   }
 
@@ -198,17 +214,35 @@ class Parser {
     this.i = s + 1;
     if (rest.startsWith('?')) {
       let m: RegExpExecArray | null;
-      if (rest.startsWith('?:')) (kind = 'non'), (this.i += 2);
-      else if (/^\?[=!]/.test(rest)) (kind = 'look'), (look = rest[1]), (this.i += 2);
-      else if (/^\?<[=!]/.test(rest)) (kind = 'look'), (look = rest.slice(1, 3)), (this.i += 3);
-      else if ((m = /^\?<([^>]*)>/.exec(rest))) {
+      if (rest.startsWith('?:')) {
+        kind = 'non';
+        this.i += 2;
+      } else if (/^\?[=!]/.test(rest)) {
+        kind = 'look';
+        look = rest[1];
+        this.i += 2;
+      } else if (/^\?<[=!]/.test(rest)) {
+        kind = 'look';
+        look = rest.slice(1, 3);
+        this.i += 3;
+      } else if ((m = /^\?<([^>]*)>/.exec(rest))) {
         kind = 'named';
         name = m[1];
         this.i += m[0].length;
         if (!/^[\p{L}_][\p{L}_\p{Nd}]*$/u.test(name) || name.length > 62)
-          this.err('A submatch name must start with a letter or _, then use only letters, digits and _ (62 at most).', s, this.i);
-        if (this.o.numbered) this.err('Named submatches can’t be used with NumberedSubMatches. Turn it off, or use plain ( ) groups.', s, this.i);
-        if (this.groups.some((g) => g.name === name)) this.err(`Two submatches are both named “${name}”. Names must be unique.`, s, this.i);
+          this.err(
+            'A submatch name must start with a letter or _, then use only letters, digits and _ (62 at most).',
+            s,
+            this.i,
+          );
+        if (this.o.numbered)
+          this.err(
+            'Named submatches can’t be used with NumberedSubMatches. Turn it off, or use plain ( ) groups.',
+            s,
+            this.i,
+          );
+        if (this.groups.some((g) => g.name === name))
+          this.err(`Two submatches are both named “${name}”. Names must be unique.`, s, this.i);
       } else {
         m = /^\?[a-zA-Z-]*[:)]?/.exec(rest)!;
         const what = /^\?[imsxn-]+[:)]/.test(rest)
@@ -229,7 +263,10 @@ class Parser {
         this.i += Math.max(m[0].length, 2);
       }
     }
-    const node = { t: 'group', kind, name, look, start: s, end: s, body: undefined as unknown as Node } as Extract<Node, { t: 'group' }>;
+    const node = { t: 'group', kind, name, look, start: s, end: s, body: undefined as unknown as Node } as Extract<
+      Node,
+      { t: 'group' }
+    >;
     if (kind === 'named' || (kind === 'cap' && this.o.numbered)) {
       this.groups.push(node);
       node.num = this.groups.length;
@@ -260,7 +297,11 @@ class Parser {
       return null;
     }
     const set = (js: string, negative = false, pulled = false): ClassItem => ({ kind: 'set', js, negative, pulled });
-    const char = (ch: string): ClassItem => ({ kind: 'char', cp: ch.codePointAt(0)!, js: inClass ? jsClassChar(ch) : jsChar(ch) });
+    const char = (ch: string): ClassItem => ({
+      kind: 'char',
+      cp: ch.codePointAt(0)!,
+      js: inClass ? jsClassChar(ch) : jsChar(ch),
+    });
     switch (c) {
       case 'd':
         return set('\\p{Nd}');
@@ -281,7 +322,9 @@ class Parser {
           return null;
         }
         const W = `[${WORD}]`;
-        return { assert: c === 'b' ? `(?:(?<=${W})(?!${W})|(?<!${W})(?=${W}))` : `(?:(?<=${W})(?=${W})|(?<!${W})(?!${W}))` };
+        return {
+          assert: c === 'b' ? `(?:(?<=${W})(?!${W})|(?<!${W})(?=${W}))` : `(?:(?<=${W})(?=${W})|(?<!${W})(?!${W}))`,
+        };
       }
       case 'p':
       case 'P': {
@@ -291,7 +334,8 @@ class Parser {
           return null;
         }
         this.i += m[0].length;
-        if (!CATEGORIES.has(m[1])) this.err(`\\${c}{${m[1]}} isn’t a supported Unicode category. Try L, Lu, Ll, N, Nd, P, S or Z.`, s, this.i);
+        if (!CATEGORIES.has(m[1]))
+          this.err(`\\${c}{${m[1]}} isn’t a supported Unicode category. Try L, Lu, Ll, N, Nd, P, S or Z.`, s, this.i);
         return set(`\\${c}{${m[1]}}`, c === 'P');
       }
       case 'x': {
@@ -309,8 +353,10 @@ class Parser {
         if (m) {
           this.i += m[0].length;
           const cp = parseInt(m[1], 16);
-          if (cp > 0x10ffff || (cp >= 0xd800 && cp <= 0xdfff)) this.err('\\u{…} must be a code point from 0 to 10FFFF, and not a surrogate.', s, this.i);
-          else if (inClass && cp > 0xffff) this.err('Characters beyond U+FFFF, such as emoji, can’t be used inside [ ].', s, this.i);
+          if (cp > 0x10ffff || (cp >= 0xd800 && cp <= 0xdfff))
+            this.err('\\u{…} must be a code point from 0 to 10FFFF, and not a surrogate.', s, this.i);
+          else if (inClass && cp > 0xffff)
+            this.err('Characters beyond U+FFFF, such as emoji, can’t be used inside [ ].', s, this.i);
           return { kind: 'char', cp, js: `\\u{${m[1]}}` };
         }
         m = /^[0-9a-fA-F]{4}/.exec(rest);
@@ -332,7 +378,11 @@ class Parser {
       case 'k': {
         const m = /^<([^>]+)>/.exec(this.src.slice(this.i));
         if (inClass || !m) {
-          this.err(inClass ? 'A back reference can’t be used inside [ ].' : 'Write a named back reference as \\k<name>.', s, this.i);
+          this.err(
+            inClass ? 'A back reference can’t be used inside [ ].' : 'Write a named back reference as \\k<name>.',
+            s,
+            this.i,
+          );
           return null;
         }
         this.i += m[0].length;
@@ -353,7 +403,12 @@ class Parser {
       }
       const m = /^\d*/.exec(this.src.slice(this.i))!;
       this.i += m[0].length;
-      if (!this.o.numbered) this.err('Numbered back references such as \\1 need NumberedSubMatches. Or name the submatch and use \\k<name>.', s, this.i);
+      if (!this.o.numbered)
+        this.err(
+          'Numbered back references such as \\1 need NumberedSubMatches. Or name the submatch and use \\k<name>.',
+          s,
+          this.i,
+        );
       return { backref: { num: Number(c + m[0]) } };
     }
     if (SPECIAL.includes(c) || c === '#' || c === ' ' || (inClass && c === '-')) return char(c);
@@ -388,7 +443,8 @@ class Parser {
       else if (c === '[') this.err('Inside [ ], escape [ as \\[.', p);
       else if (c === '^') this.err('Inside [ ], escape ^ as \\^ unless it comes first.', p);
       else if (c === '{' || c === '}') this.err(`Inside [ ], escape ${c} as \\${c}.`, p);
-      else if (DOUBLES.includes(c) && this.src[this.i] === c) this.err(`Inside [ ], ${c}${c} can’t appear twice in a row. Escape one of them.`, p, p + 2);
+      else if (DOUBLES.includes(c) && this.src[this.i] === c)
+        this.err(`Inside [ ], ${c}${c} can’t appear twice in a row. Escape one of them.`, p, p + 2);
       return { kind: 'char', cp, js: jsClassChar(ch) };
     };
     const parts: string[] = [];
@@ -409,14 +465,18 @@ class Parser {
         if (prev?.kind === 'char' && this.src[this.i] !== ']' && this.src[this.i] !== undefined) {
           const next = readItem();
           if (next?.kind === 'char') {
-            if (next.cp < prev.cp) this.err('This range is backwards. Put the smaller character first, as in a-z.', p - 1, this.i);
+            if (next.cp < prev.cp)
+              this.err('This range is backwards. Put the smaller character first, as in a-z.', p - 1, this.i);
             parts.push('-');
             items.push(next);
             parts.push(next.js);
             continue;
           }
           this.err('A range must go between two characters, as in a-z.', p, this.i);
-          if (next) items.push(next), parts.push(next.js);
+          if (next) {
+            items.push(next);
+            parts.push(next.js);
+          }
           continue;
         }
         this.err('Inside [ ], escape a literal hyphen as \\-.', p);
@@ -427,7 +487,8 @@ class Parser {
       const p = this.i;
       const it = readItem();
       if (!it) continue;
-      if (it.kind === 'set' && it.negative && negated) this.err('\\W, \\D, \\S and \\P{ } can’t be used inside [^ ].', p, this.i);
+      if (it.kind === 'set' && it.negative && negated)
+        this.err('\\W, \\D, \\S and \\P{ } can’t be used inside [^ ].', p, this.i);
       items.push(it);
       parts.push(it.kind === 'set' && it.pulled ? '' : it.js);
     }
@@ -435,7 +496,8 @@ class Parser {
     const body = parts.join('');
     const own = body ? `[${negated ? '^' : ''}${body}]` : '';
     // \W and \S stand for negated sets, which can't nest inside [ ] here, so they become alternatives.
-    const js = pulled.length && !negated ? `(?:${[own, ...pulled.map((p) => p.js)].filter(Boolean).join('|')})` : own || '[^]';
+    const js =
+      pulled.length && !negated ? `(?:${[own, ...pulled.map((p) => p.js)].filter(Boolean).join('|')})` : own || '[^]';
     return { t: 'atom', js, start: s, end: this.i };
   }
 }
@@ -465,8 +527,8 @@ interface Ctx {
   open: Extract<Node, { t: 'group' }>[];
 }
 
-function validate(p: Parser, n: Node, ctx: Ctx, lookGroups: Set<Node>) {
-  const rec = (c: Node, patch: Partial<Ctx> = {}) => validate(p, c, { ...ctx, ...patch }, lookGroups);
+function validate(p: Parser, n: Node, ctx: Ctx, lookGroups: Set<Node>): void {
+  const rec = (c: Node, patch: Partial<Ctx> = {}): void => validate(p, c, { ...ctx, ...patch }, lookGroups);
   switch (n.t) {
     case 'seq':
       return n.items.forEach((c) => rec(c));
@@ -474,23 +536,39 @@ function validate(p: Parser, n: Node, ctx: Ctx, lookGroups: Set<Node>) {
       return n.options.forEach((c) => rec(c, { optional: true }));
     case 'quant':
       if (ctx.inLook && n.max === Infinity)
-        p.err('Lookahead and lookbehind can’t contain unlimited quantifiers such as * or +. Use a limit, such as {0,50}.', n.body.end, n.end);
+        p.err(
+          'Lookahead and lookbehind can’t contain unlimited quantifiers such as * or +. Use a limit, such as {0,50}.',
+          n.body.end,
+          n.end,
+        );
       if (n.max > 1) return rec(n.body, { inRepeat: true, optional: false });
       return rec(n.body, n.min === 0 ? { optional: true } : {});
     case 'group': {
       const captures = n.num !== undefined;
-      if (captures && ctx.inLook) p.err('Lookahead and lookbehind can’t contain submatches. Use (?: ) instead.', n.start, n.start + 1);
+      if (captures && ctx.inLook)
+        p.err('Lookahead and lookbehind can’t contain submatches. Use (?: ) instead.', n.start, n.start + 1);
       if (captures && ctx.inRepeat && (ctx.optional || canBeEmpty(n.body)))
-        p.err('This submatch could be empty, so it can’t be repeated. Make it always match at least one character.', n.start, n.end);
+        p.err(
+          'This submatch could be empty, so it can’t be repeated. Make it always match at least one character.',
+          n.start,
+          n.end,
+        );
       if (captures && ctx.inLook) lookGroups.add(n);
       return rec(n.body, { inLook: ctx.inLook || n.kind === 'look', open: captures ? [...ctx.open, n] : ctx.open });
     }
     case 'backref': {
       const g = n.name !== undefined ? p.groups.find((x) => x.name === n.name) : p.groups[(n.num ?? 0) - 1];
-      if (!g) p.err(n.name !== undefined ? `There’s no submatch named “${n.name}”.` : `There’s no submatch number ${n.num}.`, n.start, n.end);
+      if (!g)
+        p.err(
+          n.name !== undefined ? `There’s no submatch named “${n.name}”.` : `There’s no submatch number ${n.num}.`,
+          n.start,
+          n.end,
+        );
       else if (ctx.open.includes(g)) p.err('A submatch can’t refer to itself.', n.start, n.end);
-      else if (lookGroups.has(g)) p.err('Back references to a submatch inside a lookahead or lookbehind aren’t supported.', n.start, n.end);
-      else if (canBeEmpty(g.body)) p.err('Back references to a submatch that could be empty aren’t supported.', n.start, n.end);
+      else if (lookGroups.has(g))
+        p.err('Back references to a submatch inside a lookahead or lookbehind aren’t supported.', n.start, n.end);
+      else if (canBeEmpty(g.body))
+        p.err('Back references to a submatch that could be empty aren’t supported.', n.start, n.end);
     }
   }
 }
@@ -507,19 +585,37 @@ function emit(n: Node): string {
     case 'backref':
       return n.name !== undefined ? `\\k<${n.name}>` : `\\${n.num}`;
     case 'quant': {
-      const q = n.min === 0 && n.max === Infinity ? '*' : n.min === 1 && n.max === Infinity ? '+' : n.min === 0 && n.max === 1 ? '?' : n.max === Infinity ? `{${n.min},}` : n.min === n.max ? `{${n.min}}` : `{${n.min},${n.max}}`;
+      const q =
+        n.min === 0 && n.max === Infinity
+          ? '*'
+          : n.min === 1 && n.max === Infinity
+            ? '+'
+            : n.min === 0 && n.max === 1
+              ? '?'
+              : n.max === Infinity
+                ? `{${n.min},}`
+                : n.min === n.max
+                  ? `{${n.min}}`
+                  : `{${n.min},${n.max}}`;
       const body = emit(n.body);
       return `${n.body.t === 'seq' || n.body.t === 'alt' ? `(?:${body})` : body}${q}${n.lazy ? '?' : ''}`;
     }
     case 'group': {
-      const open = n.kind === 'look' ? `(?${n.look}` : n.kind === 'named' ? `(?<${n.name}>` : n.num !== undefined ? '(' : '(?:';
+      const open =
+        n.kind === 'look' ? `(?${n.look}` : n.kind === 'named' ? `(?<${n.name}>` : n.num !== undefined ? '(' : '(?:';
       return `${open}${emit(n.body)})`;
     }
   }
 }
 
 const wrap = (js: string, anchor: Anchor) =>
-  anchor === 'Complete' ? `^(?:${js})$` : anchor === 'BeginsWith' ? `^(?:${js})` : anchor === 'EndsWith' ? `(?:${js})$` : js;
+  anchor === 'Complete'
+    ? `^(?:${js})$`
+    : anchor === 'BeginsWith'
+      ? `^(?:${js})`
+      : anchor === 'EndsWith'
+        ? `(?:${js})$`
+        : js;
 
 export function compile(pattern: string, opts: RegexOptions): Compiled {
   if (opts.host === 'classic') return compileClassic(pattern, opts);
@@ -530,7 +626,11 @@ export function compile(pattern: string, opts: RegexOptions): Compiled {
     if (inline[1].includes('m')) o.multiline = true;
     if (inline[1].includes('s')) o.dotAll = true;
     if (inline[1].includes('x')) o.freeSpacing = true;
-    if (inline[1].includes('n') && o.numbered) return { ok: false, issues: [{ message: '(?n) can’t be used with NumberedSubMatches.', start: 0, end: inline[0].length }] };
+    if (inline[1].includes('n') && o.numbered)
+      return {
+        ok: false,
+        issues: [{ message: '(?n) can’t be used with NumberedSubMatches.', start: 0, end: inline[0].length }],
+      };
   }
   const p = new Parser(pattern, o);
   p.i = inline ? inline[0].length : 0;
@@ -548,7 +648,12 @@ export function compile(pattern: string, opts: RegexOptions): Compiled {
   try {
     new RegExp(source, flags);
   } catch (e) {
-    return { ok: false, issues: [{ message: `The browser couldn’t run this pattern: ${(e as Error).message}`, start: 0, end: pattern.length }] };
+    return {
+      ok: false,
+      issues: [
+        { message: `The browser couldn’t run this pattern: ${(e as Error).message}`, start: 0, end: pattern.length },
+      ],
+    };
   }
   return { ok: true, source, flags, numbered: o.numbered, inline: inline?.[1] ?? '' };
 }
@@ -594,7 +699,12 @@ export function optionsLiteral(opts: RegexOptions, fn: 'IsMatch' | 'Match' | 'Ma
   return list.map((x) => `MatchOptions.${x}`).join(' & ');
 }
 
-export function formula(fn: 'IsMatch' | 'Match' | 'MatchAll', text: string, pattern: string, opts: RegexOptions): string {
+export function formula(
+  fn: 'IsMatch' | 'Match' | 'MatchAll',
+  text: string,
+  pattern: string,
+  opts: RegexOptions,
+): string {
   const o = optionsLiteral(opts, fn);
   return `${fn}(${text || 'TextInput1.Text'}, ${patternLiteral(pattern, opts.host)}${o ? `, ${o}` : ''})`;
 }
@@ -607,16 +717,56 @@ export interface Preset {
 }
 
 export const PRESETS: Preset[] = [
-  { label: 'Email', pattern: MATCH_ENUM.Email, anchor: 'Complete', sample: 'joan@contoso.com\nbob.jones@sub.contoso.co.uk\nnot-an-email\nname@localhost' },
-  { label: 'Indian mobile', pattern: '(?:\\+91[\\-\\s]?)?[6-9]\\d{9}', anchor: 'Complete', sample: '9876543210\n+91 9876543210\n+91-6123456789\n5876543210\n98765 43210' },
-  { label: 'US phone', pattern: '\\(?\\d{3}\\)?[\\s.\\-]?\\d{3}[\\s.\\-]?\\d{4}', anchor: 'Complete', sample: '(425) 555-0100\n425.555.0100\n4255550100\n555-0100' },
+  {
+    label: 'Email',
+    pattern: MATCH_ENUM.Email,
+    anchor: 'Complete',
+    sample: 'joan@contoso.com\nbob.jones@sub.contoso.co.uk\nnot-an-email\nname@localhost',
+  },
+  {
+    label: 'Indian mobile',
+    pattern: '(?:\\+91[\\-\\s]?)?[6-9]\\d{9}',
+    anchor: 'Complete',
+    sample: '9876543210\n+91 9876543210\n+91-6123456789\n5876543210\n98765 43210',
+  },
+  {
+    label: 'US phone',
+    pattern: '\\(?\\d{3}\\)?[\\s.\\-]?\\d{3}[\\s.\\-]?\\d{4}',
+    anchor: 'Complete',
+    sample: '(425) 555-0100\n425.555.0100\n4255550100\n555-0100',
+  },
   { label: 'PIN code', pattern: '[1-9]\\d{5}', anchor: 'Complete', sample: '600001\n110011\n012345\n60000' },
   { label: 'PAN', pattern: '[A-Z]{5}\\d{4}[A-Z]', anchor: 'Complete', sample: 'ABCDE1234F\nabcde1234f\nABCD1234F' },
   { label: 'ZIP code', pattern: '\\d{5}(?:-\\d{4})?', anchor: 'Complete', sample: '98052\n98052-6399\n9805' },
-  { label: 'Date yyyy-mm-dd', pattern: '\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])', anchor: 'Complete', sample: '2026-10-24\n2026-13-01\n2026-02-30\n24-10-2026' },
-  { label: 'Time HH:mm', pattern: '(?:[01]\\d|2[0-3]):[0-5]\\d', anchor: 'Complete', sample: '09:30\n23:59\n24:00\n9:30' },
+  {
+    label: 'Date yyyy-mm-dd',
+    pattern: '\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])',
+    anchor: 'Complete',
+    sample: '2026-10-24\n2026-13-01\n2026-02-30\n24-10-2026',
+  },
+  {
+    label: 'Time HH:mm',
+    pattern: '(?:[01]\\d|2[0-3]):[0-5]\\d',
+    anchor: 'Complete',
+    sample: '09:30\n23:59\n24:00\n9:30',
+  },
   { label: 'Decimal number', pattern: '-?\\d+(?:\\.\\d+)?', anchor: 'Complete', sample: '42\n-3.14\n1.\n.5\n1,000' },
-  { label: 'Password rule', pattern: '(?=.{0,63}\\p{Lu})(?=.{0,63}\\p{Ll})(?=.{0,63}\\d).{8,64}', anchor: 'Complete', sample: 'Summer2026\nsummer2026\nShort1\nNoDigitsHere' },
-  { label: 'GUID', pattern: '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}', anchor: 'Complete', sample: '3f2504e0-4f89-11d3-9a0c-0305e82c3301\n3f2504e0-4f89-11d3-9a0c' },
-  { label: 'Ticket IDs in text', pattern: '(?<project>[A-Z]{2,5})-(?<number>\\d+)', anchor: 'Contains', sample: 'Fixed in INC-1042 and PRJ-77, see also inc-5.' },
+  {
+    label: 'Password rule',
+    pattern: '(?=.{0,63}\\p{Lu})(?=.{0,63}\\p{Ll})(?=.{0,63}\\d).{8,64}',
+    anchor: 'Complete',
+    sample: 'Summer2026\nsummer2026\nShort1\nNoDigitsHere',
+  },
+  {
+    label: 'GUID',
+    pattern: '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}',
+    anchor: 'Complete',
+    sample: '3f2504e0-4f89-11d3-9a0c-0305e82c3301\n3f2504e0-4f89-11d3-9a0c',
+  },
+  {
+    label: 'Ticket IDs in text',
+    pattern: '(?<project>[A-Z]{2,5})-(?<number>\\d+)',
+    anchor: 'Contains',
+    sample: 'Fixed in INC-1042 and PRJ-77, see also inc-5.',
+  },
 ];

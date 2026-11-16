@@ -15,26 +15,24 @@ const H = `h${level}` as 'h2' | 'h3';
 ---
 
 <ul class="tcards" data-reveal-group>
-  {
-    tools.map((t) => {
-      const cat = categoryById(t.category);
-      return (
-        <li class="tcard" style={`--cat:${cat.color}`} data-cats={[t.category, ...(t.also ?? [])].join(' ')}>
-          <a href={t.href}>
-            <span class="tcard__top">
-              <ProductChips products={t.works} />
+  {tools.map((t) => {
+    const cat = categoryById(t.category);
+    return (
+      <li class="tcard" style={`--cat:${cat.color}`} data-cats={[t.category, ...(t.also ?? [])].join(' ')}>
+        <a href={t.href}>
+          <span class="tcard__top">
+            <ProductChips products={t.works} />
+          </span>
+          <H class="tcard__title">{t.title}</H>
+          <span class="tcard__desc">{t.description}</span>
+          <span class="tcard__foot">
+            <span class="tcard__meta">
+              <b>{t.kind === 'reference' ? 'Reference' : 'Tool'}</b> · {t.meta}
             </span>
-            <H class="tcard__title">{t.title}</H>
-            <span class="tcard__desc">{t.description}</span>
-            <span class="tcard__foot">
-              <span class="tcard__meta">
-                <b>{t.kind === 'reference' ? 'Reference' : 'Tool'}</b> · {t.meta}
-              </span>
-              <Icon name="arrow" class="tcard__arrow" />
-            </span>
-          </a>
-        </li>
-      );
-    })
-  }
+            <Icon name="arrow" class="tcard__arrow" />
+          </span>
+        </a>
+      </li>
+    );
+  })}
 </ul>

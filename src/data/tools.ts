@@ -26,7 +26,8 @@ export const categories: ToolCategory[] = [
     name: 'Power Apps',
     short: 'Power Apps',
     summary: 'Formulas, patterns and assets for canvas apps.',
-    intro: 'Look up any Power Fx formula, test the patterns you validate input with, and turn icons into formulas you can theme.',
+    intro:
+      'Look up any Power Fx formula, test the patterns you validate input with, and turn icons into formulas you can theme.',
     color: '#d16be0',
   },
   {
@@ -35,7 +36,8 @@ export const categories: ToolCategory[] = [
     name: 'Power Automate',
     short: 'Power Automate',
     summary: 'Expressions, triggers, emails and cards for cloud and desktop flows.',
-    intro: 'Every expression function, plus builders for the parts of a flow that usually take trial and error: trigger conditions, Parse JSON schemas, HTML emails and Teams cards.',
+    intro:
+      'Every expression function, plus builders for the parts of a flow that usually take trial and error: trigger conditions, Parse JSON schemas, HTML emails and Teams cards.',
     color: '#4c8dff',
   },
   {
@@ -44,7 +46,8 @@ export const categories: ToolCategory[] = [
     name: 'Dataverse/SharePoint',
     short: 'Dataverse/SharePoint',
     summary: 'Query, filter and move data in Dataverse and SharePoint.',
-    intro: 'Tools for the data layer: filter queries that return the right rows, and copying list structures between sites and tenants.',
+    intro:
+      'Tools for the data layer: filter queries that return the right rows, and copying list structures between sites and tenants.',
     color: '#1fb5a6',
   },
   {
@@ -52,7 +55,8 @@ export const categories: ToolCategory[] = [
     name: 'Developer Utilities',
     short: 'Utilities',
     summary: 'Format, read and debug formulas and JSON from any product.',
-    intro: 'General-purpose helpers for the middle of a build: make a long expression readable, or turn a step’s JSON output into the exact expression you need.',
+    intro:
+      'General-purpose helpers for the middle of a build: make a long expression readable, or turn a step’s JSON output into the exact expression you need.',
     color: '#f2c811',
   },
 ];
@@ -89,7 +93,8 @@ export const tools: Tool[] = [
   },
   {
     title: 'Regex Tester for Power Fx',
-    description: 'Test patterns for IsMatch, Match and MatchAll, check them against Power Fx’s rules, and copy the formula.',
+    description:
+      'Test patterns for IsMatch, Match and MatchAll, check them against Power Fx’s rules, and copy the formula.',
     href: '/regex-tester/',
     works: ['power-apps'],
     kind: 'tool',
@@ -100,13 +105,15 @@ export const tools: Tool[] = [
   },
   {
     title: 'UI Kit',
-    description: 'Copy-paste canvas components on one design system: headers, sidebars, tabs, dialogs, lists and tables, themed with fxConfig.',
+    description:
+      'Copy-paste canvas components on one design system: headers, sidebars, tabs, dialogs, lists and tables, themed with fxConfig.',
     href: '/ui-kit/',
     works: ['power-apps'],
     kind: 'tool',
     category: 'power-apps',
     meta: 'Components · YAML · fxConfig',
-    keywords: 'ui kit components design system yaml paste code container header sidebar tabs dialog table gallery theme fxconfig named formulas',
+    keywords:
+      'ui kit components design system yaml paste code container header sidebar tabs dialog table gallery theme fxconfig named formulas',
   },
   {
     title: 'Naming Checker',
@@ -117,7 +124,8 @@ export const tools: Tool[] = [
     category: 'power-apps',
     also: ['developer-utilities'],
     meta: 'Naming conventions · YAML',
-    keywords: 'naming convention prefix rename controls variables lbl btn gal vcon hcon yaml copy code pa.yaml best practice',
+    keywords:
+      'naming convention prefix rename controls variables lbl btn gal vcon hcon yaml copy code pa.yaml best practice',
   },
   {
     title: 'SVG to Power Apps',
@@ -141,7 +149,8 @@ export const tools: Tool[] = [
   },
   {
     title: desktopReference.title,
-    description: 'The Power Fx functions for desktop flows, with desktop-style examples and the rules that differ from Power Apps.',
+    description:
+      'The Power Fx functions for desktop flows, with desktop-style examples and the rules that differ from Power Apps.',
     href: `/${desktopReference.slug}/`,
     works: ['power-automate'],
     kind: 'reference',
@@ -151,7 +160,8 @@ export const tools: Tool[] = [
   },
   {
     title: 'Trigger Condition Builder',
-    description: 'Make a flow start only when it should: build trigger conditions for SharePoint, Dataverse and Outlook.',
+    description:
+      'Make a flow start only when it should: build trigger conditions for SharePoint, Dataverse and Outlook.',
     href: '/trigger-condition-builder/',
     works: ['power-automate', 'sharepoint', 'dataverse', 'outlook'],
     kind: 'tool',
@@ -162,7 +172,8 @@ export const tools: Tool[] = [
   },
   {
     title: 'JSON Schema Helper',
-    description: 'Paste sample JSON and get a Parse JSON schema that won’t fail on nulls, plus an expression for every field.',
+    description:
+      'Paste sample JSON and get a Parse JSON schema that won’t fail on nulls, plus an expression for every field.',
     href: '/json-schema-helper/',
     works: ['power-automate'],
     kind: 'tool',
@@ -173,7 +184,8 @@ export const tools: Tool[] = [
   },
   {
     title: 'HTML Table Styler',
-    description: 'Make Create HTML table look good in Outlook and Gmail. Pick a style, preview it, copy one Compose step.',
+    description:
+      'Make Create HTML table look good in Outlook and Gmail. Pick a style, preview it, copy one Compose step.',
     href: '/html-table-styler/',
     works: ['power-automate', 'outlook'],
     kind: 'tool',
@@ -183,7 +195,8 @@ export const tools: Tool[] = [
   },
   {
     title: 'Adaptive Card Builder',
-    description: 'Teams cards for approvals, alerts and forms: start from a template, preview it like Teams, copy the JSON.',
+    description:
+      'Teams cards for approvals, alerts and forms: start from a template, preview it like Teams, copy the JSON.',
     href: '/adaptive-card-builder/',
     works: ['power-automate', 'teams'],
     kind: 'tool',
@@ -193,7 +206,8 @@ export const tools: Tool[] = [
   },
   {
     title: 'OData Filter Builder',
-    description: 'Build the Filter Query for SharePoint Get items or Dataverse List rows, with the right quotes and dates.',
+    description:
+      'Build the Filter Query for SharePoint Get items or Dataverse List rows, with the right quotes and dates.',
     href: '/odata-filter-builder/',
     works: ['power-automate', 'dataverse', 'sharepoint'],
     kind: 'tool',
@@ -225,7 +239,8 @@ export const tools: Tool[] = [
   },
   {
     title: 'Expression Picker',
-    description: 'Paste a step’s JSON, click the value you need, and copy its Power Automate expression and Power Apps formula.',
+    description:
+      'Paste a step’s JSON, click the value you need, and copy its Power Automate expression and Power Apps formula.',
     href: '/json-expression-picker/',
     works: ['power-automate', 'power-apps'],
     kind: 'tool',

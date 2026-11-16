@@ -10,11 +10,9 @@ interface Props {
 const tool = tools.find((t) => t.href === Astro.props.href);
 ---
 
-{
-  tool && (
-    <div class="works">
-      <span class="works__label">Works with</span>
-      <ProductChips products={tool.works} size="md" />
-    </div>
-  )
-}
+{tool && (
+  <div class="works">
+    <span class="works__label">Works with</span>
+    <ProductChips products={tool.works} size="md" />
+  </div>
+)}

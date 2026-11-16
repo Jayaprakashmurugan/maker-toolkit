@@ -24,10 +24,30 @@ export const about: { text: string; focus?: string }[] = [
 export const expertise: { title: string; detail: string; icon: IconName; color: string }[] = [
   { title: 'Power Apps', detail: 'Canvas, Model-Driven & Code Apps', icon: 'apps', color: 'var(--pp-apps)' },
   { title: 'Power Automate', detail: 'Performance-conscious flow design', icon: 'flow', color: 'var(--pp-automate)' },
-  { title: 'Dataverse & Data Modeling', detail: 'Schema design and security roles', icon: 'database', color: 'var(--pp-data)' },
-  { title: 'Power Platform ALM & Governance', detail: 'Azure DevOps, PAC CLI, solution-aware components', icon: 'branch', color: 'var(--pp-bi)' },
-  { title: 'Copilot Studio & AI Agent Development', detail: 'Agent development on Dataverse', icon: 'bot', color: 'color-mix(in srgb, var(--pp-apps) 50%, var(--pp-automate))' },
-  { title: 'Training & Enablement', detail: 'Architecture decisions, code and ALM practices', icon: 'cap', color: 'var(--accent-ink)' },
+  {
+    title: 'Dataverse & Data Modeling',
+    detail: 'Schema design and security roles',
+    icon: 'database',
+    color: 'var(--pp-data)',
+  },
+  {
+    title: 'Power Platform ALM & Governance',
+    detail: 'Azure DevOps, PAC CLI, solution-aware components',
+    icon: 'branch',
+    color: 'var(--pp-bi)',
+  },
+  {
+    title: 'Copilot Studio & AI Agent Development',
+    detail: 'Agent development on Dataverse',
+    icon: 'bot',
+    color: 'color-mix(in srgb, var(--pp-apps) 50%, var(--pp-automate))',
+  },
+  {
+    title: 'Training & Enablement',
+    detail: 'Architecture decisions, code and ALM practices',
+    icon: 'cap',
+    color: 'var(--accent-ink)',
+  },
 ];
 
 /** "Methods & tools", grouped. */

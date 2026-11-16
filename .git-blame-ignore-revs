@@ -1,0 +1,5 @@
+# Formatting-only commits, hidden from `git blame` so it shows who changed the code, not who reformatted it.
+# GitHub uses this file automatically. Locally: git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Format the codebase with Prettier
+2c1109b478242d4813987e35ec47e7491c864ba8

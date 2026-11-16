@@ -18,7 +18,7 @@ const faqs = [
   },
   {
     q: 'Why does it use ?[ ] instead of [ ]?',
-    a: "The ? makes the expression return null instead of failing when a property is missing, which keeps a flow running when a field is optional or empty.",
+    a: 'The ? makes the expression return null instead of failing when a property is missing, which keeps a flow running when a field is optional or empty.',
   },
   {
     q: 'How do I read a value from every item in a list?',
@@ -38,7 +38,9 @@ const faqs = [
 <Base title={title} description={description} image="/og/json-expression-picker.png">
   <div class="wrap wrap--wide">
     <header class="page-head">
-      <p class="kicker"><b>Tool</b> · Power Automate · JSON to expression</p>
+      <p class="kicker">
+        <b>Tool</b> · Power Automate · JSON to expression
+      </p>
       <h1>{title}</h1>
       <p class="page-head__lede">{description}</p>
       <WorksWith href="/json-expression-picker/" />
@@ -78,14 +80,12 @@ const faqs = [
       </div>
     </div>
     <div class="faq" data-reveal-group>
-      {
-        faqs.map((f) => (
-          <details>
-            <summary>{f.q}</summary>
-            <div>{f.a}</div>
-          </details>
-        ))
-      }
+      {faqs.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <div>{f.a}</div>
+        </details>
+      ))}
     </div>
   </section>
 </Base>

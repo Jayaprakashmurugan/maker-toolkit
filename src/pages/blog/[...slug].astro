@@ -35,70 +35,66 @@ const articleLd = {
   <div class="progress" aria-hidden="true"></div>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(articleLd)} />
   <article class="wrap post">
-    <a class="post__back" href="/blog/"><Icon name="arrow" class="flip" /> All posts</a>
+    <a class="post__back" href="/blog/">
+      <Icon name="arrow" class="flip" /> All posts
+    </a>
     <header class="post__head">
       {draft && <p class="post__draft">Draft: only visible while you run the site locally.</p>}
-      {
-        tags.length > 0 && (
-          <p class="post__tags">
-            {tags.map((t) => (
-              <span class="pill">{t}</span>
-            ))}
-          </p>
-        )
-      }
+      {tags.length > 0 && (
+        <p class="post__tags">
+          {tags.map((t) => (
+            <span class="pill">{t}</span>
+          ))}
+        </p>
+      )}
       <h1>{title}</h1>
       <p class="post__lede">{description}</p>
       <p class="post__meta">
-        <span><Icon name="clock" /> {readingTime(post.body)} min read</span>
+        <span>
+          <Icon name="clock" /> {readingTime(post.body)} min read
+        </span>
       </p>
     </header>
 
-    {
-      cover && !video && (
-        <figure class="post__cover">
-          <Image src={cover} alt="" widths={[720, 1200, 1600]} sizes="(max-width: 800px) 100vw, 768px" loading="eager" />
-        </figure>
-      )
-    }
+    {cover && !video && (
+      <figure class="post__cover">
+        <Image src={cover} alt="" widths={[720, 1200, 1600]} sizes="(max-width: 800px) 100vw, 768px" loading="eager" />
+      </figure>
+    )}
 
-    {
-      video && (
-        <div class="post__video">
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${video}`}
-            title={`Video: ${title}`}
-            loading="lazy"
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          />
-        </div>
-      )
-    }
+    {video && (
+      <div class="post__video">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${video}`}
+          title={`Video: ${title}`}
+          loading="lazy"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        />
+      </div>
+    )}
 
     <div class="post__body prose-post">
       <Content />
     </div>
 
-    {
-      (newer || older) && (
-        <nav class="post__pager" aria-label="More posts">
-          {older ? (
-            <a href={postUrl(older)}>
-              <span>Older</span>
-              {older.data.title}
-            </a>
-          ) : (
-            <span />
-          )}
-          {newer && (
-            <a href={postUrl(newer)} class="is-next">
-              <span>Newer</span>
-              {newer.data.title}
-            </a>
-          )}
-        </nav>
-      )
-    }
+    {(newer || older) && (
+      <nav class="post__pager" aria-label="More posts">
+        {older ? (
+          <a href={postUrl(older)}>
+            <span>Older</span>
+            {older.data.title}
+          </a>
+        ) : (
+          <span />
+        )}
+        {newer && (
+          <a href={postUrl(newer)} class="is-next">
+            <span>Newer</span>
+            {newer.data.title}
+          </a>
+        )}
+      </nav>
+    )}
   </article>
 </Base>

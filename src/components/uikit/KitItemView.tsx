@@ -14,10 +14,20 @@ import YamlCode from './YamlCode';
 
 function typeOf(c: YamlControl) {
   const dir = c.props.LayoutDirection?.endsWith('Horizontal') ? 'Horizontal' : 'Vertical';
-  return PREFIXES.find((p) => p.control === c.control && (!p.variant || p.variant === c.variant) && (!p.direction || p.direction === dir));
+  return PREFIXES.find(
+    (p) => p.control === c.control && (!p.variant || p.variant === c.variant) && (!p.direction || p.direction === dir),
+  );
 }
 
-function Field({ opt, value, onChange }: { opt: KitOption; value: KitValues[string]; onChange: (v: KitValues[string]) => void }) {
+function Field({
+  opt,
+  value,
+  onChange,
+}: {
+  opt: KitOption;
+  value: KitValues[string];
+  onChange: (v: KitValues[string]) => void;
+}) {
   const id = `kopt-${opt.id}`;
   switch (opt.type) {
     case 'toggle':
@@ -46,7 +56,15 @@ function Field({ opt, value, onChange }: { opt: KitOption; value: KitValues[stri
           <span>
             {opt.label} <b>{String(value)}</b>
           </span>
-          <input id={id} type="range" min={opt.min} max={opt.max} step={opt.step ?? 1} value={Number(value)} onChange={(e) => onChange(Number(e.target.value))} />
+          <input
+            id={id}
+            type="range"
+            min={opt.min}
+            max={opt.max}
+            step={opt.step ?? 1}
+            value={Number(value)}
+            onChange={(e) => onChange(Number(e.target.value))}
+          />
         </label>
       );
     case 'lines':
@@ -67,7 +85,13 @@ function Field({ opt, value, onChange }: { opt: KitOption; value: KitValues[stri
       return (
         <label className="kit-opt" htmlFor={id}>
           <span>{opt.label}</span>
-          <input id={id} type="text" value={String(value)} onChange={(e) => onChange(e.target.value)} spellCheck={false} />
+          <input
+            id={id}
+            type="text"
+            value={String(value)}
+            onChange={(e) => onChange(e.target.value)}
+            spellCheck={false}
+          />
         </label>
       );
   }
@@ -156,7 +180,10 @@ export default function KitItemView({ slug }: { slug: string }) {
 
   const theme = useMemo(() => (stored ? resolveTheme(stored) : defaultTheme), [stored]);
   const snippet = useMemo(() => item.build(values), [item, values]);
-  const comp = useMemo(() => (canComponent ? componentize(item, values, theme) : null), [canComponent, item, values, theme]);
+  const comp = useMemo(
+    () => (canComponent ? componentize(item, values, theme) : null),
+    [canComponent, item, values, theme],
+  );
   const control = useMemo(() => toControl(snippet.root), [snippet]);
   const yaml = useMemo(() => toYaml([control]), [control]);
   const tree = useMemo(() => flatten(control), [control]);
@@ -177,7 +204,14 @@ export default function KitItemView({ slug }: { slug: string }) {
   };
   const code = codes[tab] ?? yaml;
   const isFormula = tab === 'formulas' || tab === 'onvisible' || tab === 'screen';
-  const copyLabel = tab === 'yaml' ? 'Copy YAML' : tab === 'definition' ? 'Copy component' : tab === 'instance' ? 'Copy instance' : 'Copy formula';
+  const copyLabel =
+    tab === 'yaml'
+      ? 'Copy YAML'
+      : tab === 'definition'
+        ? 'Copy component'
+        : tab === 'instance'
+          ? 'Copy instance'
+          : 'Copy formula';
   const tabButton = (id: Tab, label: ReactNode) => (
     <button type="button" role="tab" aria-selected={tab === id} onClick={() => setTab(id)}>
       {label}
@@ -216,7 +250,10 @@ export default function KitItemView({ slug }: { slug: string }) {
         <div className={`kit-canvas kit-canvas--${item.canvas.bg ?? 'white'}`} ref={stage}>
           {hover && <style>{`.kit-canvas [data-k="${hover}"]{outline:2px dashed #4c8dff;outline-offset:-2px}`}</style>}
           <div className="kit-fit" style={{ width: item.canvas.w * scale, height: item.canvas.h * scale }}>
-            <div className="kit-frame" style={{ width: item.canvas.w, height: item.canvas.h, transform: `scale(${scale})` }}>
+            <div
+              className="kit-frame"
+              style={{ width: item.canvas.w, height: item.canvas.h, transform: `scale(${scale})` }}
+            >
               <KitPreview root={snippet.root} theme={theme} />
             </div>
           </div>
@@ -225,7 +262,12 @@ export default function KitItemView({ slug }: { slug: string }) {
         <aside className="kit-props" aria-label="Options">
           <p className="kit-panel-title">Options</p>
           {item.options.map((opt) => (
-            <Field key={opt.id} opt={opt} value={values[opt.id]} onChange={(v) => setValues((prev) => ({ ...prev, [opt.id]: v }))} />
+            <Field
+              key={opt.id}
+              opt={opt}
+              value={values[opt.id]}
+              onChange={(v) => setValues((prev) => ({ ...prev, [opt.id]: v }))}
+            />
           ))}
           <div className="kit-opt">
             <span>Theme</span>
@@ -238,7 +280,9 @@ export default function KitItemView({ slug }: { slug: string }) {
                   onClick={() => saveStored(t.id === 'slate' ? null : { base: t.id })}
                   title={t.name}
                   aria-label={`${t.name} theme`}
-                  style={{ background: `linear-gradient(135deg, ${t.colors.Primary1} 50%, ${t.colors.Secondary1} 50%)` }}
+                  style={{
+                    background: `linear-gradient(135deg, ${t.colors.Primary1} 50%, ${t.colors.Secondary1} 50%)`,
+                  }}
                 />
               ))}
             </div>
@@ -295,7 +339,11 @@ export default function KitItemView({ slug }: { slug: string }) {
           )}
           <span className="kit-tabs__fill" />
           {tab === 'definition' && comp && (
-            <button type="button" className="kit-save" onClick={() => download(`${comp.name}.pa.yaml`, comp.definition)}>
+            <button
+              type="button"
+              className="kit-save"
+              onClick={() => download(`${comp.name}.pa.yaml`, comp.definition)}
+            >
               Save file
             </button>
           )}
@@ -310,16 +358,17 @@ export default function KitItemView({ slug }: { slug: string }) {
             <h2 className="kit-h">Add it to your app as a component</h2>
             <ol className="kit-steps">
               <li>
-                Once per app, paste <a href="/ui-kit/design-system/">fxConfig</a> into <b>App.Formulas</b>. Each instance hands it over with{' '}
-                <code>ConfigProperties: =fxConfig</code>.
+                Once per app, paste <a href="/ui-kit/design-system/">fxConfig</a> into <b>App.Formulas</b>. Each
+                instance hands it over with <code>ConfigProperties: =fxConfig</code>.
               </li>
               <li>
-                Save the <b>Component</b> tab as <code>Src/Components/{comp.name}.pa.yaml</code> in your app’s source files (the format Power Apps Git integration keeps
-                canvas apps in), then open the app in Studio.
+                Save the <b>Component</b> tab as <code>Src/Components/{comp.name}.pa.yaml</code> in your app’s source
+                files (the format Power Apps Git integration keeps canvas apps in), then open the app in Studio.
               </li>
               <li>
-                Put it on a screen: insert <b>{comp.name}</b> from the Insert pane, or copy the <b>On a screen</b> tab and use <b>Paste code</b> on the screen. It comes
-                with its inputs filled in and the actions in its events.
+                Put it on a screen: insert <b>{comp.name}</b> from the Insert pane, or copy the <b>On a screen</b> tab
+                and use <b>Paste code</b> on the screen. It comes with its inputs filled in and the actions in its
+                events.
               </li>
               {comp.screen && (
                 <li>
@@ -328,8 +377,8 @@ export default function KitItemView({ slug }: { slug: string }) {
               )}
             </ol>
             <p className="kit-fine">
-              Microsoft documents Paste code for controls; a component definition goes in through its source file. If you just want it on a screen now, use{' '}
-              <b>Controls</b>.
+              Microsoft documents Paste code for controls; a component definition goes in through its source file. If
+              you just want it on a screen now, use <b>Controls</b>.
             </p>
           </section>
           <section>
@@ -380,7 +429,8 @@ export default function KitItemView({ slug }: { slug: string }) {
                 </li>
               )}
               <li>
-                Copy the YAML. In Power Apps Studio, right-click the screen in the Tree view and choose <b>Paste code</b>, or select the screen and press Ctrl+V.
+                Copy the YAML. In Power Apps Studio, right-click the screen in the Tree view and choose{' '}
+                <b>Paste code</b>, or select the screen and press Ctrl+V.
               </li>
             </ol>
           </section>

@@ -17,14 +17,21 @@ const { title, id, index, more } = Astro.props;
   <div>
     {index && <p class="shead__idx">// {index}</p>}
     <h2 class="shead__title" id={id}>
-      {title.split('/').map((part, i) => (i > 0 ? <>/<wbr />{part}</> : part))}
+      {title.split('/').map((part, i) =>
+        i > 0 ? (
+          <>
+            /<wbr />
+            {part}
+          </>
+        ) : (
+          part
+        ),
+      )}
     </h2>
   </div>
-  {
-    more && (
-      <a class="shead__more" href={more.href}>
-        {more.label} <Icon name="arrow" />
-      </a>
-    )
-  }
+  {more && (
+    <a class="shead__more" href={more.href}>
+      {more.label} <Icon name="arrow" />
+    </a>
+  )}
 </div>

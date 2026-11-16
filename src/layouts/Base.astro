@@ -37,8 +37,12 @@ const nav: { href: string; label: string; count?: number; match: string[] }[] = 
   { href: '/about/', label: 'About', match: [] },
   { href: '/contact/', label: 'Contact', match: [] },
 ];
-const isCurrent = (n: (typeof nav)[number]) => (n.href === '/' ? path === '/' : [n.href, ...n.match].some((h) => path.startsWith(h)));
-const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label: 'YouTube', href: siteConfig.youtubeUrl, icon: 'youtube' }] : [])];
+const isCurrent = (n: (typeof nav)[number]) =>
+  n.href === '/' ? path === '/' : [n.href, ...n.match].some((h) => path.startsWith(h));
+const socials = [
+  ...siteConfig.authorLinks,
+  ...(siteConfig.youtubeUrl ? [{ label: 'YouTube', href: siteConfig.youtubeUrl, icon: 'youtube' }] : []),
+];
 ---
 
 <!doctype html>
@@ -66,11 +70,9 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
     <meta property="og:image:alt" content={fullTitle} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={imageUrl} />
-    {
-      siteConfig.googleSiteVerification && (
-        <meta name="google-site-verification" content={siteConfig.googleSiteVerification} />
-      )
-    }
+    {siteConfig.googleSiteVerification && (
+      <meta name="google-site-verification" content={siteConfig.googleSiteVerification} />
+    )}
     <meta name="theme-color" content="#07090d" />
     <script is:inline>
       // Dark is the default; apply a saved choice before first paint to avoid a flash.
@@ -89,7 +91,9 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
     <slot name="head" />
   </head>
   <body>
-    <a class="skip" href="#main">Skip to content</a>
+    <a class="skip" href="#main">
+      Skip to content
+    </a>
 
     <div class="bg" aria-hidden="true">
       <div class="bg__aurora"></div>
@@ -111,29 +115,39 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
           </span>
         </a>
         <nav class="site-nav" aria-label="Main">
-          {
-            nav.map((n) => (
-              <a href={n.href} aria-current={isCurrent(n) ? 'page' : undefined}>
-                {n.label}
-                {n.count !== undefined && <sup aria-hidden="true">{n.count}</sup>}
-              </a>
-            ))
-          }
+          {nav.map((n) => (
+            <a href={n.href} aria-current={isCurrent(n) ? 'page' : undefined}>
+              {n.label}
+              {n.count !== undefined && <sup aria-hidden="true">{n.count}</sup>}
+            </a>
+          ))}
         </nav>
         <div class="site-tools">
-          <button type="button" class="search-btn" data-search-open aria-label="Search" aria-keyshortcuts="Control+K Meta+K">
+          <button
+            type="button"
+            class="search-btn"
+            data-search-open
+            aria-label="Search"
+            aria-keyshortcuts="Control+K Meta+K"
+          >
             <Icon name="search" />
             <span class="search-btn__label">Search</span>
             <kbd data-search-kbd>Ctrl K</kbd>
           </button>
-          <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="Switch between dark and light">
+          <button
+            type="button"
+            class="icon-btn theme-toggle"
+            data-theme-toggle
+            aria-label="Switch between dark and light"
+          >
             <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"></circle>
               <path
                 d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"
                 stroke="currentColor"
                 stroke-width="2"
-                stroke-linecap="round"></path>
+                stroke-linecap="round"
+              ></path>
             </svg>
             <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
               <path
@@ -141,7 +155,8 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
-                stroke-linejoin="round"></path>
+                stroke-linejoin="round"
+              ></path>
             </svg>
           </button>
           <button type="button" class="icon-btn menu-btn" popovertarget="mobile-nav" aria-label="Menu">
@@ -150,15 +165,15 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
         </div>
       </div>
       <nav class="mobile-nav" id="mobile-nav" popover aria-label="Menu">
-        <a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a>
-        {
-          nav.map((n) => (
-            <a href={n.href} aria-current={isCurrent(n) ? 'page' : undefined}>
-              {n.label}
-              {n.count !== undefined && <sup aria-hidden="true">{n.count}</sup>}
-            </a>
-          ))
-        }
+        <a href="/" aria-current={path === '/' ? 'page' : undefined}>
+          Home
+        </a>
+        {nav.map((n) => (
+          <a href={n.href} aria-current={isCurrent(n) ? 'page' : undefined}>
+            {n.label}
+            {n.count !== undefined && <sup aria-hidden="true">{n.count}</sup>}
+          </a>
+        ))}
       </nav>
     </header>
 
@@ -169,13 +184,11 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
     <footer class="site-footer">
       <div class="footer-mark" aria-hidden="true">
         <div class="footer-mark__track">
-          {
-            Array.from({ length: 4 }, (_, i) => (
-              <span class:list={{ 'is-outline': i % 2 === 1 }}>
-                Maker<i>/</i>Toolkit
-              </span>
-            ))
-          }
+          {Array.from({ length: 4 }, (_, i) => (
+            <span class:list={{ 'is-outline': i % 2 === 1 }}>
+              Maker<i>/</i>Toolkit
+            </span>
+          ))}
         </div>
       </div>
       <div class="wrap wrap--wide site-footer__inner">
@@ -186,49 +199,63 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
           </a>
           <p class="site-footer__by">Free tools, guides and videos by {siteConfig.author}.</p>
           <p class="social">
-            {
-              socials.map((s) => (
-                <a href={s.href} rel="noopener me" aria-label={s.label} title={s.label}>
-                  <Icon name={s.icon as IconName} />
-                </a>
-              ))
-            }
+            {socials.map((s) => (
+              <a href={s.href} rel="noopener me" aria-label={s.label} title={s.label}>
+                <Icon name={s.icon as IconName} />
+              </a>
+            ))}
           </p>
         </div>
         <nav class="footer-cols" aria-label="Footer">
-          {
-            categories.map((c) => (
-              <div>
-                <a class="footer-cols__head" href={`/${c.id}/`}>
-                  {c.name}
-                </a>
-                <ul>
-                  {toolsIn(c.id).map((t) => (
-                    <li>
-                      <a href={t.href}>{t.title}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          }
+          {categories.map((c) => (
+            <div>
+              <a class="footer-cols__head" href={`/${c.id}/`}>
+                {c.name}
+              </a>
+              <ul>
+                {toolsIn(c.id).map((t) => (
+                  <li>
+                    <a href={t.href}>{t.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
           <div>
             <span class="footer-cols__head">Site</span>
             <ul>
-              {hasPosts && <li><a href="/blog/">Blog</a></li>}
-              {videos.length > 0 && <li><a href="/videos/">Videos</a></li>}
-              <li><a href="/about/">About</a></li>
-              <li><a href="/contact/">Contact</a></li>
-              <li><a href="/changelog/">What’s new</a></li>
+              {hasPosts && (
+                <li>
+                  <a href="/blog/">Blog</a>
+                </li>
+              )}
+              {videos.length > 0 && (
+                <li>
+                  <a href="/videos/">Videos</a>
+                </li>
+              )}
+              <li>
+                <a href="/about/">About</a>
+              </li>
+              <li>
+                <a href="/contact/">Contact</a>
+              </li>
+              <li>
+                <a href="/changelog/">What’s new</a>
+              </li>
             </ul>
           </div>
         </nav>
       </div>
       <div class="wrap wrap--wide site-footer__bottom">
-        <p>© {new Date().getFullYear()} {siteConfig.author}</p>
+        <p>
+          © {new Date().getFullYear()} {siteConfig.author}
+        </p>
         <p class="site-footer__legal">
           <a href="/privacy/">Privacy &amp; terms</a>
-          <a href={siteConfig.feedbackUrl} rel="noopener">Report an issue</a>
+          <a href={siteConfig.feedbackUrl} rel="noopener">
+            Report an issue
+          </a>
         </p>
         <p class="disclaimer">
           Independent project, not affiliated with Microsoft. Power Apps, Power Automate, Power Fx, Dataverse and
@@ -256,28 +283,32 @@ const socials = [...siteConfig.authorLinks, ...(siteConfig.youtubeUrl ? [{ label
           aria-autocomplete="list"
           aria-label="Search"
         />
-        <button type="button" class="sitesearch__close" data-search-close aria-label="Close search">Esc</button>
+        <button type="button" class="sitesearch__close" data-search-close aria-label="Close search">
+          Esc
+        </button>
       </div>
       <ul id="search-results" class="sitesearch__results" role="listbox" aria-label="Results"></ul>
       <p class="sitesearch__foot">
-        <span><kbd>↑</kbd> <kbd>↓</kbd> move</span>
-        <span><kbd>Enter</kbd> open</span>
+        <span>
+          <kbd>↑</kbd> <kbd>↓</kbd> move
+        </span>
+        <span>
+          <kbd>Enter</kbd> open
+        </span>
         <span class="sitesearch__count" aria-live="polite"></span>
       </p>
     </dialog>
 
     <div id="sr-status" class="visually-hidden" aria-live="polite"></div>
 
-    {
-      siteConfig.cfAnalyticsToken && (
-        <script
-          is:inline
-          defer
-          src="https://static.cloudflareinsights.com/beacon.min.js"
-          data-cf-beacon={JSON.stringify({ token: siteConfig.cfAnalyticsToken })}
-        />
-      )
-    }
+    {siteConfig.cfAnalyticsToken && (
+      <script
+        is:inline
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={JSON.stringify({ token: siteConfig.cfAnalyticsToken })}
+      />
+    )}
 
     <script>
       import '../scripts/motion';

@@ -332,6 +332,13 @@ export function beautify(src: string, opts: { lang: Lang; mode: Mode; indent: nu
     });
   };
 
+  // A separator right after a // comment goes on the next line, or the comment would swallow it.
+  const writeSep = (sep: Tok) => {
+    if (pendingBreak >= 0) newline(pendingBreak);
+    pendingBreak = -1;
+    write(sep.v);
+  };
+
   const printGroup = (g: Group, ind: number) => {
     const flat = flatGroup(g);
     const empty = g.items.length === 1 && g.items[0].length === 0;
@@ -346,7 +353,7 @@ export function beautify(src: string, opts: { lang: Lang; mode: Mode; indent: nu
       pendingBreak = -1;
       newline(ind + step);
       printItem(it, ind + step);
-      if (k < g.seps.length) write(g.seps[k].v);
+      if (k < g.seps.length) writeSep(g.seps[k]);
     });
     pendingBreak = -1;
     newline(ind);
@@ -361,7 +368,7 @@ export function beautify(src: string, opts: { lang: Lang; mode: Mode; indent: nu
     }
     pendingBreak = -1;
     printItem(it, 0);
-    if (k < root.seps.length) write(root.seps[k].v);
+    if (k < root.seps.length) writeSep(root.seps[k]);
   });
 
   let depth = 0;

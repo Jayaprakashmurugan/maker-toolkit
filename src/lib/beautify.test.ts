@@ -33,6 +33,24 @@ describe('Power Fx interpolated strings', () => {
   });
 });
 
+describe('line comments', () => {
+  it('end their line, even right before a separator', () => {
+    const want = 'Patch(\n  Src,\n  rec // note\n  ,\n  { a: 1 },\n  { b: 2 }\n)';
+    expect(format('Patch(Src, rec // note\n, {a: 1}, {b: 2})', 'powerfx', 'expanded')).toBe(want);
+    expect(format('Patch(Src, rec // note\n, {a: 1}, {b: 2})', 'powerfx', 'smart')).toBe(want);
+  });
+
+  it('end their line before a ; between Power Fx statements', () => {
+    expect(format('Set(a, 1) // first\n; Set(b, 2)', 'powerfx')).toBe('Set(a, 1) // first\n;\nSet(b, 2)');
+  });
+
+  it('become block comments on one line', () => {
+    expect(format('Patch(Src, rec // note\n, {a: 1})', 'powerfx', 'oneline')).toBe(
+      'Patch(Src, rec /* note */, { a: 1 })',
+    );
+  });
+});
+
 // ── Only whitespace changes ──────────────────────────────────
 // A scanner of its own, so a tokenizer bug can't hide itself: it splits source into the code between literals, with
 // all whitespace removed, and the literals (strings, quoted names), byte for byte. Comments keep their words only,
@@ -135,6 +153,9 @@ const SAMPLES: [Lang, string][] = [
   ['powerfx', 'With({total:Sum(Items,Price*Qty)},If(total>100&&!IsBlank(Coupon),total*0.9,total)) /* discount */'],
   ['powerfx', 'Set(a, 1); // first\nSet(b, "  two  ")'],
   ['powerfx', 'If(x, // yes\n1, 2)'],
+  ['powerfx', 'Patch(Src, rec // note\n, {a: 1}, {b: 2})'],
+  ['powerfx', 'Set(a, 1) // first\n; Set(b, 2)'],
+  ['powerfx', 'If(IsBlank(x) // empty?\n, "none", Text(Value(x) // as number\n, "0.0") // formatted\n)'],
 ];
 
 describe('formatting', () => {
